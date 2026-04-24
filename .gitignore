@@ -49,3 +49,6 @@ Thumbs.db
 *.wmv
 
 ShopMate/ErrorLog/Error/log20231006.txt
+bin/
+ErrorLog/
+obj/
