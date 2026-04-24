@@ -52,3 +52,7 @@ ShopMate/ErrorLog/Error/log20231006.txt
 bin/
 ErrorLog/
 obj/
+Web.config
+Web.Debug.config
+Web.old.config
+Web.Release.config
