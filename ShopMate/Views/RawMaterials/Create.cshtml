@@ -1,0 +1,138 @@
+﻿@model ShopMate.Models.RawMaterials
+
+@{
+    ViewBag.Title = "Create";
+    if (Ajax.IsThisAjaxRequest())
+    {
+        Layout = null;
+    } 
+}
+
+<script src="~/Content/ckeditor/ckeditor.js"></script>
+<script src="~/Scripts/quagga.js"></script>
+<link href="~/Content/Site.css" rel="stylesheet" /> 
+
+@Html.StarkAjaxFormSubmiter("frmRawmaterials", "tbRawMaterials", true, "Action Successfully Executed")
+
+@{
+    if (!Ajax.IsThisAjaxRequest())
+    {
+        <section class="content-header">
+            <h1>
+                @ViewBag.Title
+                <small>@ViewBag.Title</small>
+            </h1>
+        </section>
+    }
+}
+<script type="text/javascript">
+        $(function () {
+            $('select').searchableOptionList({
+                maxHeight: '250px'
+            });
+        });
+
+   
+        $(document).ready(function () {
+
+          //  load_quaga();
+        });
+    //clear things
+        function clearTextbox() {
+            $("#Name").val('');
+            $("#hdnBarcode").val('');
+            $("#CostPrice").val('');
+            $("#SalePrice").val('');
+            $("#Discount").val('');
+            $("#HSN").val('');
+    }
+    $(document).ready(function () {
+        $('#RefreshPage').click(function () {
+
+            setTimeout(
+                function () {
+                    window.location.reload(true);
+                }, 800);
+        });
+    });
+
+
+
+</script>
+@using (Html.BeginForm("Create", "RawMaterials", FormMethod.Post, new { enctype = "multipart/form-data", id = "frmRawmaterials" }))
+{
+    @Html.AntiForgeryToken()
+          <!-- Main content -->
+    <section class="content">
+
+       
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box box-solid box-primary">
+                    <div class="box-header">
+                        <h3 class="box-title">Fill Raw Material Form</h3>
+                    </div><!-- /.box-header -->
+                    <!-- form start -->
+                    <div role="form">
+                        <div class="box-body" id="barcode-scanner">
+                            <div id="barcode-scanner"></div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Name, new { @class = "" })
+                                @Html.EditorFor(model => model.Name, new { @Id = "Name" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ProductCategory, new { @class = "" })
+                                @Html.EditorFor(model => model.ProductCategory, new { @Id = "ProductCategory" })
+                                @*@Html.DropDownList("", " -Select- ")*@
+                                @* @Html.StarkDropDownAjaxLink("/ProductCategory/Create", "AddMore", "")*@
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.CostPrice, new { @class = "" })
+                                @Html.EditorFor(model => model.CostPrice, new { @Id = "CostPrice" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.BarCode, new { @class = "" })
+                                @Html.EditorFor(model => model.BarCode, new { htmlAttributes = new { @class = "form-control", @id = "hdnBarcode" } })
+
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.StockAlert, new { @class = "" })
+                                @Html.EditorFor(model => model.StockAlert, new { htmlAttributes = new { @class = "", @id = "StockAlert" } })
+
+                            </div>
+                            <div class="form-group">
+                                @Html.Hidden("AddedBy", Env.GetUserInfo("userid"))
+                            </div>
+                            <div class="form-group">
+                                @Html.Hidden("DateAdded", DateTime.Now)
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.TaxId, new { @class = "" })
+                                @*@Html.DropDownList("TaxId", " -Select- ")*@
+                                @Env.TaxUC(1)
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.WarehouseId, new { @class = "" })
+                                @Env.WareHouseUC(1)
+                            </div>
+
+
+
+
+                        </div>
+                        <div class="box-footer">
+                            @*<input type="submit" value="Create New" class="btn btn-primary" onclick="clearTextbox();">*@
+                            @*@Html.StarkInputButtion("Create New", "submit", "btn btn-primary", "")*@
+                            <input type="submit" id="RefreshPage" value="Create New" class="btn btn-primary">
+                            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+<!-- Small boxes (Stat box) -->

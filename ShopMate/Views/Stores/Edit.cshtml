@@ -1,0 +1,44 @@
+﻿@model ShopMate.Models.Stores
+
+@{
+    ViewBag.Title = "Edit";
+    if (Ajax.IsThisAjaxRequest())
+    {
+        Layout = null;
+    }
+}
+<script src="~/Content/ckeditor/ckeditor.js"></script>
+
+
+@Html.StarkAjaxFormSubmiter("frmStores", "tbStores", true, "Action Successfully Executed")
+
+
+@{
+    if (!Ajax.IsThisAjaxRequest())
+    {
+        <section class="content-header">
+            <h1>
+                @ViewBag.Title
+                <small>@ViewBag.Title</small>
+            </h1>
+        </section>
+    }
+}
+
+<script type="text/javascript">
+    $(function () {
+        $('select').searchableOptionList({
+            maxHeight: '250px'
+        });
+    });
+</script>
+
+
+@using (Html.BeginForm("Edit", "Stores", FormMethod.Post, new { enctype = "multipart/form-data", id = "frmStores" }))
+{
+   
+}
+
+@*<div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>*@

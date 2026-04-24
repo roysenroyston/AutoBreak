@@ -1,0 +1,281 @@
+﻿@model ShopMate.Models.StockShippingOrder
+
+@{
+    ViewBag.Title = "Create";
+    if (Ajax.IsThisAjaxRequest())
+    {
+        Layout = null;
+    }
+}
+
+<script src="~/Content/ckeditor/ckeditor.js"></script>
+
+@Html.StarkAjaxFormSubmiter("frmStockShippingOrder", "tbStockShippingOrder", true, "Action Successfully Executed")
+
+@{
+    if (!Ajax.IsThisAjaxRequest())
+    {
+        <section class="content-header">
+            <h1>
+                @ViewBag.Title
+                <small>@ViewBag.Title</small>
+            </h1>
+        </section>
+    }
+}
+<script type="text/javascript">
+    $(function () {
+        $('select').searchableOptionList({
+            maxHeight: '250px'
+        });
+    });
+
+    function multi() {
+        var Quantity = $("#Quantity").val();
+        var UnitPrice = $("#UnitPrice").val();
+        var TotalAmount = Quantity * UnitPrice;
+        $("#TotalAmount").val(TotalAmount);
+    }
+
+    //
+
+</script>
+@using (Html.BeginForm("StockShippingOrderCreate", "Order", FormMethod.Post, new { enctype = "multipart/form-data", id = "frmStockShippingOrder" }))
+{
+    @Html.AntiForgeryToken()
+    <!-- Main content -->
+    <section class="content">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box box-solid box-primary">
+                    <div class="box-header">
+                        <h3 class="box-title">Fill Stock Shipping Order Form</h3>
+                    </div><!-- /.box-header -->
+                    <!-- form start -->
+                    <div role="form">
+                        <div class="box-body">
+
+                            <div class="col-xs-12">
+                                <div class="col-xs-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.WarehouseFrom, new { @class = "" })
+                                        @Html.DropDownList("Warehouse", null, new { @Id = "warehouseFrom" })
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.WarehouseTo, new { @class = "" })
+                                        @Html.DropDownList("Warehouse", null, new { @Id = "warehouseTo" })
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-12">
+                                <table class="table table-bordered table-hover" id="tab_logic">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:30%">Product</th>
+                                            <th style="width:30%">Quantity</th>
+                                            <th style="width:30%">Remarks</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+
+                                            <td>
+                                                @Html.DropDownList("ProductId", null, "- Select Product -", new { @Id = "products" })
+                                            </td>
+
+                                            <td>
+                                                <input type="number" id="quantity" name="quantity" placeholder="Quantity" class="form-control" />
+                                            </td>
+                                            <td>
+                                                <input type="text" id="remarks" name="remarks" placeholder="Remarks" class="form-control" />
+                                            </td>
+                                            <td style="display:none">
+                                                <input type="text" id="Name" name="Name" placeholder="Name" class="form-control" />
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="col-md-12">
+                                    <a id="addToList" class="btn btn-primary">Add To List</a>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <table id="detailsTable" class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+
+
+                                            <th style="width:10%">Product Id</th>
+                                            <th style="width:40%">Name</th>
+                                            <th style="width:20%">Quantity</th>
+                                            <th style="width:20%">Remarks</th>
+                                            <th style="width:10%"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Hidden("DateAdded", DateTime.Now)
+                            </div>
+                            <div class="form-group">
+                                @Html.Hidden("AddedBy", Env.GetUserInfo("userid"))
+                            </div>
+
+                        </div>
+                        <div class="box-footer">
+                            @*@Html.StarkInputButtion("Create New", "submit", "btn btn-primary", "")*@
+                            <button id="saveOrder" type="submit" class="btn btn-primary">New Order</button>
+
+                            @Html.ActionLink("Back to List", "StockShippingOrder", null, new { @class = "btn btn-primary" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+}
+<script>
+    $(document).ready(function () {
+
+        $("#vendorId").on("change", function () {
+            var selectedvendorId = $(this).children("option:selected").val();
+            var value = $('#dropDownId:selected').val();
+            $.ajax(
+
+                {
+                    url: '/User/GetDetails?id=' + $(this).children("option:selected").val(),
+                    type: 'GET',
+                    data: "",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        $("#vatNumber").val(data.Vat);
+                    },
+                    error: function () {
+                        alert("error");
+                    }
+                });
+        });
+    });
+
+
+
+ 
+    $(document).ready(function () {
+
+        $("#products").on("change", function () {
+            var selectedProductId = $(this).children("option:selected").val();
+            var value = $('#dropDownId:selected').val();
+            //console.log(value);
+            $.ajax(
+                {
+                    url: '/Product/GetDetails?id=' + $(this).children("option:selected").val(),
+                    type: 'GET',
+                    data: "",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                          $("#Name").val(data.Name);
+                    },
+                    error: function () {
+                        alert("error");
+                    }
+                });
+        });
+    });
+
+       //Add Multiple Materails.
+    $("#addToList").click(function (e) {
+        e.preventDefault();
+
+        if ($.trim($("#products").val()) == "" || $.trim($("#quantity").val()) == "") return;
+
+        console.log('adding');
+        var description = $("#products").val(),
+            name = $("#Name").val(),
+            quantity = $("#quantity").val(),
+            remarks = $("#remarks").val(),
+            detailsTableBody = $("#detailsTable tbody");
+        var productItem = '<tr><td>' + description + '</td><td>' + name + '</td><td>' + quantity +  '</td><td>' + remarks + '</td><td><a data-itemId="0" href="#" class="deleteItem">Remove</a></td></tr>';
+        detailsTableBody.append(productItem);
+        clearItem();
+    });
+    //After Add A New description In The List, Clear Clean The Form For Add More description.
+    function clearItem() {
+        $("#description").val('');
+        $("#quantity").val('');
+    }
+
+    // After Add A New Order In The List, If You Want, You Can Remove It.
+    $(document).on('click', 'a.deleteItem', function (e) {
+        e.preventDefault();
+        var $self = $(this);
+        if ($(this).attr('data-itemId') == "0") {
+            $(this).parents('tr').css("background-color", "#ff6347").fadeOut(800, function () {
+                $(this).remove();
+            });
+        }
+    });
+    //After Click Save Button Pass All Data View To Controller For Save Database
+    function saveOrder(data) {
+        return $.ajax({
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            type: 'POST',
+            url: "/Order/StockShippingOrderCreate",
+            data: data,
+            success: function (result) {
+                alert(result);
+                location.reload();
+            },
+            error: function (req, textStatus, errorThrown) {
+                //this is going to happen when you send something different from a 200 OK HTTP
+                //alert('Ooops, something happened: ' + textStatus + ' ' + errorThrown);
+                $.sticky('<br/> ! Not enough stock to perform action <br/>  ', { stickyClass: 'error' });
+            }
+        });
+    }
+    //Collect Multiple Quotation List For Pass To Controller
+    $("#saveOrder").click(function (e) {
+        e.preventDefault();
+        debugger
+        var QuotationItemArr = [];
+
+        QuotationItemArr.length = 0;
+
+        $.each($("#detailsTable tbody tr"), function () {
+            QuotationItemArr.push({
+                ProductId: $(this).find('td:eq(0)').html(),
+                Quantity: $(this).find('td:eq(2)').html(),
+                 Remarks: $(this).find('td:eq(3)').html(),
+                Name: $(this).find('td:eq(1)').html()               
+            });
+        });
+
+        var data = JSON.stringify({
+            WarehouseFrom: $("#warehouseFrom").val(),
+            WarehouseTo: $("#warehouseTo").val(),
+            OrderMaterials: QuotationItemArr,
+
+        });
+
+        $.when(saveOrder(data)).then(function (response) {
+            console.log(response);
+        }).fail(function (err) {
+            console.log(err);
+        });
+
+
+
+
+    });
+
+</script>
+
+
+

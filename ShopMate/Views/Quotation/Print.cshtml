@@ -1,0 +1,234 @@
+﻿@model ShopMate.ModelDto.QuotationDto
+
+@{
+    ViewBag.Title = "Quotation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/Scripts/jquery1.8.3.print.js"></script>
+@*<link href="~/Content/QuotationsStyling.css" rel="stylesheet" />
+    <link href="~/Content/QuatationsPrintOutputStyling.css" media="print" rel="stylesheet" />*@
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+@*<script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>*@
+@*<script src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>*@
+@*<script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.flash.min.js"></script>*@
+@*<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>*@
+@*<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>*@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
+<script src=" https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js"></script>
+
+
+
+@{
+    //    string css1 = Url.Content("~/Content/theme/bootstrap/css/bootstrap.min.css");
+}
+
+
+<script type="text/javascript">
+    $("#btnPrint").live("click", function () {
+        //var divContents = $("#dvContainer").html();
+        //var printWindow = window.open('', '', 'height=1000,width=1000');
+        //printWindow.document.write('<html><head>');
+        //printWindow.document.write('<link href="../../Content/theme/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />');
+
+        //printWindow.document.write('</head><body >');
+        //printWindow.document.write(divContents);
+        //printWindow.document.write('</body></html>');
+        //printWindow.document.close();
+        //printWindow.print();
+        window.print();
+
+    });
+
+
+</script>
+
+
+@*<style>
+        select {
+            width: 150px;
+        }
+        <!-- https://www.transparenttextures.com/wood-pattern.html -->
+    </style>*@
+
+
+
+
+<section class="content" style="background-color: #996600; background-image: url(@Url.Content("~/Content/bg/mining.jpg"));">
+    <!-- Small boxes (Stat box)  -->
+    <div class="row">
+        @*<div class="col-xs-2 no-print">
+                <section class="content">
+                    <div class="col-xs-12">
+                        <div class="clearfix"></div>
+                        <br />
+                        <div class="clearfix"></div>
+                        <br /><br /><br />
+                        <a class="btn btn-app" id="btnPrint">
+                            <i class="fa fa-print"></i>
+                            Print This
+                        </a>
+                    </div>
+                </section>
+            </div>*@
+
+        <div class="col-xs-12 print">
+            <div id="print-content" class="content invoice">
+                <span class="Fiscal-Heading" style="text-align:center;margin-left:0%; font-weight: bold;"><h3> <strong>  QUOTATION : @Model.Id</strong></h3></span>
+                <figure>
+                    <img id="KediLogo" class="pull-left" img src="~/Content/bg/TaniumHardware.png" style="width:250px; height:200px;margin-top:2%;" />
+                </figure>                
+                <div class="pull-right" style="text-align: left;width:45%; margin-left: 2%; margin-top: 1%; margin-right: 2%; font-size: 11px; width: 30%;">
+                    <div id="KediAddress">
+                        <kediAddress>
+                            <strong>@Model.CompanyName</strong><br>
+                            @Html.Raw(Model.CompanyAddress)<br>
+                            Email:sales@taniumgutters.co.zw<br>
+                            Mobile:+263 78 922 2314 <br>
+                            <kediAddress>
+                                <kediAddress>
+</div>
+                    <br />
+                    <div class="pull-left">Date:@Model.IssueDate </div><br />
+                    <br />
+                    <span><strong>Bill To:</strong></span>
+                    <address style="width:45%;">
+                        @Model.customer<br />                     
+                         <strong> Address :</strong>@Model.ToInfo<br />
+                            Customer VAT No: @Model.CustomerVat<br />                         
+
+                    </address>
+                </div>
+                <br />
+                <br />
+                <br />
+                <p>&nbsp;&nbsp;</p>
+                <p>&nbsp;&nbsp;</p>
+                <p>&nbsp;&nbsp;</p>
+                <p>&nbsp;&nbsp;</p>
+                <p>&nbsp;&nbsp;</p>
+                <p>&nbsp;&nbsp;</p>
+
+
+
+                <br />
+                <div class="invoice-body">
+
+                    <div class="Table-Area-Container">
+                        <div style="width:100%;">
+                            <section>
+                                <div class="Table-Area">
+                                    <table class="table" style="font-size: 11px; width: 98%;height: auto;font-weight: 200; position: relative;">
+                                        <thead style="background-color:#e5e2e2;">
+                                            <tr>
+
+                                                @*<th class="heading-print">CODE</th>*@
+                                                <th class="heading-print">PRODUCT NAME</th>
+                                                @*<th class="heading-print">PRODUCT</th>*@
+                                                @*<th class="heading-print">DESCRIPTION</th>*@
+                                                <th class="heading-print">QUANTITY</th>
+                                                <th class="heading-print">UNIT PRICE</th>
+                                                <th class="heading-print">TAX</th>
+                                                <th class="heading-print">SUBTOTAL</th>
+                                            
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var items in Model.items)
+                                            {
+                                            <tr>
+                                                <td> @items.Name</td>
+                                                @*<td>@items.Description</td>*@
+                                                <td> @items.Quantity</td>
+                                                <td>@items.UnitPrice</td>
+                                                <td>@items.UnitVat</td>
+                                                <td>@items.TotalPrice</td>
+
+                                            </tr>
+                                            }
+
+                                        </tbody>
+                                    </table>
+
+
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                    @*<br />*@
+                                    <div id="footer " style="display: block; width: 98%;  height: 280px; position: relative; page-break-inside: avoid; ">
+                                        <div style="float: none; position: static; overflow: visible;  page-break-inside: avoid;">
+                                            <div class="pull-right" style="text-align: left; margin-left: 2%; font-weight: bold; margin-right: 0%; margin-top: 1%; page-break-inside: avoid; font-size: 11px; width: 21%;">
+                                                Total(Excl):&nbsp;@Model.CurrencySymbol @Model.SubTotal
+                                                <p>&nbsp;&nbsp;</p>
+                                                Tax:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Model.CurrencySymbol @Model.VAT
+                                                <p>&nbsp;&nbsp;</p>
+                                                @*Discount:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Model.CurrencySymbol @Model.discount
+            <p>&nbsp;&nbsp;</p>*@
+                                                Total(Incl):&nbsp;&nbsp;@Model.CurrencySymbol @Model.Total
+                                            </div>
+                                            <br />
+                                            <br />
+                                            <br />
+                                            <br />
+                                            <br />
+                                            <div class="Banking-Details pull-left" style="float: left; font-size: 12px; font-weight: bold; left: 10px; width: 30%; margin-left: 0%; page-break-inside: avoid;">REMARKS : @Model.Remarks</div>
+                                            <br />
+                                            @*<div class="bank-title" style="font-weight:bold;text-align: left;margin-left:0%;"><h4><strong>OUR BANKING DETAILS</strong></h4></div>*@
+
+                                        <div class="Banking-Details pull-left" style="float:left; font-size:10px; left: 10px;width:30%;margin-left: 0%;  page-break-inside: avoid;">
+
+                                            <div id="first-bank" style="font-size: 10px; ">
+
+                                                <h5>
+                                                    <strong>TERMS &Aacute; CONDITIONS</strong><br>
+                                                </h5>
+                                                <p>(i)70% Deposit is required before commence of job and 30% upon job completion </p>
+                                                <p>(ii)10 year guarantee on workmanship </p>
+                                                <p>(iii)Prices are subject to change without notice </p>
+
+                                            </div>
+
+                                        </div>
+
+                                         
+
+
+                                        </div>
+
+                                        </div>
+                            </section>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*<div class="row">
+            <div class="col-xs-12">
+                <div class="col-xs-5" style="padding-left:60px;"> @DateTime.Now.ToString("dd/MMM/yyyy hh:mm:tt")</div>
+                <div class="col-xs-4" style="margin-left:25%;padding-left:80px;">Printed by: @Env.GetUserInfo("name") </div>
+            </div>
+        </div>*@
+    <div class="no-print">
+        <a class="btn btn-app"  id="btnPrint"onclick="window.print()">
+            <i class="fa fa-print"></i>
+            Print This
+        </a>
+    </div>
+</section>
+
