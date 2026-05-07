@@ -31,7 +31,7 @@ namespace ShopMate.Controllers
             int warehouses = int.Parse(Env.GetUserInfo("WarehouseId"));
             var warehouse = db.Warehouses.ToArray();
             var user = db.Users.ToArray();
-            var tak = db.Purchases.Where(i => i.WarehouseId == warehouses).ToArray();
+            var tak = db.Purchases.Take(20).Where(i => i.WarehouseId == warehouses).ToArray();
             var userwarehouse = db.Users.FirstOrDefault(n => n.UserName == userId).WarehouseId;
 
             {

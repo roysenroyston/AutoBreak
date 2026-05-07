@@ -29,7 +29,14 @@ namespace ShopMate.Models
         public virtual Warehouse Warehouse_WarehouseId { get; set; }
 
         public decimal RemainingQuantity { get; set; }
+
+
         [DisplayName("Returned Quantity")]
         public Decimal ReturnedQuantity { get; set; }
-    }
+
+
+		[DisplayName("Remaining Singles Quantity")]
+		[DefaultValue(0.00)]
+		public int RemainingSinglesQuantity { get; set; }
+	}
 }

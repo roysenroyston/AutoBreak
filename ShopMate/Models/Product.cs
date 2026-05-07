@@ -33,7 +33,10 @@ namespace ShopMate.Models
         [Required]
         [DisplayName("Sale Price")] 
         public Decimal SalePrice { get; set; }
-        [SkipTracking]
+
+		[DisplayName("Unit Sale Price")]
+		public Decimal UnitSalePrice { get; set; }
+		[SkipTracking]
         [DisplayName("Product Image")] 
         public string ProductImage { get; set; }
         [SkipTracking]
@@ -70,7 +73,13 @@ namespace ShopMate.Models
         [DefaultValue(0.00)]
         public Decimal RemainingQuantity { get; set; }
 
-        [DisplayName("Remaining Amount")]
+
+		[DisplayName("Remaining Singles Quantity")]
+		[DefaultValue(0.00)]
+		public int RemainingSinglesQuantity { get; set; }
+
+
+		[DisplayName("Remaining Amount")]
         [DefaultValue(0.00)]
         
        

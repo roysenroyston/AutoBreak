@@ -10,7 +10,11 @@ namespace ShopMate.ModelDto
     {
         public string ProductName { get; set; }
         public decimal Quantity { get; set; }
-        public decimal SalePrice { get; set; }
+        public string Currency { get; set; }
+		public string PaymentType { get; set; }
+        public long Singles { get; set; }
+        public decimal UnitSalePrice { get; set; }
+		public decimal SalePrice { get; set; }
         public decimal Amount { get; set; }
         public decimal? WithTaxAmount { get; set; }
         public DateTime Dated { get; set; }
@@ -23,6 +27,7 @@ namespace ShopMate.ModelDto
         public string VatNumber { get; set; }
         public string AddedBy { get; set; }
         public string CustomerName { get; set; }
+        public string ProductType { get; set; }
         public int RecieptNo { get; set; }
 
     }
@@ -420,7 +425,9 @@ namespace ShopMate.ModelDto
         public decimal Quantity { get; set; }
         public string Barcode { get; set; }
         public decimal stockAmount { get; set; }
-        public bool IsActive { get; set; }
+
+		public int RemainingSinglesQuantity { get; set; }
+		public bool IsActive { get; set; }
     }
 
     public class PaymentDto

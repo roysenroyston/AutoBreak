@@ -285,7 +285,7 @@ namespace ShopMate.Controllers
             //}
             //else
             //{
-                var LastRegister = db.Sales.Where(i => i.DateAdded >= LastDays && i.WarehouseId==warehouse).ToArray();
+                var LastRegister = db.Sales.Take(20).Where(i => i.DateAdded >= LastDays && i.WarehouseId==warehouse).ToArray();
             //}
         
 
@@ -330,7 +330,7 @@ namespace ShopMate.Controllers
 
             DateTime newDate = new DateTime(year, month, day);
           
-                var LastRegister = db.Sales.Where(i => (i.DateAdded.Value.Day == newDate.Day && i.DateAdded.Value.Month == newDate.Month && i.DateAdded.Value.Year == newDate.Year) && i.WarehouseId == warehouse).ToArray();
+                var LastRegister = db.Sales.Take(20).Where(i => (i.DateAdded.Value.Day == newDate.Day && i.DateAdded.Value.Month == newDate.Month && i.DateAdded.Value.Year == newDate.Year) && i.WarehouseId == warehouse).ToArray();
 
                 var groupByProductName = LastRegister
                                 .GroupBy(i => i.Product_ProductId.Name)

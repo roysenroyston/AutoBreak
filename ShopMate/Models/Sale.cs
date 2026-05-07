@@ -22,14 +22,20 @@ namespace ShopMate.Models
         [Required]
         [DisplayName("Quantity")] 
         public Decimal Quantity { get; set; }
-        [DisplayName("Returned Quantity")]
+
+		[DisplayName("Singles")]
+		public long Singles { get; set; }
+		[DisplayName("Returned Quantity")]
         public Decimal ReturnedQuantity { get; set; }
         [DisplayName("RemainingQuantity")]
         public int RemainingQuantity { get; set; }
         [Required]
         [DisplayName("Sale Price")] 
         public Decimal SalePrice { get; set; }
-        [Required]
+
+		[DisplayName("Unit Sale Price")]
+		public decimal UnitSalePrice { get; set; }
+		[Required]
         [SkipTracking]
         [DisplayName("Payment Mode")]
         public int? PaymentModeId { get; set; }
@@ -39,7 +45,7 @@ namespace ShopMate.Models
         public Decimal TotalAmount { get; set; }
 
         [DisplayName("Total Amount With Tax")]
-        public Nullable<Decimal> TotalAmountWithTax { get; set; }
+        public decimal TotalAmountWithTax { get; set; }
         
         [Required]
         [DisplayName("Paid Amount")] 
@@ -97,6 +103,9 @@ namespace ShopMate.Models
         [DefaultValue("")]
         public string customerName { get; set; }
 
+		[DefaultValue("Currency")]
+		public string Currency { get; set; }
 
-    }
+
+	}
 }

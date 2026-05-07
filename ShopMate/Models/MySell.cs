@@ -12,7 +12,8 @@ namespace ShopMate.Models
         public int id { get; set; }
         public int invoiceId { get; set; }
         public int online { get; set; }
-        public List<SellProduct> products { get; set; }
+		public decimal rate { get; set; }
+		public List<SellProduct> products { get; set; }
         public string subtotal { get; set; }
         public double tax { get; set; }
         public string time { get; set; }

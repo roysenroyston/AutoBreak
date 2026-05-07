@@ -519,8 +519,8 @@ namespace ShopMate.Controllers
         }
         public ActionResult GetGridSale()
         {
-            var tak = db.Invoices.Where(i => i.IsPurchaseOrSale == "Sale" && i.CustomerId > 0).ToArray();
-            var tak2 = db.InformalInvoices.Where(i => i.IsPurchaseOrSale == "Sale" && i.CustomerId > 0).ToArray();
+            var tak = db.Invoices.Take(20).Where(i => i.IsPurchaseOrSale == "Sale" && i.CustomerId > 0).ToArray();
+            var tak2 = db.InformalInvoices.Take(20).Where(i => i.IsPurchaseOrSale == "Sale" && i.CustomerId > 0).ToArray();
 
             var result = from c in tak
                          select new string[] { c.Id.ToString(), Convert.ToString(c.Id),

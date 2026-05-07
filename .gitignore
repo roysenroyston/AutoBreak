@@ -47,6 +47,7 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
+.vs/
 
 ShopMate/ErrorLog/Error/log20231006.txt
 bin/

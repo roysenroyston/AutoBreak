@@ -154,100 +154,105 @@ window.onload = function () {
                     </div><!-- /.box-header -->
                     <!-- form start -->
                     <div role="form">
-                        <div class="box-body" id="barcode-scanner">
-                            <div id="barcode-scanner"></div>
+						<div class="box-body" id="barcode-scanner">
+							<div id="barcode-scanner"></div>
 
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.Name, new { @class = "" })
-                                @Html.EditorFor(model => model.Name, new { @Id = "Name", @class = "form-control" })
-                            </div>
-                            <div class="form-group" hidden>
-                                @Html.LabelFor(model => model.ProductCategoryId, new { @class = "" })
-                                @Html.DropDownList("ProductCategoryId", " -Select- ")
-                                @Html.StarkDropDownAjaxLink("/ProductCategory/Create", "AddMore", "")
-                            </div>
+							<div class="form-group">
+								@Html.LabelFor(model => model.Name, new { @class = "" })
+								@Html.EditorFor(model => model.Name, new { @Id = "Name", @class = "form-control" })
+							</div>
+							<div class="form-group" hidden>
+								@Html.LabelFor(model => model.ProductCategoryId, new { @class = "" })
+								@Html.DropDownList("ProductCategoryId", " -Select- ")
+								@Html.StarkDropDownAjaxLink("/ProductCategory/Create", "AddMore", "")
+							</div>
 
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.ProductCaseId, new { @class = "" })
-                                @Html.DropDownList("ProductCaseId", " -Select-  Product Case Id")
-                                @Html.StarkDropDownAjaxLink("/Product/Create", "AddMore", "")
-                            </div>
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.NumOfSinglesInCase, new { @class = "" })
-                                @Html.EditorFor(model => model.NumOfSinglesInCase, new { @Id = "NumOfSinglesInCase", @class = "form-control" })
-                            </div>
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.ProductDescription, new { @class = "" })
-                                @Html.EditorFor(model => model.ProductDescription, new { @Id = "Description", @class = "form-control" })
-                            </div>
+							<div class="form-group">
+								<label>Product Case Id (Required only if product is Single)</label>
+								@Html.DropDownList("ProductCaseId", " -Select-  Product Case Id")
+								@Html.StarkDropDownAjaxLink("/Product/Create", "AddMore", "")
+							</div>
+							<div class="form-group">
+								@Html.LabelFor(model => model.NumOfSinglesInCase, new { @class = "" })
+								@Html.EditorFor(model => model.NumOfSinglesInCase, new { @Id = "NumOfSinglesInCase", @class = "form-control" })
+							</div>
+							<div class="form-group">
+								@Html.LabelFor(model => model.ProductDescription, new { @class = "" })
+								@Html.EditorFor(model => model.ProductDescription, new { @Id = "Description", @class = "form-control" })
+							</div>
 
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.BarCode, new { @class = "" })
-                                @Html.EditorFor(model => model.BarCode, new { htmlAttributes = new { @class = "form-control", @id = "hdnBarcode" } })
-                            </div>
-            
-                                <div class="form-group">
-                                    <strong>Product Type</strong>
-                                    <select name="ProductType" id="productType">
-                                        <option value="">-Select Product Type -</option>
-                                        <option value="SINGLE">SINGLE</option>
-                                        <option value="CASE">CASE</option>
-                                    </select>
-                                </div>
-                         
-                <div class="form-group">
-                                    <label>Purchase Price</label>
-                                    @*@Html.LabelFor(model => model.PurchasePrice, new { @class = "" })*@
-                                    @Html.EditorFor(model => model.PurchasePrice, new { @Id = "PurchasePrice", @class = "form-control" })
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.SalePrice, new { @class = "" })
-                                    @Html.EditorFor(model => model.SalePrice, new { @Id = "SalePrice", @class = "form-control" })
-                                </div>
-                                <div class="form-group" hidden>
-                                    @Html.LabelFor(model => model.ProductImage, new { @class = "" })
-                                    <input id="ProductImage" name="ProductImage" type="file" />
+							<div class="form-group">
+								@Html.LabelFor(model => model.BarCode, new { @class = "" })
+								@Html.EditorFor(model => model.BarCode, new { htmlAttributes = new { @class = "form-control", @id = "hdnBarcode" } })
+							</div>
 
-                                </div>
-                                <div class="form-group" hidden>
-                                    @Html.LabelFor(model => model.Discount, new { @class = "" })
-                                    @Html.EditorFor(model => model.Discount, new { @Id = "Discount", @class = "form-control" })
-                                </div>
-                                <div class="form-group">
-                                    @Html.Hidden("AddedBy", Env.GetUserInfo("userid"))
-                                </div>
-                                <div class="form-group">
-                                    @Html.Hidden("DateAdded", DateTime.Now)
-                                </div>
-                                <div class="form-group">
-                                    @Html.Hidden("ModifiedBy", Env.GetUserInfo("userid"))
-                                </div>
-                                <div class="form-group">
-                                    @Html.Hidden("DateModied", DateTime.Now)
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.IsActive, new { @class = "" })
-                                    @Html.EditorFor(model => model.IsActive)
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.StockAlert, new { @class = "" })
-                                    @Html.EditorFor(model => model.StockAlert)
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.TaxId, new { @class = "" })
-                                    @*@Html.DropDownList("TaxId", " -Select- ")*@
-                                    @Env.TaxUC(1)
-                                </div>
-                                <div class="form-group" hidden>
-                                    @Html.LabelFor(model => model.WarehouseId, new { @class = "" })
-                                    @*@Env.WareHouseUC(1)*@
-                                    @Html.DropDownList("WareHouse", " -Select- ")
-                                </div>
+							<div class="form-group">
+								<strong>Product Type</strong>
+								<select name="ProductType" id="productType">
+									<option value="">-Select Product Type -</option>
+									<option value="SINGLE">SINGLE</option>
+									<option value="CASE">CASE</option>
+								</select>
+							</div>
+
+							<div class="form-group">
+								<label>Purchase Price</label>
+								@*@Html.LabelFor(model => model.PurchasePrice, new { @class = "" })*@
+								@Html.EditorFor(model => model.PurchasePrice, new { @Id = "PurchasePrice", @class = "form-control" })
+							</div>
+							<div class="form-group">
+								@Html.LabelFor(model => model.SalePrice, new { @class = "" })
+								@Html.EditorFor(model => model.SalePrice, new { @Id = "SalePrice", @class = "form-control" })
+							</div>
+							<div class="form-group">
+								<label>UnitSalePrice</label>
+								@*@Html.LabelFor(model => model.UnitSalePrice, new { @class = "control-label" })*@
+								@Html.TextBoxFor(model => model.UnitSalePrice, new { @id = "UnitSalePrice", @class = "form-control" })
+							</div>
+							<div class="form-group" hidden>
+								@Html.LabelFor(model => model.ProductImage, new { @class = "" })
+								<input id="ProductImage" name="ProductImage" type="file" />
+
+							</div>
+							<div class="form-group" hidden>
+								@Html.LabelFor(model => model.Discount, new { @class = "" })
+								@Html.EditorFor(model => model.Discount, new { @Id = "Discount", @class = "form-control" })
+							</div>
+							<div class="form-group">
+								@Html.Hidden("AddedBy", Env.GetUserInfo("userid"))
+							</div>
+							<div class="form-group">
+								@Html.Hidden("DateAdded", DateTime.Now)
+							</div>
+							<div class="form-group">
+								@Html.Hidden("ModifiedBy", Env.GetUserInfo("userid"))
+							</div>
+							<div class="form-group">
+								@Html.Hidden("DateModied", DateTime.Now)
+							</div>
+							<div class="form-group">
+								@Html.LabelFor(model => model.IsActive, new { @class = "" })
+								@Html.EditorFor(model => model.IsActive)
+							</div>
+							<div class="form-group">
+								@Html.LabelFor(model => model.StockAlert, new { @class = "" })
+								@Html.EditorFor(model => model.StockAlert)
+							</div>
+							<div class="form-group">
+								@Html.LabelFor(model => model.TaxId, new { @class = "" })
+								@*@Html.DropDownList("TaxId", " -Select- ")*@
+								@Env.TaxUC(1)
+							</div>
+							<div class="form-group" hidden>
+								@Html.LabelFor(model => model.WarehouseId, new { @class = "" })
+								@*@Env.WareHouseUC(1)*@
+								@Html.DropDownList("WareHouse", " -Select- ")
+							</div>
 
 
 
 
-                            </div>
+						</div>
                             <div class="box-footer">
                                 @*<input type="submit" value="Create New" class="btn btn-primary" onclick="clearTextbox();">*@
                                 @*@Html.StarkInputButtion("Create New","submit","btn btn-primary","")*@

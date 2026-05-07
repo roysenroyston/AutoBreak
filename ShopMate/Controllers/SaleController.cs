@@ -27,7 +27,7 @@ namespace ShopMate.Controllers
         // GET Sale/GetGrid
         public ActionResult GetGrid()
         {
-            var tak = db.Sales.ToArray();
+            var tak = db.Sales.Take(20).ToArray();
             DateTime today = DateTime.Now;
             // var duein =  DateTime.Subtract(today, 90);
             TimeSpan ts = new TimeSpan(90, 0, 0, 0);

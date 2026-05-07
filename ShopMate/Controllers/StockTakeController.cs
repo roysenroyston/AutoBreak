@@ -49,7 +49,7 @@ namespace ShopMate.Controllers
         }
 
 
-        private SIContext db = new SIContext();
+        private readonly SIContext db = new SIContext();
         public ActionResult GetProduct()
         {
 

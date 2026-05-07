@@ -2,6 +2,7 @@
 using ShopMate.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -180,12 +181,12 @@ namespace ShopMate.Controllers
             if ((db.Warehouses.FirstOrDefault(i => i.Id == warehouse).Name) == "Dispatch")
             {
                 sale = db.Sales.Where(i => (i.DateAdded >= Datefrom && i.DateAdded <= Dateto) && i.InventoryTypeId == 2 && i.WarehouseId == warehouse)
-                   .Select(i => new SaleDto { ProductName = i.Product_ProductId.Name, CustomerName = i.customerName, Quantity = i.Quantity, SalePrice = i.SalePrice, Amount = i.TotalAmount, WithTaxAmount = i.TotalAmountWithTax, InvoiceId = i.InvoiceId, Dated = i.DateAdded.Value , RecieptNo = i.recieptNumber }).ToList();
+                   .Select(i => new SaleDto { Singles = i.Singles, UnitSalePrice = i.UnitSalePrice, PaymentType = i.PaymentMode_PaymentModeId.Name, Currency = i.Currency, ProductName = i.Product_ProductId.Name, CustomerName = i.customerName, Quantity = i.Quantity, SalePrice = i.SalePrice, Amount = i.TotalAmount, WithTaxAmount = i.TotalAmountWithTax, InvoiceId = i.InvoiceId, Dated = i.DateAdded.Value , RecieptNo = i.recieptNumber }).ToList();
             }
             else
             {
                 sale = db.Sales.Where(i => (i.DateAdded >= Datefrom && i.DateAdded <= Dateto) && i.InventoryTypeId == 2 && i.WarehouseId == warehouse)
-                  .Select(i => new SaleDto { ProductName = i.Product_ProductId.Name, Quantity = i.Quantity, CustomerName = i.customerName, SalePrice = i.SalePrice, Amount = i.TotalAmount, WithTaxAmount = i.TotalAmountWithTax, InvoiceId = i.InvoiceId, Dated = i.DateAdded.Value, RecieptNo = i.recieptNumber }).ToList();
+                  .Select(i => new SaleDto { Singles = i.Singles, UnitSalePrice = i.UnitSalePrice, PaymentType = i.PaymentMode_PaymentModeId.Name, Currency = i.Currency, ProductName = i.Product_ProductId.Name, Quantity = i.Quantity, CustomerName = i.customerName, SalePrice = i.SalePrice, Amount = i.TotalAmount, WithTaxAmount = i.TotalAmountWithTax, InvoiceId = i.InvoiceId, Dated = i.DateAdded.Value, RecieptNo = i.recieptNumber }).ToList();
             }
             ViewBag.company = invoiceFormat.CompanyName;
             return View(sale);
@@ -1018,16 +1019,16 @@ namespace ShopMate.Controllers
                         ViewBag.ProductId = new SelectList(db.Products.Where(i => i.WarehouseId == warehouse), "Id", "Name", ProductId);
                         ViewBag.productType = new SelectList(db.InvoiceTypes, "Id", "Name");
                         ViewBag.WarehouseId = new SelectList(db.Warehouses.Where(n => n.Id == warehouse), "Id", "Name");
-                        sale = db.Sales.Where(i => (i.DateAdded >= Datefrom && i.DateAdded <= Dateto) && i.WarehouseId == warehouse && i.InventoryTypeId == 2 && i.ProductId == ProductId)
-                    .Select(i => new SaleDto { ProductName = i.Product_ProductId.Name, CustomerName = i.customerName, Quantity = i.Quantity, SalePrice = i.SalePrice, Amount = i.TotalAmount, WithTaxAmount = i.TotalAmountWithTax, InvoiceId = i.InvoiceId, Dated = i.DateAdded.Value, RecieptNo = i.recieptNumber }).ToList();
+                        sale = db.Sales.Where(i => (i.DateAdded >= Datefrom && i.DateAdded <= Dateto) && i.WarehouseId == warehouse && i.InventoryTypeId == 2 && i.ProductId == ProductId).Include(p=>p.PaymentMode_PaymentModeId)
+                    .Select(i => new SaleDto { PaymentType = i.PaymentMode_PaymentModeId.Name, ProductName = i.Product_ProductId.Name, CustomerName = i.customerName, Quantity = i.Quantity, SalePrice = i.SalePrice, Amount = i.TotalAmount, WithTaxAmount = i.TotalAmountWithTax, InvoiceId = i.InvoiceId, Dated = i.DateAdded.Value, RecieptNo = i.recieptNumber }).ToList();
                     }
                     else
                     {
                         ViewBag.ProductId = new SelectList(db.Products.Where(i => i.WarehouseId == warehouse), "Id", "Name", ProductId);
                         ViewBag.productType = new SelectList(db.InvoiceTypes, "Id", "Name");
                         ViewBag.WarehouseId = new SelectList(db.Warehouses.Where(n => n.Id == warehouse), "Id", "Name");
-                        sale = db.Sales.Where(i => (i.DateAdded >= Datefrom && i.DateAdded <= Dateto) && i.WarehouseId == warehouse && i.InventoryTypeId == 2)
-                        .Select(i => new SaleDto { ProductName = i.Product_ProductId.Name, CustomerName = i.customerName, Quantity = i.Quantity, SalePrice = i.SalePrice, Amount = i.TotalAmount, WithTaxAmount = i.TotalAmountWithTax, InvoiceId = i.InvoiceId, Dated = i.DateAdded.Value, RecieptNo = i.recieptNumber }).ToList();
+                        sale = db.Sales.Where(i => (i.DateAdded >= Datefrom && i.DateAdded <= Dateto) && i.WarehouseId == warehouse && i.InventoryTypeId == 2).Include(p => p.PaymentMode_PaymentModeId)
+						.Select(i => new SaleDto { PaymentType = i.PaymentMode_PaymentModeId.Name, ProductName = i.Product_ProductId.Name, CustomerName = i.customerName, Quantity = i.Quantity, SalePrice = i.SalePrice, Amount = i.TotalAmount, WithTaxAmount = i.TotalAmountWithTax, InvoiceId = i.InvoiceId, Dated = i.DateAdded.Value, RecieptNo = i.recieptNumber }).ToList();
                     }
                 }
                 else
@@ -1091,7 +1092,7 @@ namespace ShopMate.Controllers
                         ViewBag.productType = new SelectList(db.InvoiceTypes, "Id", "Name");
                         ViewBag.WarehouseId = new SelectList(db.Warehouses.Where(n => n.Id == warehouse), "Id", "Name");
                         sale = db.Sales.Where(i => (i.DateAdded >= Datefrom && i.DateAdded <= Dateto) && i.InventoryTypeId == 2 && i.WarehouseId == warehouse && i.Product_ProductId.ProductType== productTypes)
-                    .Select(i => new SaleDto { ProductName = i.Product_ProductId.Name, CustomerName = i.customerName, Quantity = i.Quantity, SalePrice = i.SalePrice, Amount = i.TotalAmount, WithTaxAmount = i.TotalAmountWithTax, InvoiceId = i.InvoiceId, Dated = i.DateAdded.Value, RecieptNo = i.recieptNumber }).ToList();
+                    .Select(i => new SaleDto {  ProductName = i.Product_ProductId.Name, CustomerName = i.customerName, Quantity = i.Quantity, SalePrice = i.SalePrice, Amount = i.TotalAmount, WithTaxAmount = i.TotalAmountWithTax, InvoiceId = i.InvoiceId, Dated = i.DateAdded.Value, RecieptNo = i.recieptNumber }).ToList();
                     }
 
                 }

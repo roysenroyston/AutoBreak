@@ -16,10 +16,9 @@ namespace ShopMate.Controllers
 {
     public class ProductUpdateController : BaseController
     {
+		private SIContext db = new SIContext();
 
-        private SIContext db = new SIContext();
-
-        string userId = Env.GetUserInfo("name");
+		string userId = Env.GetUserInfo("name");
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -36,219 +35,195 @@ namespace ShopMate.Controllers
         }
 
 
-        [HttpPost]
-        public async Task<ActionResult> UpdateFile(HttpPostedFileBase importFile)
-        {
-            if (importFile == null)
-            {
-                return Json(new { Status = 0, Message = "No File Selected" });
-            }
+		[HttpPost]
+		public ActionResult UpdateFile(HttpPostedFileBase importFile)
+		{
+			if (importFile == null)
+			{
+				return Json(new { Status = 0, Message = "No File Selected" });
+			}
 
-            try
-            {
-                var fileData = GetDataFromCSVFile(importFile.InputStream);
+			// Begin a database transaction
+			using (var transaction = db.Database.BeginTransaction())
+			{
 
-                foreach (Product product in fileData)
-                {
-                    Product updateProduct = db.Products.Where(i => i.Id == product.Id).FirstOrDefault();
-                    //  Product updateProduct = db.Products.Where(i => i.Id == product.Id).FirstOrDefault();
-                    var caseId =  db.Products.FirstOrDefault(m => m.Name == product.ProductType && m.WarehouseId== product.WarehouseId).Id;
-                    if ( updateProduct != null )
-                    {
+				try
+				{
+					var fileData = GetDataFromCSVFile(importFile.InputStream).ToList();
 
-                        if (updateProduct.Id == product.Id && updateProduct.WarehouseId == product.WarehouseId) {
+					// Preload current user (assuming 'userId' is a class field or property)
+					User currentUser = db.Users.FirstOrDefault(n => n.UserName == userId) ?? throw new Exception("User not found");
+					int UserId = currentUser.Id;
 
-                            updateProduct.Name = product.Name;
-                            updateProduct.BarCode = product.BarCode;
-                            updateProduct.SalePrice = product.SalePrice;
-                            updateProduct.ProductDescription = product.ProductDescription;
-                            updateProduct.PurchasePrice = product.PurchasePrice;
-                            updateProduct.WarehouseId = product.WarehouseId;
-                            updateProduct.ProductCaseId = caseId;
-                            updateProduct.NumOfSinglesInCase = product.NumOfSinglesInCase;
+					// Preload existing products that match any Id in the CSV
+					var existingProductIds = fileData.Select(p => p.Id).Distinct().ToList();
+					var existingProducts = db.Products
+						.Where(p => existingProductIds.Contains(p.Id))
+						.ToDictionary(p => p.Id);
 
-                            db.Entry(updateProduct).State = EntityState.Modified;
-                            db.SaveChanges();
+					// Preload all possible 'case' products (Name + WarehouseId) for mapping
+					var caseProducts = db.Products
+						.Select(p => new { p.Name, p.WarehouseId, p.Id })
+						.ToList();
+					var caseIdLookup = caseProducts
+						.GroupBy(p => new { p.Name, p.WarehouseId })
+						.ToDictionary(g => g.Key, g => g.First().Id);
 
-                            //WarehouseStock stock = db.WarehouseStocks.FirstOrDefault(b => b.ProductId == product.Id);
-                            //stock.WarehouseId = product.WarehouseId;
-                            //stock.RemainingQuantity = product.RemainingQuantity;
-                            //db.Entry(stock).State = EntityState.Modified;
-                            //db.SaveChanges();
+					// Collections for batched operations
+					var productsToUpdate = new List<Product>();
+					var newProducts = new List<Product>();          // new Product entities to be added
+					var tempNewProductData = new List<(Product entity, Product source)>(); // store source data for later stock creation
 
-                        }
-                        else
-                        {
-                            Product newprod = new Product();
-                            int UserId = db.Users.FirstOrDefault(n => n.UserName == userId).Id;
-                           // newprod.Id = product.Id;
-                            newprod.Name = product.Name;
-                            newprod.BarCode = product.BarCode;
-                            newprod.SalePrice = product.SalePrice;
-                            newprod.ProductDescription = product.ProductDescription;
-                            newprod.PurchasePrice = product.PurchasePrice;
-                            newprod.IsActive = true;
-                            newprod.AddedBy = UserId;
-                            newprod.WarehouseId = product.WarehouseId;
-                            newprod.StockAlert = 10;
-                            newprod.ProductCategoryId = 1;
-                            newprod.NumOfSinglesInCase = product.NumOfSinglesInCase;
-                            newprod.DateAdded = DateTime.Now;
-                            newprod.DateModied = DateTime.Now;
-                            newprod.TaxId = 5;
-                            newprod.ProductCaseId = caseId;
-                            db.Products.Add(newprod);
-                            db.SaveChanges();
+					// For stocks and warehouse stocks – will be populated after new product IDs are known
+					var productStocksToAdd = new List<ProductStock>();
+					var warehouseStocksToAdd = new List<WarehouseStock>();
 
-                            ProductStock ps = new ProductStock();
-                            ps.ProductId = product.Id;
+					foreach (Product product in fileData)
+					{
+						// Get caseId (original logic: assumes it always exists, throws if null)
+						var caseKey = new { Name = product.ProductType, WarehouseId = product.WarehouseId };
+						if (!caseIdLookup.TryGetValue(caseKey, out int caseId))
+							continue;
 
+						if (existingProducts.TryGetValue(product.Id, out Product updateProduct))
+						{
+							// Product exists in DB
+							if (updateProduct.Id == product.Id && updateProduct.WarehouseId == product.WarehouseId)
+							{
+								// Update existing product (no stock changes)
+								updateProduct.Name = product.Name;
+								updateProduct.BarCode = product.BarCode;
+								updateProduct.SalePrice = product.SalePrice;
+								updateProduct.ProductDescription = product.ProductDescription;
+								updateProduct.PurchasePrice = product.PurchasePrice;
+								updateProduct.WarehouseId = product.WarehouseId;
+								updateProduct.ProductCaseId = caseId;
+								updateProduct.NumOfSinglesInCase = product.NumOfSinglesInCase;
+								updateProduct.UnitSalePrice = product.UnitSalePrice;
+								updateProduct.ProductType = product.ProductType;
+								db.Entry(updateProduct).State = EntityState.Modified;
+								productsToUpdate.Add(updateProduct);
+							    db.SaveChanges();
+							}
+							else
+							{
+								// Warehouse mismatch – treat as new product (original logic)
+								var newprod = CreateNewProductEntity(product, UserId, caseId);
+								newProducts.Add(newprod);
+								tempNewProductData.Add((newprod, product));
+								db.SaveChanges();
+							}
+						}
+						else
+						{
+							// Product does not exist – create new
+							var newprod = CreateNewProductEntity(product, UserId, caseId);
+							newProducts.Add(newprod);
+							tempNewProductData.Add((newprod, product));
+							db.SaveChanges();
+						}
+					}
 
-                            ps.Quantity = product.RemainingQuantity;
+					// 1. Save all new products to generate their Ids
+					if (newProducts.Any())
+					{
+						db.Products.AddRange(newProducts);
+						db.SaveChanges();
+					}
 
-                            ps.PurchasePrice = product.PurchasePrice;
+					// 2. Now build stock records using the generated Ids
+					foreach (var (newprod, source) in tempNewProductData)
+					{
+						// Use the REAL database-generated product ID, not the CSV Id
+						ProductStock ps = new ProductStock
+						{
+							ProductId = newprod.Id,  
+							Quantity = source.RemainingQuantity,
+							PurchasePrice = source.PurchasePrice
+						};
+						ps.TotalPurchaseAmount = source.PurchasePrice * ps.Quantity;
+						ps.SalePrice = source.SalePrice;
+						ps.Discount = 0;
+						ps.TotalSaleAmount = ps.SalePrice * ps.Quantity;
+						decimal TaxAmount = 0;
+						ps.TotalSaleAmountWithTax = ps.SalePrice * ps.Quantity;
+						ps.TaxAmount = TaxAmount;
+						ps.ProfitWithTax = (ps.TotalSaleAmount - ps.TotalPurchaseAmount);
+						ps.Description = "Product Import";
+						ps.AddedBy = UserId;
+						ps.DateAdded = DateTime.Now;
+						ps.ModifiedBy = UserId;
+						ps.DateModied = DateTime.Now;
+						ps.InventoryTypeId = 1007;
+						ps.WarehouseId = source.WarehouseId;
+						ps.IsFormal = true;
+						ps.RemainingQuantity = source.RemainingQuantity;
+						productStocksToAdd.Add(ps);
+						db.SaveChanges();
 
-                            ps.TotalPurchaseAmount = (product.PurchasePrice * ps.Quantity);
+						// WarehouseStock (already correct – uses newprod.Id)
+						WarehouseStock newProduct = new WarehouseStock
+						{
+							ProductId = newprod.Id,
+							WarehouseId = newprod.WarehouseId,
+							RemainingQuantity = source.RemainingQuantity,
+							ReturnedQuantity = 0
+						};
+						warehouseStocksToAdd.Add(newProduct);
+						db.SaveChanges();
+					}
 
-                            ps.SalePrice = product.SalePrice;
-                            ps.Discount = 0;
-                            ps.TotalSaleAmount = (ps.SalePrice * ps.Quantity);
+					// 3. Add all stock records and save
+					if (productStocksToAdd.Any())
+						db.ProductStocks.AddRange(productStocksToAdd);
+					if (warehouseStocksToAdd.Any())
+						db.WarehouseStocks.AddRange(warehouseStocksToAdd);
+					db.SaveChanges();
 
-                            decimal TaxAmount = 0;
+					// Commit the transaction – all operations succeeded
+					transaction.Commit();
 
+					return Json(new { Status = 1, Message = "File Imported Successfully ", items = fileData.ToArray() });
+				}
+				catch (Exception ex)
+				{
+					// Rollback is automatic if transaction is disposed without commit,
+					// but we explicitly rollback for clarity
+					transaction.Rollback();
+					return Json(new { Status = 0, Message = ex.Message });
+				}
+			}
+		}
 
-                            ps.TotalSaleAmountWithTax = (ps.SalePrice * ps.Quantity);//+ TaxAmount
-                            ps.TaxAmount = TaxAmount;
-
-                            //  ps.Profit = (ps.TotalSaleAmount - (ps.TotalPurchaseAmount)) - (discount / mysellCount.Count);//+ TaxAmount
-                            ps.ProfitWithTax = (ps.TotalSaleAmount - ps.TotalPurchaseAmount);//+ TaxAmount
-
-                            ps.Description = "Product Import";
-                            ps.AddedBy = UserId;
-                            ps.DateAdded = DateTime.Now;
-                            ps.ModifiedBy = UserId;
-                            ps.DateModied = DateTime.Now;
-                            ps.InventoryTypeId = 1007;
-                            ps.WarehouseId = product.WarehouseId;
-                            ps.IsFormal = true;
-                            ps.RemainingQuantity = product.RemainingQuantity;
-
-                            db.ProductStocks.Add(ps);
-                            db.SaveChanges();
-
-
-
-
-                            WarehouseStock newProduct = new WarehouseStock();
-                            newProduct.ProductId = newprod.Id;
-                            newProduct.WarehouseId = newprod.WarehouseId;
-                            newProduct.RemainingQuantity = product.RemainingQuantity;
-                            newProduct.ReturnedQuantity = 0;
-                            db.WarehouseStocks.Add(newProduct);
-                            db.SaveChanges();
-
-                        }
-
-                    }
-                    else
-                    {
-                        Product newprod = new Product();
-                        int UserId = db.Users.FirstOrDefault(n => n.UserName == userId).Id;
-                       // newprod.Id = product.Id;
-                        newprod.Name = product.Name;
-                        newprod.BarCode = product.BarCode;
-                        newprod.SalePrice = product.SalePrice;
-                        newprod.ProductDescription = product.ProductDescription;
-                        newprod.PurchasePrice = product.PurchasePrice;
-                        newprod.IsActive = true;
-                        newprod.AddedBy = UserId;
-                        newprod.WarehouseId = product.WarehouseId;
-                        newprod.StockAlert = 10;
-                        newprod.ProductCategoryId = 1;
-                        newprod.NumOfSinglesInCase = product.NumOfSinglesInCase;
-                        newprod.DateAdded = DateTime.Now;
-                        newprod.DateModied = DateTime.Now;
-                        newprod.TaxId = 5;
-                        newprod.ProductCaseId = caseId;
-                        db.Products.Add(newprod);
-                        db.SaveChanges();
-
-
-                        ProductStock ps = new ProductStock();
-                        ps.ProductId = product.Id;
-
-
-                        ps.Quantity = product.RemainingQuantity;
-
-                        ps.PurchasePrice = product.PurchasePrice;
-
-                        ps.TotalPurchaseAmount = (product.PurchasePrice * ps.Quantity);
-
-                        ps.SalePrice = product.SalePrice;
-                        ps.Discount = 0;
-                        ps.TotalSaleAmount = (ps.SalePrice * ps.Quantity);
-
-                        decimal TaxAmount = 0;
-
-
-                        ps.TotalSaleAmountWithTax = (ps.SalePrice * ps.Quantity);//+ TaxAmount
-                        ps.TaxAmount = TaxAmount;
-
-                        //  ps.Profit = (ps.TotalSaleAmount - (ps.TotalPurchaseAmount)) - (discount / mysellCount.Count);//+ TaxAmount
-                        ps.ProfitWithTax = (ps.TotalSaleAmount - ps.TotalPurchaseAmount);//+ TaxAmount
-
-                        ps.Description = "Product Import";
-                        ps.AddedBy = UserId;
-                        ps.DateAdded = DateTime.Now;
-                        ps.ModifiedBy = UserId;
-                        ps.DateModied = DateTime.Now;
-                        ps.InventoryTypeId = 1007;
-                        ps.WarehouseId = product.WarehouseId;
-                        ps.IsFormal = true;
-                        ps.RemainingQuantity = product.RemainingQuantity;
-
-                        db.ProductStocks.Add(ps);
-                        db.SaveChanges();
-
-
-
-
-
-
-                        WarehouseStock newProduct = new WarehouseStock();
-                        newProduct.ProductId = newprod.Id;
-                        newProduct.WarehouseId = newprod.WarehouseId;
-                        newProduct.RemainingQuantity = product.RemainingQuantity;
-                        newProduct.ReturnedQuantity = 0;
-                        db.WarehouseStocks.Add(newProduct);
-                        db.SaveChanges();
-
-
-
-                    }
-                
-              
-                }
-
-                return Json(new { Status = 1, Message = "File Imported Successfully ", items = fileData.ToArray() });
-
-                //var dtProducts = fileData.ToDataTable();
-                //var tblProductParameter = new SqlParameter("Product", SqlDbType.Structured)
-                //{
-                //    TypeName = "dbo.Product",
-                //    Value = dtProducts
-                //};
-                //await db.Database.ExecuteSqlCommandAsync("EXEC spBulkImportProduct @Product", tblProductParameter);
-                //return Json(new { Status = 1, Message = "File Imported Successfully " });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { Status = 0, Message = ex.Message });
-            }
-        }
+		// Helper method to create a new Product entity without saving (pure logic extraction)
+		private Product CreateNewProductEntity(Product source, int userId, int caseId)
+		{
+			Product newprod = new Product
+			{
+				// newprod.Id = product.Id;  (commented in original, so omitted)
+				Name = source.Name,
+				BarCode = source.BarCode,
+				SalePrice = source.SalePrice,
+				ProductDescription = source.ProductDescription,
+				PurchasePrice = source.PurchasePrice,
+				IsActive = true,
+				AddedBy = userId,
+				WarehouseId = source.WarehouseId,
+				StockAlert = 10,
+				ProductCategoryId = 1,
+				NumOfSinglesInCase = source.NumOfSinglesInCase,
+				DateAdded = DateTime.Now,
+				DateModied = DateTime.Now,
+				TaxId = 5,
+				ProductCaseId = caseId,
+				UnitSalePrice = source.UnitSalePrice,
+				ProductType = source.ProductType
+			};
+			return newprod;
+		}
 
 
-        private List<Product> GetDataFromCSVFile(Stream stream)
+		private List<Product> GetDataFromCSVFile(Stream stream)
         {
             var empList = new List<Product>();
             int Ngoni = 0;
@@ -282,14 +257,13 @@ namespace ShopMate.Controllers
                                 ProductType = Convert.ToString(objDataRow["Case Name"].ToString()),
                                 PurchasePrice = Convert.ToDecimal(objDataRow["Purchase Price"].ToString()),
                                 SalePrice = Convert.ToDecimal(objDataRow["Sale Price"].ToString()),
-                               ProductDescription = Convert.ToString(objDataRow["Product Description"].ToString()),
-                               WarehouseId = Convert.ToInt16(objDataRow["Warehouse Id"].ToString()),
-                               RemainingQuantity = Convert.ToDecimal(objDataRow["RemainingQuantity"].ToString()),
+                                ProductDescription = Convert.ToString(objDataRow["Product Description"].ToString()),
+                                WarehouseId = Convert.ToInt16(objDataRow["Warehouse Id"].ToString()),
+                                RemainingQuantity = Convert.ToDecimal(objDataRow["RemainingQuantity"].ToString()),
                                 NumOfSinglesInCase = Convert.ToInt32(objDataRow["No Of Singles"].ToString()),
-
-                                //Ngoni to add spefic parameters for the product model
-
-                            });
+								UnitSalePrice = Convert.ToDecimal(objDataRow["UnitSalePrice"].ToString()),
+								//Ngoni to add spefic parameters for the product model
+							});
                             Ngoni = Ngoni + 1;
                         }
                     }

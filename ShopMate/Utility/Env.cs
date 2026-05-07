@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
@@ -10,8 +11,8 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
+using Newtonsoft.Json.Linq;
 using ShopMate.Models;
-using System.Globalization;
 
 namespace ShopMate
 {
@@ -263,7 +264,10 @@ namespace ShopMate
         {
 
             StringBuilder sb = new StringBuilder();
+            
             SIContext db = new SIContext();
+            try
+            {
             //get role id and role regarding to role bind this
             var userId = Convert.ToInt32(Env.GetUserInfo("userid"));
             var RoleId = Convert.ToInt32(Env.GetUserInfo("roleid"));
@@ -316,7 +320,13 @@ namespace ShopMate
             }
 
 
-        }
+			}
+			catch (Exception ex) {
+				return MvcHtmlString.Create(sb.ToString());
+			}
+
+
+		}
 
 
 
@@ -373,38 +383,45 @@ namespace ShopMate
 
         public static string GetUserExpiry()
         {
-            var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
-            int userId = Convert.ToInt32(identity.Claims.Where(c => c.Type == ClaimTypes.Sid).Select(c => c.Value).SingleOrDefault());
-            var ngodza = db.Users.FirstOrDefault(k => k.Id == userId);
-            String Value = "";
-            if (ngodza != null)
+            try
             {
-
-                DateTime dateOfJoining = (DateTime)ngodza.JoinDate; // Example
-
-
-                // Calculate time difference
-                TimeSpan timeDifference = DateTime.Now - dateOfJoining;
-
-                //     DateTime dateOfJoining = (DateTime)ngodza.JoinDate; // Example
-                DateTime newDate = dateOfJoining.AddDays(365);
-
-                TimeSpan daysleft = newDate - DateTime.Now;
-                int more = (int)daysleft.TotalDays;
-                // Check if one year has passed
-                if (timeDifference.TotalDays >= 335)
+                var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+                Console.WriteLine("User id:::");
+                int userId = Convert.ToInt32(identity.Claims.Where(c => c.Type == ClaimTypes.Sid).Select(c => c.Value).SingleOrDefault());
+                Console.WriteLine("User id.........:::" + userId);
+                var ngodza = db.Users.FirstOrDefault(k => k.Id == userId);
+                String Value = "";
+                if (ngodza != null)
                 {
-                    Value = "Your account is about to expire you are left with " + more + " days";
-                    //ModelState.AddModelError(string.Empty, "You are not allowed to log in as one year has passed since your date of joining.");
-                    //ViewBag.Msg = "Your Account Expired, Contact 0783 284 440";
-                }
 
+                    DateTime dateOfJoining = (DateTime)ngodza.JoinDate; // Example
+
+
+                    // Calculate time difference
+                    TimeSpan timeDifference = DateTime.Now - dateOfJoining;
+
+                    //     DateTime dateOfJoining = (DateTime)ngodza.JoinDate; // Example
+                    DateTime newDate = dateOfJoining.AddDays(365);
+
+                    TimeSpan daysleft = newDate - DateTime.Now;
+                    int more = (int)daysleft.TotalDays;
+                    // Check if one year has passed
+                    if (timeDifference.TotalDays >= 335)
+                    {
+                        Value = "Your account is about to expire you are left with " + more + " days";
+                        //ModelState.AddModelError(string.Empty, "You are not allowed to log in as one year has passed since your date of joining.");
+                        //ViewBag.Msg = "Your Account Expired, Contact 0783 284 440";
+                    }
+
+                }
+				return Value;
+			}
+            catch (Exception ex) {
+                Console.WriteLine("Error..."+ex.Message);
             }
 
-
-            return Value;
-
-        }
+            return "";
+		}
         public static DateTime AddTimeInDate(DateTime comingDate, string time)
         {
 

@@ -2,14 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using System.IO;
-using ShopMate.Models;
-using System.Data.SqlClient;
+using ShopMate.Migrations;
 using ShopMate.ModelDto;
+using ShopMate.Models;
 using WebErrorLogging.Utilities;
 
 namespace ShopMate.Controllers
@@ -161,6 +162,7 @@ namespace ShopMate.Controllers
             Convert.ToString(c.WarehouseId),
            // Convert.ToString(c.StockAlert),
             Convert.ToString(pd.RemainingQuantity),
+			Convert.ToString(pd.RemainingSinglesQuantity),
          //   Convert.ToString(tax.FirstOrDefault(i=>i.Id==c.TaxId).TaxRate+" %")
                 
                 
@@ -420,98 +422,96 @@ namespace ShopMate.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
-        public ActionResult Create(Product ObjProduct, HttpPostedFileBase ProductImage, string HideImage1)
-        {
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            string result = "Error! Product not added! The Product already exist.";
-            int warehouse = int.Parse(Env.GetUserInfo("WarehouseId"));
-            var tak = db.Products.Where(i => i.Name == ObjProduct.Name && i.WarehouseId == ObjProduct.WarehouseId).FirstOrDefault();
-            var tak2 = db.WarehouseStocks.Where(i => i.Product_ProductId.Name == ObjProduct.Name && i.WarehouseId == warehouse).FirstOrDefault();
-            var warehouses = db.Warehouses.ToList();
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    if (ProductImage != null)
-                    {
-                        var fileName = MicrosoftHelper.MSHelper.StarkFileUploaderCSharp(ProductImage, Server.MapPath("~/Uploads"));
-                        ModelState.Clear();
-                        ObjProduct.ProductImage = fileName;
-                    }
-                    else
-                    {
-                        ObjProduct.ProductImage = HideImage1;
-                    }
-                 
-                    if (tak != null)
-                    {
-                        //foreach (var item in warehouses)
-                        {
-                            if (tak2 == null)
-                            {
-                                WarehouseStock wstock = new WarehouseStock();
-                                wstock.ProductId = db.Products.FirstOrDefault(i => i.Name == ObjProduct.Name).Id;
-                                wstock.RemainingQuantity = 0;
-                                 wstock.WarehouseId = warehouse;
-                                db.WarehouseStocks.Add(wstock);
-                                db.SaveChanges(userId);
-                            }
+		public ActionResult Create(Product ObjProduct, HttpPostedFileBase ProductImage, string HideImage1)
+		{
+			System.Text.StringBuilder sb = new System.Text.StringBuilder();
+			int warehouse = int.Parse(Env.GetUserInfo("WarehouseId"));
 
-                        }
-                        sb.Append("Product Already Exist ");
-                        return Content(sb.ToString());
-                       // return Json(result, JsonRequestBehavior.AllowGet);
-                    }
-                    else
-                    {
-                        if(ObjProduct.ProductCaseId == null)
-                        {
-                            ObjProduct.ProductCaseId = 1;
-                        }
-                        ObjProduct.WarehouseId = warehouse;
-                        db.Products.Add(ObjProduct);
-                        //db.SaveChanges(userId);
-                   //     foreach (var item in warehouses)
-                        {
-                            WarehouseStock wstock = new WarehouseStock();
-                            wstock.ProductId = ObjProduct.Id;
-                            wstock.RemainingQuantity = 0;
-                            wstock.WarehouseId = warehouse;
-                            db.WarehouseStocks.Add(wstock);
-                            db.SaveChanges(userId);
-                            //result = "Success! Product Added";
-                        }
-                        //result = "Success! Product Added";
-                     
-                       //return Json(result, JsonRequestBehavior.AllowGet);
-                    }
+			using (var transaction = db.Database.BeginTransaction())
+			{
+				try
+				{
+					var tak = db.Products.Where(i => i.Name == ObjProduct.Name && i.WarehouseId == ObjProduct.WarehouseId).FirstOrDefault();
+					var tak2 = db.WarehouseStocks.Where(i => i.Product_ProductId.Name == ObjProduct.Name && i.WarehouseId == warehouse).FirstOrDefault();
+					var warehouses = db.Warehouses.ToList();
 
+					if (ModelState.IsValid)
+					{
+						if (ProductImage != null)
+						{
+							var fileName = MicrosoftHelper.MSHelper.StarkFileUploaderCSharp(ProductImage, Server.MapPath("~/Uploads"));
+							ModelState.Clear();
+							ObjProduct.ProductImage = fileName;
+						}
+						else
+						{
+							ObjProduct.ProductImage = HideImage1;
+						}
 
-                    sb.Append("Sumitted");
-                    return Content(sb.ToString());
-                }
-                else
-                {
-                    foreach (var key in this.ViewData.ModelState.Keys)
-                    {
-                        foreach (var err in this.ViewData.ModelState[key].Errors)
-                        {
-                            sb.Append(err.ErrorMessage + "<br/>");
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Helper.WriteError(ex, ex.Message);
-                sb.Append("Error :" + ex.Message);
-            }
+						if (tak != null)
+						{
+							if (tak2 == null)
+							{
+								WarehouseStock wstock = new WarehouseStock
+								{
+									ProductId = db.Products.FirstOrDefault(i => i.Name == ObjProduct.Name).Id,
+									RemainingQuantity = 0,
+									WarehouseId = warehouse
+								};
+								db.WarehouseStocks.Add(wstock);
+								db.SaveChanges(userId);
+							}
 
-            return Content(sb.ToString());
+							sb.Append("Product Already Exist ");
+							transaction.Commit(); // Commit before returning
+							return Content(sb.ToString());
+						}
+						else
+						{
+							if (ObjProduct.ProductCaseId == null)
+							{
+								ObjProduct.ProductCaseId = 1;
+							}
+							ObjProduct.WarehouseId = warehouse;
+							db.Products.Add(ObjProduct);
+							db.SaveChanges(userId); // Save to get the Product Id
 
-        }
-        // GET: /Product/Edit/5
-        public ActionResult Edit(int? id)
+							WarehouseStock wstock = new WarehouseStock();
+							wstock.ProductId = ObjProduct.Id;
+							wstock.RemainingQuantity = 0;
+							wstock.WarehouseId = warehouse;
+							db.WarehouseStocks.Add(wstock);
+							db.SaveChanges(userId);
+
+							sb.Append("Submitted");
+							transaction.Commit(); // Commit transaction
+							return Content(sb.ToString());
+						}
+					}
+					else
+					{
+						foreach (var key in this.ViewData.ModelState.Keys)
+						{
+							foreach (var err in this.ViewData.ModelState[key].Errors)
+							{
+								sb.Append(err.ErrorMessage + "<br/>");
+							}
+						}
+						throw new Exception("Server error");
+					}
+				}
+				catch (Exception ex)
+				{
+					transaction.Rollback(); // Rollback on error
+					Helper.WriteError(ex, ex.Message);
+					sb.Append("Error :" + ex.Message);
+				}
+			}
+
+			return Content(sb.ToString());
+		}
+		// GET: /Product/Edit/5
+		public ActionResult Edit(int? id)
         {
             if (id == null)
             {

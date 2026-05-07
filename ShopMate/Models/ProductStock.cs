@@ -93,5 +93,8 @@ namespace ShopMate.Models
 
         public bool IsFormal { get; set; }
         public Decimal RemainingQuantity { get; set; }
-    }
+
+		[DisplayName("Singles quantiry")]
+		public Decimal RemainingSinglesQuantity { get; set; }
+	}
 }

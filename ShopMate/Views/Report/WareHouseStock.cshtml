@@ -178,14 +178,15 @@
                                 <div style="width:96%;">
                                     <table id="tbInvoiceItem" class="table table-striped table-bordered">
                                         <thead style="background-color:#e5e2e2;">
-                                            <tr>
-                                                <th>S.No</th>
-                                                <th>Product Name </th>
-                                                <th>Barcode</th>
-                                                <th>Product Description</th>
-                                                <th> Remaining Quantity </th>
-                                                <th>Stock Value</th>
-                                            </tr>
+											<tr>
+												<th>S.No</th>
+												<th>Product Name </th>
+												<th>Barcode</th>
+												<th>Product Description</th>
+												<th> Remaining Quantity </th>
+												<th> Remaining Singles Quantity </th>
+												<th>Stock Value</th>
+											</tr>
                                         </thead>
                                         <tbody>
                                             @if (Model != null)
@@ -193,14 +194,15 @@
                                                 int i = 1;
                                                 foreach (var item in Model)
                                                 {
-                                                    <tr>
-                                                        <td>@i</td>
-                                                        <td> @item.ProductName </td>
-                                                        <td>@item.Barcode</td>
-                                                        <td> @item.ProductDescription </td>
-                                                        <td> @item.Quantity </td>
-                                                         <td> @item.stockAmount </td>
-                                                    </tr>
+													<tr>
+														<td>@i</td>
+														<td> @item.ProductName </td>
+														<td>@item.Barcode</td>
+														<td> @item.ProductDescription </td>
+														<td> @item.Quantity </td>
+														<td> @item.Re </td>
+														<td> @item.stockAmount </td>
+													</tr>
                                                     i++;
                                                 }
 

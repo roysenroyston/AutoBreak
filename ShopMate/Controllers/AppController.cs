@@ -1,20 +1,23 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
-using ShopMate.Models;
-using Newtonsoft.Json.Linq;
-using System.Text.RegularExpressions;
-using WebErrorLogging.Utilities;
 using System.Net.Http.Formatting;
-using Newtonsoft.Json;
-using System.Threading.Tasks;
-using System.IO;
-using System.Web;
 using System.Net.Mail;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Http;
+using Microsoft.Ajax.Utilities;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using ShopMate.Migrations;
+using ShopMate.Models;
+using WebErrorLogging.Utilities;
 
 namespace ShopMate.Controllers
 {
@@ -235,7 +238,7 @@ namespace ShopMate.Controllers
 
         [Route("api/App/login")]
         [HttpPost, ActionName("login")]
-        public HttpResponseMessage login([FromBody] JObject value)
+        public HttpResponseMessage Login([FromBody] JObject value)
         {
 
 
@@ -243,7 +246,7 @@ namespace ShopMate.Controllers
             {
                 string email = value["email"].ToString();
                 string password = value["password"].ToString();
-
+                Console.WriteLine("About to login..."+email,password);
                 User login = db.Users.FirstOrDefault(i => i.UserName == email && i.CanLogin == true);
                 //  login.JoinDate
                 DateTime dateOfJoining = (DateTime)login.JoinDate; // Example
@@ -340,20 +343,22 @@ namespace ShopMate.Controllers
                 catch (InvalidOperationException ex)
                 {
                     System.Diagnostics.Debug.WriteLine("Test1 : " + ex.Message.ToString());
-
-                    Helper.WriteError(ex, ex.Message);
+					Console.WriteLine("Error..." + ex.Message);
+					Helper.WriteError(ex, ex.Message);
                     return Request.CreateResponse(HttpStatusCode.NotAcceptable, "Invalid details please try again");
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.WriteLine("Test1 : " + ex.Message.ToString());
+					Console.WriteLine("Error..." + ex.Message);
+					System.Diagnostics.Debug.WriteLine("Test1 : " + ex.Message.ToString());
                     Helper.WriteError(ex, ex.Message);
                     return Request.CreateResponse(HttpStatusCode.NotAcceptable, "Invalid details please try again");
                 }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("Test1 : " + ex.Message.ToString());
+				Console.WriteLine("Error..." + ex.Message);
+				System.Diagnostics.Debug.WriteLine("Test1 : " + ex.Message.ToString());
                 Helper.WriteError(ex, ex.Message);
                 return Request.CreateResponse(HttpStatusCode.NotAcceptable, "Invalid details please try again");
             }
@@ -364,70 +369,77 @@ namespace ShopMate.Controllers
 
         {
             System.Diagnostics.Debug.WriteLine("Test1 : " + userWarehouse);
-            var stockdata = db.WarehouseStocks.Where(i => i.WarehouseId == userWarehouse);
-      
+			var query = from sd in db.WarehouseStocks
+						join pd in db.Products on sd.ProductId equals pd.Id
+						join t in db.Taxs on pd.TaxId equals t.Id into taxGroup
+						from tax in taxGroup.DefaultIfEmpty()
+						where sd.WarehouseId == userWarehouse && pd.IsActive == true
+						orderby pd.Name
+						select new
+						{
+							id = pd.Id,
+							name = pd.Name,
+							price = pd.SalePrice,
+							//priceRTGS = pd.RtgsPrice,
+							image = pd.ProductImage,
+							tax = tax != null ? tax.TaxRate : 0,  // avoids NullReferenceException
+							barcode = pd.BarCode,
+							quantity = sd.RemainingQuantity,
+							productType = pd.ProductType,
+							numOfSinglesInCase = pd.NumOfSinglesInCase,
+							remainingSinglesQuantity = sd.RemainingSinglesQuantity,
+							remainingQuantity = sd.RemainingQuantity,
+                            unitSalePrice = pd.UnitSalePrice
+                            
+						};
 
-            var res = from sd in stockdata.ToList()
-                      join pd in db.Products on sd.ProductId equals pd.Id
-                      where pd.IsActive == true
-                      orderby pd.Name
-                      select new
-                      {
-                          id = pd.Id,
-                          name = pd.Name,
-                          price = pd.SalePrice,
-                          //priceRTGS = pd.RtgsPrice,
-                          image = pd.ProductImage,
-                          tax = db.Taxs.FirstOrDefault(i => i.Id == pd.TaxId).TaxRate,
-                          barcode = pd.BarCode,
-                          quantity = sd.RemainingQuantity
-                      };
+			var res = query.ToList();  // executes the query efficiently on the database side
 
 
 
-            //if (userWarehouse==8)
-            //{
-            //    //var roysen = db.WarehouseStocks.Where(m => m.Product_ProductId.ProductType == "case".ToLower() && m.RemainingQuantity > 0 && m.WarehouseId == userWarehouse);
-            //    //if (roysen != null)
-            //    //    if (stockdata = 2)
-            //    //    {
-            //    //    }
-            //  var  res2 = from sd in stockdata.Where(k=>k.RemainingQuantity > 0 && k.Product_ProductId.ProductType=="CASE").ToList()
-            //          join pd in db.Products on sd.ProductId equals pd.Id
-            //          where pd.IsActive == true
-                      
-            //          orderby pd.Name
-            //          select new
-            //          {
-            //              id = pd.Id,
-            //              name = pd.Name,
-            //              price = pd.SalePrice,
-            //              //priceRTGS = pd.RtgsPrice,
-            //              image = pd.ProductImage,
-            //              tax = db.Taxs.FirstOrDefault(i => i.Id == pd.TaxId).TaxRate,
-            //              barcode = pd.BarCode,
-            //              quantity = sd.RemainingQuantity
-            //          };
-            // var res3 = from sd in stockdata.Where(k =>  k.Product_ProductId.ProductType == "SINGLE").ToList()
-            //           join pd in db.Products on sd.ProductId equals pd.Id
-            //           where pd.IsActive == true
+			//if (userWarehouse==8)
+			//{
+			//    //var roysen = db.WarehouseStocks.Where(m => m.Product_ProductId.ProductType == "case".ToLower() && m.RemainingQuantity > 0 && m.WarehouseId == userWarehouse);
+			//    //if (roysen != null)
+			//    //    if (stockdata = 2)
+			//    //    {
+			//    //    }
+			//  var  res2 = from sd in stockdata.Where(k=>k.RemainingQuantity > 0 && k.Product_ProductId.ProductType=="CASE").ToList()
+			//          join pd in db.Products on sd.ProductId equals pd.Id
+			//          where pd.IsActive == true
 
-            //           orderby pd.Name
-            //           select new
-            //           {
-            //               id = pd.Id,
-            //               name = pd.Name,
-            //               price = pd.SalePrice,
-            //               //priceRTGS = pd.RtgsPrice,
-            //               image = pd.ProductImage,
-            //               tax = db.Taxs.FirstOrDefault(i => i.Id == pd.TaxId).TaxRate,
-            //               barcode = pd.BarCode,
-            //               quantity = sd.RemainingQuantity
-            //           };
-            //    res = res2.Concat(res3);
-           // }
+			//          orderby pd.Name
+			//          select new
+			//          {
+			//              id = pd.Id,
+			//              name = pd.Name,
+			//              price = pd.SalePrice,
+			//              //priceRTGS = pd.RtgsPrice,
+			//              image = pd.ProductImage,
+			//              tax = db.Taxs.FirstOrDefault(i => i.Id == pd.TaxId).TaxRate,
+			//              barcode = pd.BarCode,
+			//              quantity = sd.RemainingQuantity
+			//          };
+			// var res3 = from sd in stockdata.Where(k =>  k.Product_ProductId.ProductType == "SINGLE").ToList()
+			//           join pd in db.Products on sd.ProductId equals pd.Id
+			//           where pd.IsActive == true
 
-            System.Diagnostics.Debug.WriteLine("Test1 : " + userWarehouse);
+			//           orderby pd.Name
+			//           select new
+			//           {
+			//               id = pd.Id,
+			//               name = pd.Name,
+			//               price = pd.SalePrice,
+			//               //priceRTGS = pd.RtgsPrice,
+			//               image = pd.ProductImage,
+			//               tax = db.Taxs.FirstOrDefault(i => i.Id == pd.TaxId).TaxRate,
+			//               barcode = pd.BarCode,
+			//               quantity = sd.RemainingQuantity
+			//           };
+			//    res = res2.Concat(res3);
+			// }
+
+			System.Diagnostics.Debug.WriteLine("Test1 : " + userWarehouse);
 
             //return Request.CreateResponse(HttpStatusCode.OK, res);
 
@@ -485,174 +497,299 @@ namespace ShopMate.Controllers
 
         [Route("api/App/sell")]
         [HttpPost, ActionName("sell")]
-        public HttpResponseMessage sell([FromBody] JObject sell)
-        {
-            Helper.WriteDebug(new Exception(), sell["sell"].ToString());
-            var test = false;
+		public HttpResponseMessage Sell([FromBody] JObject sell)
+		{
+			Helper.WriteDebug(new Exception(), sell["sell"].ToString());
+			var test = false;
+			var result = new { trynos = "", sellsCount = 0, duplicatesCount = 0, duplicatesList = "" };
 
-            String value = sell["sell"].ToString();
-            List<MySell> maSells = JsonConvert.DeserializeObject<List<MySell>>(value);
-            var csello = new JArray();
-            var duplicates = new JArray();
-            var sellCount = new JArray();
+			string value = sell["sell"].ToString();
+			List<MySell> maSells = JsonConvert.DeserializeObject<List<MySell>>(value);
+			var csello = new JArray();
+			var duplicates = new JArray();
+			var sellCount = new JArray();
 
-            foreach (MySell mySell in maSells)
-            {
-                csello.Add(mySell.paymentMethod);
-                if (!test)
-                {
-                    User seller_user = db.Users.FirstOrDefault(i => i.Id == mySell.userId);
-                    Sale ObjSale = new Sale();
-                    foreach (var item in mySell.products)
-                    {
-                        sellCount.Add(item.prodId);
-                        var selectedProduct = db.Products.Where(i => i.Id == item.prodId).FirstOrDefault();
-                        var ObjWarehouseStock = db.WarehouseStocks.Where(i => i.ProductId == item.prodId && i.WarehouseId == seller_user.WarehouseId).FirstOrDefault();
-                        DateTime nowDate = DateTime.ParseExact(mySell.date + " " + mySell.time, "dd/MM/yyyy HH:mm:ss", null);
-                        decimal taxAmount = db.Taxs.FirstOrDefault(i => i.Id == selectedProduct.TaxId).TaxRate;
+			// Start a database transaction
+			using (var transaction = db.Database.BeginTransaction())
+			{
+				try
+				{
+					foreach (MySell mySell in maSells)
+					{
+						csello.Add(mySell.paymentMethod);
+                        var isUsd = mySell.currency.Equals("USD");
+                        var _rate = mySell.rate;
+						if (!test)
+						{
+							// Validate seller exists
+							User seller_user = db.Users.FirstOrDefault(i => i.Id == mySell.userId) ?? throw new Exception("User not found..." + mySell.userId);
+							Sale ObjSale = new Sale();
 
-                        if (mySell.currency == "USD")
-                        {
-                            ObjSale.ProductId = item.prodId;
-                            ObjSale.Quantity = item.quantity;
+							foreach (var item in mySell.products)
+							{
+								sellCount.Add(item.prodId);
+								var selectedProduct = db.Products.Where(i => i.Id == item.prodId).FirstOrDefault() ?? throw new Exception("Product not found..." + item.prodId);
+                                var productIsCase = "CASE".Equals(selectedProduct.ProductType); // check if product is case
 
-                            //ObjSale.UnitPrice = selectedProduct.PurchasePrice * item.quantity;
-                            ObjSale.SalePrice = item.price;
-                            ObjSale.TotalAmount = (item.price * ObjSale.Quantity);
-                            if (selectedProduct.TaxId != 2)
-                            {
-                                ObjSale.TotalAmountWithTax = ObjSale.TotalAmount;
-                            }
-                            else
-                            {
-                                ObjSale.TotalAmountWithTax = ObjSale.TotalAmount + (taxAmount * ObjSale.Quantity);
-                            }
-                            ObjSale.WarehouseId = (int)seller_user.WarehouseId;
-                            ObjSale.AddedBy = seller_user.Id;
-                            ObjSale.CustomerUserId = 29611;
-                            ObjSale.DateAdded = nowDate;
-                            ObjSale.DateModied = nowDate;
-                            ObjSale.ModifiedBy = seller_user.Id;
-                            ObjSale.PaidAmount = (item.price * ObjSale.Quantity);
-                            ObjSale.PaymentModeId = db.PaymentModes.FirstOrDefault(i => i.Name == mySell.currency).Id; /*PaymentModeId;*/
-                            ObjSale.InventoryTypeId = 2;
-                            ObjSale.isFormalSale = false;
-                        }
-                        else
-                        {
-                            var mypayment = db.PaymentModes.FirstOrDefault(i => i.Name == mySell.paymentMethod).Name;
-                            var mycurrency = db.Currencies.FirstOrDefault(i => i.Name == mypayment).Id;
-                            var priceRate = db.Rates.Where(i => i.CurrencyId == mycurrency).OrderByDescending(i => i.DateModified).First().CurrencyRate;
-                            ObjSale.ProductId = item.prodId;
-                            ObjSale.Quantity = item.quantity;
-                            //    ObjSale.UnitPrice = selectedProduct.PurchasePrice * item.quantity;
-                            ObjSale.SalePrice = item.price;
-                            ObjSale.TotalAmount = item.price * ObjSale.Quantity;
-                            if (selectedProduct.TaxId != 2)
-                            {
-                                ObjSale.TotalAmountWithTax = ObjSale.TotalAmount;
-                            }
-                            else
-                            {
-                                ObjSale.TotalAmountWithTax = ObjSale.TotalAmount + (taxAmount * ObjSale.Quantity);
-                            }
-                            ObjSale.WarehouseId = (int)seller_user.WarehouseId;
-                            ObjSale.AddedBy = seller_user.Id;
-                            ObjSale.CustomerUserId = 29611;
-                            ObjSale.DateAdded = nowDate;
-                            ObjSale.DateModied = nowDate;
-                            ObjSale.ModifiedBy = seller_user.Id;
-                            ObjSale.PaidAmount = item.price * ObjSale.Quantity;
-                            ObjSale.PaymentModeId = db.PaymentModes.FirstOrDefault(i => i.Name == mySell.paymentMethod).Id; /*PaymentModeId;*/
-                            ObjSale.InventoryTypeId = 2;
-                            ObjSale.rtgs = ObjSale.TotalAmount * (decimal)priceRate;
-                            ObjSale.isFormalSale = false;
-                        }
-                        ObjSale.customerName = mySell.customer;
-                        ObjSale.recieptNumber = mySell.invoiceId;
+                                int singlesQuantity = 0;
 
-                        try
-                        {
-                            db.Sales.Add(ObjSale);
-                            db.SaveChanges(seller_user.FullName);
-                            if (ObjWarehouseStock.RemainingQuantity < item.quantity)
-                            {
-                                string result = "Break Failed.";
-                                var tak = db.Products.Find(item.prodId);
-                                var me = db.WarehouseStocks.FirstOrDefault(n => n.ProductId == item.prodId && n.WarehouseId == seller_user.WarehouseId).ProductId;
-                                var tak1 = db.WarehouseStocks.FirstOrDefault(m => m.ProductId == me && m.WarehouseId == seller_user.WarehouseId);
-                                var tak2 = db.Products.FirstOrDefault(m => m.Name == "0" && m.WarehouseId == seller_user.WarehouseId);
-                                if (tak2 == null)
-                                {
-                                    tak2.Id = 1;
+                                decimal quantity = item.quantity;
+
+								if (productIsCase){ // if case look for singles
+                                    var quntities = item.quantity.ToString().Split('.');
+                                    if(quntities.Length == 2){
+                                        singlesQuantity = int.Parse(quntities[1]);
+                                        if(singlesQuantity >= selectedProduct.NumOfSinglesInCase){
+                                          throw new Exception("Number of singles must be less than :"+selectedProduct.NumOfSinglesInCase);
+                                        }
+                                        quantity = decimal.Parse(quntities[0]);
+									}
                                 }
-                                if (tak.ProductCaseId != tak2.Id)
-                                {
-                                    var ProdCase = db.Products.Find(tak.ProductCaseId);
-                                    var WareProdCase = db.WarehouseStocks.FirstOrDefault(m => m.ProductId == tak1.Product_ProductId.ProductCaseId && m.WarehouseId == seller_user.WarehouseId);
+                                var ObjWarehouseStock = db.WarehouseStocks.Where(i => i.ProductId == item.prodId && i.WarehouseId == seller_user.WarehouseId).FirstOrDefault() ?? throw new Exception("Warehouse stock not found...Product Id:" + item.prodId + ", Warehouse Id:" + seller_user.WarehouseId);
 
-                                    if (tak1.RemainingQuantity <= 0 || WareProdCase.RemainingQuantity - 5 <= ProdCase.StockAlert)
-                                    {
-                                        //Break one case
-                                        //subtract 1 case from Prodcase
-                                        WareProdCase.RemainingQuantity = WareProdCase.RemainingQuantity - 1;
+								// Check for sufficient stock before proceeding
+								if (ObjWarehouseStock.RemainingQuantity < quantity)
+								{
+									throw new Exception("Insufficient stock..." + item.prodId + "  Product Name...:" + selectedProduct.Name + ",  Remaining Quantity:" + ObjWarehouseStock.RemainingQuantity + ", Quantity:" + item.quantity);
+								}
+								DateTime nowDate;
+								try
+								{
+									nowDate = DateTime.ParseExact(mySell.date + " " + mySell.time, "dd/MM/yyyy HH:mm:ss", null);
+								}
+								catch
+								{
+									nowDate = DateTime.Now;
+								}
+                                //cal amounts
+                                var unitSalePrice = isUsd ? selectedProduct.UnitSalePrice : selectedProduct.UnitSalePrice * _rate;
+                                var totalAmountWithTax = (item.price * quantity) + (unitSalePrice * singlesQuantity);
+                                var purchasePrice = isUsd ? selectedProduct.PurchasePrice : selectedProduct.PurchasePrice * _rate;
+                                var totalPurchaseAmount = (purchasePrice * quantity) + ((purchasePrice/selectedProduct.NumOfSinglesInCase ?? 0) * singlesQuantity);
 
-                                        // add 1* number of singles in case to tak
-                                        tak1.RemainingQuantity = (int)(tak1.RemainingQuantity + (1 * ProdCase.NumOfSinglesInCase));
-                                    }
 
-                                    db.Entry(tak).State = EntityState.Modified;
-                                    db.Entry(tak1).State = EntityState.Modified;
-                                    db.Entry(WareProdCase).State = EntityState.Modified;
-                                    db.Entry(ProdCase).State = EntityState.Modified;
-                                    db.SaveChanges(seller_user);
-                                }
-                            }
+								decimal taxAmount = 0;
+                                decimal taxPurchaseAmount = 0;
+								var tax = db.Taxs.FirstOrDefault(i => i.Id == selectedProduct.TaxId);
+								if (tax != null)
+								{
+									taxAmount =  totalAmountWithTax * tax.TaxRate/100;
+                                    taxPurchaseAmount = (totalPurchaseAmount * tax.TaxRate/100);
+								}
 
-                            WarehouseStock warehse = new WarehouseStock();
-                            warehse = db.WarehouseStocks.FirstOrDefault(i => i.ProductId == item.prodId && i.WarehouseId == seller_user.WarehouseId);
-                            warehse.RemainingQuantity = ObjWarehouseStock.RemainingQuantity - (decimal)item.quantity;
-                            db.Entry(warehse).State = EntityState.Modified;
-                            db.SaveChanges();
+								if (mySell.currency == "USD")
+								{
+									ObjSale.ProductId = item.prodId;
+									ObjSale.Quantity = quantity;
+									ObjSale.SalePrice = isUsd ? selectedProduct.SalePrice : selectedProduct.SalePrice * _rate;
+									ObjSale.UnitSalePrice = isUsd ? selectedProduct.UnitSalePrice : selectedProduct.UnitSalePrice * _rate;
+									ObjSale.Singles = singlesQuantity;
+									ObjSale.TotalAmountWithTax =totalAmountWithTax;
+									if (selectedProduct.TaxId != 2)
+									{
+										ObjSale.TotalAmount = ObjSale.TotalAmountWithTax;
+									}
+									else
+									{
+										ObjSale.TotalAmount = ObjSale.TotalAmountWithTax - taxAmount;
+									}
 
-                            ProductStock ps = new ProductStock();
-                            ps.ProductId = ObjSale.ProductId;
-                            ps.Quantity = ObjSale.Quantity;
-                            ps.PurchasePrice = selectedProduct.PurchasePrice;
-                            ps.TotalPurchaseAmount = (selectedProduct.PurchasePrice * ObjSale.Quantity);
-                            ps.SalePrice = ObjSale.SalePrice;
-                            ps.Discount = selectedProduct.Discount;
-                            ps.TotalSaleAmount = (ObjSale.SalePrice * ObjSale.Quantity);
-                            decimal TaxAmount = 0;
-                            ps.TotalSaleAmountWithTax = (selectedProduct.SalePrice * ObjSale.Quantity);//+ TaxAmount
-                            ps.TaxAmount = TaxAmount;
-                            ps.Profit = (ps.TotalSaleAmount - (ps.TotalPurchaseAmount));//+ TaxAmount
-                            ps.ProfitWithTax = (ps.TotalSaleAmount - ps.TotalPurchaseAmount);//+ TaxAmount
-                            ps.Description = "SaleNote";
-                            ps.AddedBy = seller_user.Id;
-                            ps.DateAdded = nowDate;
-                            ps.ModifiedBy = seller_user.Id;
-                            ps.DateModied = DateTime.Now;
-                            ps.InventoryTypeId = 2;
-                            ps.WarehouseId = (int)seller_user.WarehouseId;
-                            ps.IsFormal = false;
-                            ps.OtherTaxValue = ObjSale.Id;
-                            ps.RemainingQuantity = ObjWarehouseStock.RemainingQuantity;
-                            db.ProductStocks.Add(ps);
-                            db.SaveChanges();
-                        }
-                        catch (Exception ex)
-                        {
-                            duplicates.Add(Convert.ToString(new { reciept = mySell.invoiceId, prodId = item.prodId.ToString(), prodName = selectedProduct.Name.ToString() }));
-                        }
-                    }
-                }
-            }
+									ObjSale.WarehouseId = (int)seller_user.WarehouseId;
+									ObjSale.AddedBy = seller_user.Id;
+									ObjSale.CustomerUserId = 29611;
+									ObjSale.DateAdded = nowDate;
+									ObjSale.DateModied = nowDate;
+									ObjSale.ModifiedBy = seller_user.Id;
+									ObjSale.PaidAmount = totalAmountWithTax;
 
-            return Request.CreateResponse(
-            HttpStatusCode.OK,
-            new { trynos = csello.ToString(), sellsCount = sellCount.Count(), duplicatesCount = duplicates.Count(), duplicatesList = duplicates.ToString() },
-            JsonMediaTypeFormatter.DefaultMediaType);
-        }
-    }
+									var paymentMode = db.PaymentModes.FirstOrDefault(i => i.Name == mySell.currency) ?? throw new Exception("Payment mode not found..." + mySell.currency);
+									ObjSale.PaymentModeId = paymentMode.Id;
+									ObjSale.InventoryTypeId = 2;
+									ObjSale.isFormalSale = false;
+								}
+								else
+								{
+									var mypayment = db.PaymentModes.FirstOrDefault(i => i.Name == mySell.paymentMethod) ?? throw new Exception("Payment method not found..." + mySell.paymentMethod);
+									var mycurrency = db.Currencies.FirstOrDefault(i => i.Name == mypayment.Name) ?? throw new Exception("Currency not found..." + mypayment.Name);
+									var priceRate = db.Rates.Where(i => i.CurrencyId == mycurrency.Id)
+										.OrderByDescending(i => i.DateModified).FirstOrDefault();
+
+									decimal rate = priceRate != null ? (decimal)priceRate.CurrencyRate : 1;
+
+									ObjSale.ProductId = item.prodId;
+									ObjSale.Quantity = quantity;
+									ObjSale.SalePrice = isUsd ? selectedProduct.SalePrice : selectedProduct.SalePrice * _rate; ;
+                                    ObjSale.UnitSalePrice = isUsd ? selectedProduct.UnitSalePrice : selectedProduct.UnitSalePrice * _rate;
+                                    ObjSale.Singles = singlesQuantity;
+									ObjSale.TotalAmountWithTax = totalAmountWithTax;
+
+									if (selectedProduct.TaxId != 2)
+									{
+										ObjSale.TotalAmount = ObjSale.TotalAmountWithTax;
+									}
+									else
+									{
+										ObjSale.TotalAmount = ObjSale.TotalAmountWithTax - taxAmount;
+									}
+
+									ObjSale.WarehouseId = (int)seller_user.WarehouseId;
+									ObjSale.AddedBy = seller_user.Id;
+									ObjSale.CustomerUserId = 29611;
+									ObjSale.DateAdded = nowDate;
+									ObjSale.DateModied = nowDate;
+									ObjSale.ModifiedBy = seller_user.Id;
+									ObjSale.PaidAmount = totalAmountWithTax;
+									ObjSale.PaymentModeId = mypayment.Id;
+									ObjSale.InventoryTypeId = 2;
+									ObjSale.rtgs = ObjSale.TotalAmountWithTax * rate;
+									ObjSale.isFormalSale = false;
+								}
+
+								ObjSale.customerName = mySell.customer;
+								ObjSale.recieptNumber = mySell.invoiceId;
+                                ObjSale.Currency = mySell.currency;
+
+								// Add Sale
+								db.Sales.Add(ObjSale);
+								db.SaveChanges();
+
+								if (productIsCase)
+								{
+									int currentSingles = ObjWarehouseStock.RemainingSinglesQuantity;
+									int remainingSinglesAfter = currentSingles - singlesQuantity;
+
+									// Reduce full case count
+									ObjWarehouseStock.RemainingQuantity -=quantity;
+
+									// Update loose singles based on the computed remaining amount
+									if (currentSingles == 0 && remainingSinglesAfter == 0)
+									{
+										ObjWarehouseStock.RemainingSinglesQuantity = 0;
+									}
+                                    
+									else if (remainingSinglesAfter < 0)
+									{
+										// Borrow a full case to cover the shortage
+										ObjWarehouseStock.RemainingSinglesQuantity = (int)(selectedProduct.NumOfSinglesInCase + remainingSinglesAfter);
+										ObjWarehouseStock.RemainingQuantity--;   // one extra case broken open
+									}
+									else if (remainingSinglesAfter > 0)
+									{
+										// Only update if the remaining singles meet or exceed the singlesQuantity threshold
+										if (currentSingles == singlesQuantity)
+											ObjWarehouseStock.RemainingSinglesQuantity = 0;
+										else if (currentSingles > singlesQuantity)
+											ObjWarehouseStock.RemainingSinglesQuantity = remainingSinglesAfter;
+                                        // If 0 < remainingSinglesAfter < singlesQuantity, leave the value unchanged (original behavior)
+                                       
+									}else if(remainingSinglesAfter == 0){
+										ObjWarehouseStock.RemainingSinglesQuantity = 0;
+									}
+									// The original 'else if (singlesQuantity == 0)' branch was unreachable and has been removed
+								}
+								else
+								{
+									// Non‑case product: treat RemainingQuantity as the count of individual items
+									ObjWarehouseStock.RemainingQuantity -= quantity;
+									ObjWarehouseStock.RemainingSinglesQuantity = 0;
+								}
+
+                                if (ObjWarehouseStock.RemainingQuantity < 0) throw new Exception("Insufficient stock");
+                                
+								db.Entry(ObjWarehouseStock).State = EntityState.Modified;
+
+								selectedProduct.RemainingQuantity = ObjWarehouseStock.RemainingQuantity;
+
+								db.Entry(selectedProduct).State = EntityState.Modified;
+								// Create product stock record
+								ProductStock ps = new ProductStock
+								{
+									ProductId = ObjSale.ProductId,
+									Quantity = ObjSale.Quantity,
+									PurchasePrice = selectedProduct.PurchasePrice,
+									TotalPurchaseAmount = totalPurchaseAmount,
+									SalePrice = ObjSale.SalePrice,
+									Discount = selectedProduct.Discount ?? 0,
+									TotalSaleAmount = totalAmountWithTax
+								};
+								decimal TaxAmount = 0;
+								ps.TotalSaleAmountWithTax = totalAmountWithTax;
+								ps.TaxAmount = TaxAmount;
+								ps.Profit = ps.TotalSaleAmount - ps.TotalPurchaseAmount;
+								ps.ProfitWithTax = ps.TotalSaleAmount - ps.TotalPurchaseAmount;
+								ps.Description = "SaleNote";
+								ps.AddedBy = seller_user.Id;
+								ps.DateAdded = nowDate;
+								ps.ModifiedBy = seller_user.Id;
+								ps.DateModied = DateTime.Now;
+								ps.InventoryTypeId = 2;
+								ps.WarehouseId = (int)seller_user.WarehouseId;
+								ps.IsFormal = false;
+								ps.OtherTaxValue = 0; // Will be set after saving to get ObjSale.Id
+								ps.RemainingQuantity = ObjWarehouseStock.RemainingQuantity;
+                                
+								db.ProductStocks.Add(ps);
+								db.SaveChanges();
+							}
+						}
+					}
+
+					// Save all changes once
+					try
+					{
+						db.SaveChanges();
+					}
+					catch (DbUpdateException dbEx)
+					{
+						// EF-specific exception with detailed inner SQL errors
+						var inner = dbEx.InnerException?.InnerException?.Message ?? dbEx.InnerException?.Message ?? dbEx.Message;
+						throw new Exception($"SaveChanges failed: {inner}", dbEx);
+					}
+
+					// Update OtherTaxValue with Sale Id for ProductStock records
+					// This needs to be done after SaveChanges to get the generated Sale Ids
+					var sales = db.Sales.OrderByDescending(s => s.Id).Take(maSells.Sum(m => m.products.Count)).ToList();
+					var productStocks = db.ProductStocks.OrderByDescending(p => p.Id).Take(maSells.Sum(m => m.products.Count)).ToList();
+
+					for (int i = 0; i < productStocks.Count && i < sales.Count; i++)
+					{
+						productStocks[i].OtherTaxValue = sales[i].Id;
+					}
+					try
+					{
+						db.SaveChanges();
+					}
+					catch (DbUpdateException dbEx)
+					{
+						// EF-specific exception with detailed inner SQL errors
+						var inner = dbEx.InnerException?.InnerException?.Message ?? dbEx.InnerException?.Message ?? dbEx.Message;
+						throw new Exception($"SaveChanges failed: {inner}", dbEx);
+					}
+
+					// Commit the transaction
+					transaction.Commit();
+
+					result = new
+					{
+						trynos = csello.ToString(),
+						sellsCount = sellCount.Count(),
+						duplicatesCount = duplicates.Count(),
+						duplicatesList = duplicates.ToString()
+					};
+
+					return Request.CreateResponse(HttpStatusCode.OK, result, JsonMediaTypeFormatter.DefaultMediaType);
+				}
+				catch (Exception ex)
+				{
+					// Rollback transaction on error
+					transaction.Rollback();
+					Helper.WriteError(ex, "Error in sell method: " + ex.Message);
+                    Console.WriteLine(ex.InnerException.ToString());
+					return Request.CreateResponse(HttpStatusCode.InternalServerError,
+						new { error = "Transaction failed", message = ex.ToString() },
+						JsonMediaTypeFormatter.DefaultMediaType);
+				}
+			}
+		}
+	}
 }
