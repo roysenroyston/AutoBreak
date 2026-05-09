@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -12,10 +13,12 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using System.Xml.Linq;
 using Microsoft.Ajax.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ShopMate.Migrations;
+using ShopMate.ModelDto;
 using ShopMate.Models;
 using WebErrorLogging.Utilities;
 
@@ -364,81 +367,65 @@ namespace ShopMate.Controllers
 			}
 		}
 
+
+
+
 		[HttpGet, ActionName("getProducts")]
 		public HttpResponseMessage getProducts(int userWarehouse)
 
 		{
 			System.Diagnostics.Debug.WriteLine("Test1 : " + userWarehouse);
-			var query = from sd in db.WarehouseStocks
-						join pd in db.Products on sd.ProductId equals pd.Id
-						
-						join tax in db.Taxs on pd.TaxId equals tax.Id into taxGroup
+			// 1. Define the hierarchy key for each product
+			var productsWithHierarchy = from p in db.Products
+										where p.IsActive == true
+										let hierarchyKey = p.MainParentId == null || p.MainParentId == 0 ? p.Id : p.MainParentId.Value
+										select new { Product = p, HierarchyKey = hierarchyKey };
+
+			// 2. Compute one subStock per hierarchy (latest stock with RemainingQuantity > 0 for any product in that hierarchy)
+			var subStocksPerHierarchy = from ws in db.WarehouseStocks
+										join p in db.Products on ws.ProductId equals p.Id
+										where ws.WarehouseId == userWarehouse && ws.RemainingQuantity > 0
+										let hierarchyKey = p.MainParentId == null || p.MainParentId == 0 ? p.Id : p.MainParentId.Value
+										group ws by hierarchyKey into g
+										select new
+										{
+											HierarchyKey = g.Key,
+											SubStock = g.OrderByDescending(ws => ws.Id).FirstOrDefault()
+										};
+
+			// 3. Main query: join products with their hierarchy’s subStock (left join)
+			var query = from ph in productsWithHierarchy
+						join sh in subStocksPerHierarchy on ph.HierarchyKey equals sh.HierarchyKey into subGroup
+						from subStockRecord in subGroup.DefaultIfEmpty()
+						join tax in db.Taxs on ph.Product.TaxId equals tax.Id into taxGroup
 						from tax in taxGroup.DefaultIfEmpty()
-						where sd.WarehouseId == userWarehouse && pd.IsActive == true
-						orderby pd.Name
+						orderby ph.Product.Name
 						select new
 						{
-							id = pd.Id,
-							name = pd.Name,
-							price = pd.SalePrice,
-							//priceRTGS = pd.RtgsPrice,
-							image = pd.ProductImage,
-							tax = tax != null ? tax.TaxRate : 0,  // avoids NullReferenceException
-							barcode = pd.BarCode,
-							quantity = sd.RemainingQuantity,
-							productType = pd.ProductType,
-							numOfSinglesInCase = pd.NumOfSinglesInCase,
-							remainingSinglesQuantity = sd.RemainingSinglesQuantity,
-							remainingQuantity = sd.RemainingQuantity,
-							unitSalePrice = pd.UnitSalePrice
-
+							id = ph.Product.Id,
+							name = ph.Product.Name,
+							price = ph.Product.SalePrice,
+							image = ph.Product.ProductImage,
+							tax = tax != null ? tax.TaxRate : 0,
+							barcode = ph.Product.BarCode,
+							quantity = subStockRecord.SubStock != null
+										? subStockRecord.SubStock.RemainingQuantity
+										: 0,
+							productType = ph.Product.ProductType,
+							numOfSinglesInCase = ph.Product.NumOfSinglesInCase != null ? ph.Product.NumOfSinglesInCase : 0,
+							remainingSinglesQuantity = subStockRecord.SubStock != null
+												? subStockRecord.SubStock.RemainingSinglesQuantity
+												: 0,
+							remainingQuantity = subStockRecord.SubStock != null
+												? subStockRecord.SubStock.RemainingQuantity
+												: 0,
+							unitSalePrice = ph.Product.UnitSalePrice,
 						};
 
-			var res = query.ToList();  // executes the query efficiently on the database side
+			var res = query.ToList();
 
 
 
-			//if (userWarehouse==8)
-			//{
-			//    //var roysen = db.WarehouseStocks.Where(m => m.Product_ProductId.ProductType == "case".ToLower() && m.RemainingQuantity > 0 && m.WarehouseId == userWarehouse);
-			//    //if (roysen != null)
-			//    //    if (stockdata = 2)
-			//    //    {
-			//    //    }
-			//  var  res2 = from sd in stockdata.Where(k=>k.RemainingQuantity > 0 && k.Product_ProductId.ProductType=="CASE").ToList()
-			//          join pd in db.Products on sd.ProductId equals pd.Id
-			//          where pd.IsActive == true
-
-			//          orderby pd.Name
-			//          select new
-			//          {
-			//              id = pd.Id,
-			//              name = pd.Name,
-			//              price = pd.SalePrice,
-			//              //priceRTGS = pd.RtgsPrice,
-			//              image = pd.ProductImage,
-			//              tax = db.Taxs.FirstOrDefault(i => i.Id == pd.TaxId).TaxRate,
-			//              barcode = pd.BarCode,
-			//              quantity = sd.RemainingQuantity
-			//          };
-			// var res3 = from sd in stockdata.Where(k =>  k.Product_ProductId.ProductType == "SINGLE").ToList()
-			//           join pd in db.Products on sd.ProductId equals pd.Id
-			//           where pd.IsActive == true
-
-			//           orderby pd.Name
-			//           select new
-			//           {
-			//               id = pd.Id,
-			//               name = pd.Name,
-			//               price = pd.SalePrice,
-			//               //priceRTGS = pd.RtgsPrice,
-			//               image = pd.ProductImage,
-			//               tax = db.Taxs.FirstOrDefault(i => i.Id == pd.TaxId).TaxRate,
-			//               barcode = pd.BarCode,
-			//               quantity = sd.RemainingQuantity
-			//           };
-			//    res = res2.Concat(res3);
-			// }
 
 			System.Diagnostics.Debug.WriteLine("Test1 : " + userWarehouse);
 
@@ -536,6 +523,20 @@ namespace ShopMate.Controllers
 
 								decimal quantity = item.quantity;
 
+
+
+								var parentProduct = selectedProduct; // get the parent product 
+								if (parentProduct.MainParentId.Value > 0)
+								{
+									parentProduct = db.Products.Where(p => p.Id == selectedProduct.MainParentId).FirstOrDefault();
+								}
+
+
+								var ObjWarehouseStock = db.WarehouseStocks.Where(i => i.ProductId == item.prodId && i.WarehouseId == seller_user.WarehouseId).FirstOrDefault() ?? throw new Exception("Warehouse stock not found...Product Id:" + item.prodId + ", Warehouse Id:" + seller_user.WarehouseId);
+								var remainingQty = ObjWarehouseStock.RemainingQuantity;
+								var stockRemainingSingles = ObjWarehouseStock.RemainingSinglesQuantity;
+								var targetedProductWithQuantity = selectedProduct;
+
 								if (productIsCase)
 								{ // if case look for singles
 									var quntities = item.quantity.ToString().Split('.');
@@ -548,11 +549,118 @@ namespace ShopMate.Controllers
 										}
 										quantity = decimal.Parse(quntities[0]);
 									}
-								}
-								var ObjWarehouseStock = db.WarehouseStocks.Where(i => i.ProductId == item.prodId && i.WarehouseId == seller_user.WarehouseId).FirstOrDefault() ?? throw new Exception("Warehouse stock not found...Product Id:" + item.prodId + ", Warehouse Id:" + seller_user.WarehouseId);
+									//Dictionary<long, WarehouseStock> stockByCodeWh = new Dictionary<long, WarehouseStock>();
+									//Dictionary<long, decimal> stockByCodeQtyTaken = new Dictionary<long, decimal>();
+									//Dictionary<long, decimal> stockByCodeUnitTaten = new Dictionary<long, decimal>();
 
-								// Check for sufficient stock before proceeding
-								if (ObjWarehouseStock.RemainingQuantity < quantity)
+									// if quantity not enough borrow parent and parent will borrow its parent if not the orgin 
+									if (remainingQty < quantity && parentProduct.Id != selectedProduct.Id)
+									{ // do this if the product is not parent
+									  //steps of borrowing from immediate parent 
+									  // Step.1. Ask the immediate
+										var _cases = quantity;
+										var _singlesQty = singlesQuantity;
+										var _productCaseId = selectedProduct.ProductCaseId;
+										var _workingOnProduct = selectedProduct;
+										var _workingOnWarehouseStock = ObjWarehouseStock;
+										var _numOfSingles = selectedProduct.NumOfSinglesInCase;
+
+										//get required raw units
+										var _howManyChildUnitsRequiredOfSelected = (quantity * selectedProduct.NumOfSinglesInCase) + (singlesQuantity);
+										var productsToBorrow = db.Products.Where(i => ((i.Id == selectedProduct.MainParentId || i.MainParentId == selectedProduct.MainParentId)
+																  && i.Id < selectedProduct.Id)).OrderBy(i => i.Id).ToArray();
+										foreach (var immeProduct in productsToBorrow)
+										{
+											var confirmEnough = db.WarehouseStocks.Where(w => w.Product_ProductId.Id == immeProduct.Id).FirstOrDefault();
+											if (confirmEnough != null)
+											{
+												var howManyUnitsInImmeProductRequired = (_howManyChildUnitsRequiredOfSelected / _numOfSingles) != 0 ? _cases : _cases + 1;
+												// check if units need a case
+
+												// Avoid division by zero
+												int howManyCasesInImmeProductRequired = 0;
+												int howManySinglesRequred = 0;
+												if (confirmEnough.RemainingSinglesQuantity > 0)
+												{
+													howManyCasesInImmeProductRequired = (int)(howManyUnitsInImmeProductRequired / confirmEnough.RemainingSinglesQuantity);
+													howManySinglesRequred = (int)(howManyUnitsInImmeProductRequired % confirmEnough.RemainingSinglesQuantity);
+												}
+												else
+												{
+													// If no singles available, all required units must come from full cases
+													howManyCasesInImmeProductRequired = (int)Math.Ceiling((decimal)(howManyUnitsInImmeProductRequired / immeProduct.NumOfSinglesInCase));
+													howManySinglesRequred = 0;
+												}
+
+												int currentSingles = confirmEnough.RemainingSinglesQuantity;
+												int remainingSinglesAfter = currentSingles - howManySinglesRequred;
+
+												// Reduce full case count
+												confirmEnough.RemainingQuantity -= quantity;
+
+												// Update loose singles based on the computed remaining amount
+												if (currentSingles == 0 && remainingSinglesAfter == 0)
+												{
+													confirmEnough.RemainingSinglesQuantity = 0;
+												}
+
+												else if (remainingSinglesAfter < 0)
+												{
+													// Borrow a full case to cover the shortage
+													confirmEnough.RemainingSinglesQuantity = (int)(immeProduct.NumOfSinglesInCase + remainingSinglesAfter);
+													confirmEnough.RemainingQuantity--;   // one extra case broken open
+												}
+												else if (remainingSinglesAfter > 0)
+												{
+													// Only update if the remaining singles meet or exceed the singlesQuantity threshold
+													if (currentSingles == singlesQuantity)
+														confirmEnough.RemainingSinglesQuantity = 0;
+													else if (currentSingles > singlesQuantity)
+														confirmEnough.RemainingSinglesQuantity = remainingSinglesAfter;
+													// If 0 < remainingSinglesAfter < singlesQuantity, leave the value unchanged (original behavior)
+
+												}
+												else if (remainingSinglesAfter == 0)
+												{
+													confirmEnough.RemainingSinglesQuantity = 0;
+												}
+
+												if (confirmEnough.RemainingQuantity < 0)
+												{
+													// update variables for the next iteration
+													_cases = howManyCasesInImmeProductRequired;
+													_singlesQty = howManySinglesRequred;
+													_productCaseId = immeProduct.ProductCaseId;
+													_workingOnProduct = immeProduct;
+													_workingOnWarehouseStock = confirmEnough;
+													_numOfSingles = immeProduct.NumOfSinglesInCase;
+													continue;
+												}
+
+												// if quantity matched save and exit to proceed the process
+												db.Entry(confirmEnough).State = EntityState.Modified;
+												immeProduct.RemainingQuantity = confirmEnough.RemainingQuantity;
+												immeProduct.RemainingSinglesQuantity = confirmEnough.RemainingSinglesQuantity;
+												db.Entry(immeProduct).State = EntityState.Modified;
+												//set borrowed
+												// one unit of immeProduct have // is one case
+												var selectedProductToEddedRemaingQty = howManyUnitsInImmeProductRequired * _workingOnProduct.NumOfSinglesInCase; // removed invalid ?? 0
+												_workingOnWarehouseStock.RemainingQuantity += selectedProductToEddedRemaingQty ?? 0;
+												//_workingOnWarehouseStock.RemainingQuantity += selectedProductToEddedRemaingQty ?? 0;
+												remainingQty = _workingOnWarehouseStock.RemainingQuantity;
+
+												//_workingOnWarehouseStock.RemainingSinglesQuantity = _singlesQty;
+												db.Entry(_workingOnWarehouseStock).State = EntityState.Modified;
+
+												db.SaveChanges(); // if found do the cal and save changes
+												break;
+											}
+										}
+									}
+
+								}
+								// Check for sufficient stock before proceedings (nailed)
+								if (remainingQty < quantity)
 								{
 									throw new Exception("Insufficient stock..." + item.prodId + "  Product Name...:" + selectedProduct.Name + ",  Remaining Quantity:" + ObjWarehouseStock.RemainingQuantity + ", Quantity:" + item.quantity);
 								}
@@ -569,7 +677,7 @@ namespace ShopMate.Controllers
 								var unitSalePrice = isUsd ? selectedProduct.UnitSalePrice : selectedProduct.UnitSalePrice * _rate;
 								var totalAmountWithTax = (item.price * quantity) + (unitSalePrice * singlesQuantity);
 								var purchasePrice = isUsd ? selectedProduct.PurchasePrice : selectedProduct.PurchasePrice * _rate;
-								var totalPurchaseAmount = (purchasePrice * quantity) + ((purchasePrice / selectedProduct.NumOfSinglesInCase) * singlesQuantity);
+								var totalPurchaseAmount = (purchasePrice * quantity) + ((purchasePrice / selectedProduct.NumOfSinglesInCase ?? 0) * singlesQuantity);
 
 
 								decimal taxAmount = 0;
@@ -705,6 +813,7 @@ namespace ShopMate.Controllers
 								db.Entry(ObjWarehouseStock).State = EntityState.Modified;
 
 								selectedProduct.RemainingQuantity = ObjWarehouseStock.RemainingQuantity;
+								selectedProduct.RemainingSinglesQuantity = ObjWarehouseStock.RemainingSinglesQuantity;
 
 								db.Entry(selectedProduct).State = EntityState.Modified;
 								// Create product stock record
@@ -790,12 +899,15 @@ namespace ShopMate.Controllers
 					// Rollback transaction on error
 					transaction.Rollback();
 					Helper.WriteError(ex, "Error in sell method: " + ex.Message);
-					Console.WriteLine(ex.InnerException.ToString());
+					//Console.WriteLine(ex.InnerException.ToString());
 					return Request.CreateResponse(HttpStatusCode.InternalServerError,
 						new { error = "Transaction failed", message = ex.ToString() },
 						JsonMediaTypeFormatter.DefaultMediaType);
 				}
 			}
 		}
+
+
+
 	}
 }

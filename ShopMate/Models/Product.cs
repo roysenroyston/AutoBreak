@@ -92,10 +92,16 @@ namespace ShopMate.Models
         [DisplayName("Product Type")]
         public string ProductType { get; set; }
         public int? ProductCaseId { get; set; }
-        public int? NumOfSinglesInCase { get; set; }
-      //  public string ProductCaseName { get; set; }
 
-        public virtual ICollection<ProductStock> ProductStock_ProductIds { get; set; }
+        public int? MainParentId { get; set; } = 0;
+
+        public int NumOfSinglesInCase { get; set; } = 1;
+
+		[DisplayName("Units")]
+		public int Units { get; set; } = 0;
+		//  public string ProductCaseName { get; set; }
+
+		public virtual ICollection<ProductStock> ProductStock_ProductIds { get; set; }
         public virtual ICollection<Sale> Sale_ProductIds { get; set; }
         public virtual ICollection<InvoiceItems> InvoiceItems_ProductIds { get; set; }
         public virtual ICollection<Purchase> Purchase_ProductIds { get; set; }

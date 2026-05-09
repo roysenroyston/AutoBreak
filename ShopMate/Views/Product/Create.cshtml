@@ -168,13 +168,17 @@ window.onload = function () {
 							</div>
 
 							<div class="form-group">
-								<label>Product Case Id (Required only if product is Single)</label>
+								<label>Product Case Id (Required only if Product is not Single Or Case Parent)</label>
 								@Html.DropDownList("ProductCaseId", " -Select-  Product Case Id")
 								@Html.StarkDropDownAjaxLink("/Product/Create", "AddMore", "")
 							</div>
 							<div class="form-group">
 								@Html.LabelFor(model => model.NumOfSinglesInCase, new { @class = "" })
 								@Html.EditorFor(model => model.NumOfSinglesInCase, new { @Id = "NumOfSinglesInCase", @class = "form-control" })
+							</div>
+							<div class="form-group">
+								@Html.LabelFor(model => model.Units, new { @class = "" })
+								@Html.EditorFor(model => model.Units, new { @Id = "Units", @class = "form-control" })
 							</div>
 							<div class="form-group">
 								@Html.LabelFor(model => model.ProductDescription, new { @class = "" })
@@ -189,7 +193,7 @@ window.onload = function () {
 							<div class="form-group">
 								<strong>Product Type</strong>
 								<select name="ProductType" id="productType">
-									<option value="">-Select Product Type -</option>
+									<option value="0">-Select Product Type -</option>
 									<option value="SINGLE">SINGLE</option>
 									<option value="CASE">CASE</option>
 								</select>

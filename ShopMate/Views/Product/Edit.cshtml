@@ -89,7 +89,7 @@
 								@Html.StarkDropDownAjaxLink("/ProductCategory/Create", "AddMore", "")
 							</div>
 							<div class="form-group">
-								<label>Product Case Id (Required only if product is Single)</label>
+								<label>Product Case Id (Required only if Product is not Single Or Case Parent)</label>
 								@*@Html.LabelFor(model => model.ProductCaseId, new { @class = "" })*@
 								@Html.DropDownList("ProductCaseId", " -Select ProductCaseId- ")
 								@Html.StarkDropDownAjaxLink("/Product/Create", "AddMore", "")
@@ -98,6 +98,10 @@
 							<div class="form-group">
 								@Html.LabelFor(model => model.NumOfSinglesInCase, new { @class = "" })
 								@Html.EditorFor(model => model.NumOfSinglesInCase)
+							</div>
+							<div class="form-group">
+								@Html.LabelFor(model => model.Units, new { @class = "" })
+								@Html.EditorFor(model => model.Units, new { @Id = "Units", @class = "form-control" })
 							</div>
 							<div class="form-group">
 								@Html.LabelFor(model => model.ProductDescription, new { @class = "" })

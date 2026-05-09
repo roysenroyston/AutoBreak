@@ -225,8 +225,17 @@
 												}
 												else
 												{
-													<td> @item.Quantity </td>
+													if ("CASE".Equals(item.ProductType))
+													{
+														<td> @((long)item.Quantity) (C) </td>
+
+													}
+													else
+													{
+														<td> @item.Quantity </td>
+													}
 													<td> @item.SalePrice </td>
+
 												}
 
 

@@ -987,8 +987,33 @@
     <Compile Include="Migrations\202605060208352_sale_add_field_singles.Designer.cs">
       <DependentUpon>202605060208352_sale_add_field_singles.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202605080026105_product_main+parentId.cs" />
+    <Compile Include="Migrations\202605080026105_product_main+parentId.Designer.cs">
+      <DependentUpon>202605080026105_product_main+parentId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202605080031359_productMainParentIdDefault.cs" />
+    <Compile Include="Migrations\202605080031359_productMainParentIdDefault.Designer.cs">
+      <DependentUpon>202605080031359_productMainParentIdDefault.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202605082315158_product_add_field_number_of_unitCases.cs" />
+    <Compile Include="Migrations\202605082315158_product_add_field_number_of_unitCases.Designer.cs">
+      <DependentUpon>202605082315158_product_add_field_number_of_unitCases.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202605082345402_product_add_field_number_of_unitCasesu.cs" />
+    <Compile Include="Migrations\202605082345402_product_add_field_number_of_unitCasesu.Designer.cs">
+      <DependentUpon>202605082345402_product_add_field_number_of_unitCasesu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202605082355222_product_add_field_number_of_unitCasesq.cs" />
+    <Compile Include="Migrations\202605082355222_product_add_field_number_of_unitCasesq.Designer.cs">
+      <DependentUpon>202605082355222_product_add_field_number_of_unitCasesq.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202605090032133_product_change-numof-units-to-units.cs" />
+    <Compile Include="Migrations\202605090032133_product_change-numof-units-to-units.Designer.cs">
+      <DependentUpon>202605090032133_product_change-numof-units-to-units.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ModelDto\AccountingDto.cs" />
+    <Compile Include="ModelDto\AppProductView.cs" />
     <Compile Include="ModelDto\DispatchDto.cs" />
     <Compile Include="ModelDto\DNoteDto.cs" />
     <Compile Include="ModelDto\GRVDto.cs" />
@@ -3733,6 +3758,24 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202605060208352_sale_add_field_singles.resx">
       <DependentUpon>202605060208352_sale_add_field_singles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202605080026105_product_main+parentId.resx">
+      <DependentUpon>202605080026105_product_main+parentId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202605080031359_productMainParentIdDefault.resx">
+      <DependentUpon>202605080031359_productMainParentIdDefault.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202605082315158_product_add_field_number_of_unitCases.resx">
+      <DependentUpon>202605082315158_product_add_field_number_of_unitCases.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202605082345402_product_add_field_number_of_unitCasesu.resx">
+      <DependentUpon>202605082345402_product_add_field_number_of_unitCasesu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202605082355222_product_add_field_number_of_unitCasesq.resx">
+      <DependentUpon>202605082355222_product_add_field_number_of_unitCasesq.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202605090032133_product_change-numof-units-to-units.resx">
+      <DependentUpon>202605090032133_product_change-numof-units-to-units.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
