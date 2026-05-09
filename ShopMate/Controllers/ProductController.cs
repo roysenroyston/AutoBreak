@@ -461,7 +461,7 @@ namespace ShopMate.Controllers
 
 						if (productParent != null) // make sure every product have the parentId 
 						{
-							ObjProduct.MainParentId = productParent.ProductCaseId == 0 ? productParent.Id : productParent.MainParentId;
+							ObjProduct.MainParentId = (productParent.ProductCaseId == null || productParent.ProductCaseId.Value == 0) ? productParent.Id : productParent.MainParentId;
 						}
 
 						if (productExist != null)
@@ -542,6 +542,7 @@ namespace ShopMate.Controllers
 			{
 				return HttpNotFound();
 			}
+			
 			var myProductWarehouse = db.Users.FirstOrDefault(i => i.UserName == userId).WarehouseId;
 			if (myProductWarehouse == 1)
 			{
@@ -608,6 +609,12 @@ namespace ShopMate.Controllers
 
 					//    ObjProduct.ProductCaseId = 783;
 					//}
+
+					var productParent = db.Products.Where(p => p.Id == ObjProduct.ProductCaseId).FirstOrDefault();
+					if (productParent != null) // make sure every product have the parentId 
+					{
+						ObjProduct.MainParentId = (productParent.ProductCaseId == null || productParent.ProductCaseId.Value == 0 ) ? productParent.Id : productParent.MainParentId;
+					}
 
 					ObjProduct.WarehouseId = warehouse;
 					db.Entry(ObjProduct).State = EntityState.Modified;

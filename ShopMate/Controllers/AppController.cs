@@ -368,92 +368,100 @@ namespace ShopMate.Controllers
 		public HttpResponseMessage getProducts(int userWarehouse)
 
 		{
-			System.Diagnostics.Debug.WriteLine("Test1 : " + userWarehouse);
-			var query = from sd in db.WarehouseStocks
-						join pd in db.Products on sd.ProductId equals pd.Id
-						
-						join tax in db.Taxs on pd.TaxId equals tax.Id into taxGroup
-						from tax in taxGroup.DefaultIfEmpty()
-						where sd.WarehouseId == userWarehouse && pd.IsActive == true
-						orderby pd.Name
-						select new
-						{
-							id = pd.Id,
-							name = pd.Name,
-							price = pd.SalePrice,
-							//priceRTGS = pd.RtgsPrice,
-							image = pd.ProductImage,
-							tax = tax != null ? tax.TaxRate : 0,  // avoids NullReferenceException
-							barcode = pd.BarCode,
-							quantity = sd.RemainingQuantity,
-							productType = pd.ProductType,
-							numOfSinglesInCase = pd.NumOfSinglesInCase,
-							remainingSinglesQuantity = sd.RemainingSinglesQuantity,
-							remainingQuantity = sd.RemainingQuantity,
-							unitSalePrice = pd.UnitSalePrice
-
-						};
-
-			var res = query.ToList();  // executes the query efficiently on the database side
-
-
-
-			//if (userWarehouse==8)
-			//{
-			//    //var roysen = db.WarehouseStocks.Where(m => m.Product_ProductId.ProductType == "case".ToLower() && m.RemainingQuantity > 0 && m.WarehouseId == userWarehouse);
-			//    //if (roysen != null)
-			//    //    if (stockdata = 2)
-			//    //    {
-			//    //    }
-			//  var  res2 = from sd in stockdata.Where(k=>k.RemainingQuantity > 0 && k.Product_ProductId.ProductType=="CASE").ToList()
-			//          join pd in db.Products on sd.ProductId equals pd.Id
-			//          where pd.IsActive == true
-
-			//          orderby pd.Name
-			//          select new
-			//          {
-			//              id = pd.Id,
-			//              name = pd.Name,
-			//              price = pd.SalePrice,
-			//              //priceRTGS = pd.RtgsPrice,
-			//              image = pd.ProductImage,
-			//              tax = db.Taxs.FirstOrDefault(i => i.Id == pd.TaxId).TaxRate,
-			//              barcode = pd.BarCode,
-			//              quantity = sd.RemainingQuantity
-			//          };
-			// var res3 = from sd in stockdata.Where(k =>  k.Product_ProductId.ProductType == "SINGLE").ToList()
-			//           join pd in db.Products on sd.ProductId equals pd.Id
-			//           where pd.IsActive == true
-
-			//           orderby pd.Name
-			//           select new
-			//           {
-			//               id = pd.Id,
-			//               name = pd.Name,
-			//               price = pd.SalePrice,
-			//               //priceRTGS = pd.RtgsPrice,
-			//               image = pd.ProductImage,
-			//               tax = db.Taxs.FirstOrDefault(i => i.Id == pd.TaxId).TaxRate,
-			//               barcode = pd.BarCode,
-			//               quantity = sd.RemainingQuantity
-			//           };
-			//    res = res2.Concat(res3);
-			// }
-
-			System.Diagnostics.Debug.WriteLine("Test1 : " + userWarehouse);
-
-			//return Request.CreateResponse(HttpStatusCode.OK, res);
-
-			if (res.ToArray().Length != 0)
+			try
 			{
-				return Request.CreateResponse(
-				HttpStatusCode.OK,
-				res.ToList(),
-				JsonMediaTypeFormatter.DefaultMediaType);
-			}
-			else
-			{
-				return Request.CreateResponse(HttpStatusCode.NotFound, "Product not found , please try again");
+				System.Diagnostics.Debug.WriteLine("Test1 : " + userWarehouse);
+				var query = from sd in db.WarehouseStocks
+							join pd in db.Products on sd.ProductId equals pd.Id
+							join sdP in db.WarehouseStocks on pd.MainParentId equals sdP.ProductId into parentStockGroup
+							from sdP in parentStockGroup.DefaultIfEmpty()   // 👈 This makes it a LEFT JOIN
+							join tax in db.Taxs on pd.TaxId equals tax.Id into taxGroup
+							from tax in taxGroup.DefaultIfEmpty()
+							where sd.WarehouseId == userWarehouse && pd.IsActive == true
+							orderby pd.Name
+							select new
+							{
+								id = pd.Id,
+								name = pd.Name,
+								price = pd.SalePrice,
+								//priceRTGS = pd.RtgsPrice,
+								image = pd.ProductImage,
+								tax = tax != null ? tax.TaxRate : 0,  // avoids NullReferenceException
+								barcode = pd.BarCode,
+								quantity = sd.RemainingQuantity == 0 ? (sdP != null) ? sdP.RemainingQuantity :  0 : sd.RemainingQuantity,
+								remainingSinglesQuantity = sd.RemainingSinglesQuantity,
+								remainingQuantity = sd.RemainingQuantity == 0 ? (sdP != null) ? sdP.RemainingQuantity : 0 : sd.RemainingQuantity,
+								unitSalePrice = pd.UnitSalePrice
+
+							};
+
+				var res = query.ToList();  // executes the query efficiently on the database side
+
+
+
+				//if (userWarehouse==8)
+				//{
+				//    //var roysen = db.WarehouseStocks.Where(m => m.Product_ProductId.ProductType == "case".ToLower() && m.RemainingQuantity > 0 && m.WarehouseId == userWarehouse);
+				//    //if (roysen != null)
+				//    //    if (stockdata = 2)
+				//    //    {
+				//    //    }
+				//  var  res2 = from sd in stockdata.Where(k=>k.RemainingQuantity > 0 && k.Product_ProductId.ProductType=="CASE").ToList()
+				//          join pd in db.Products on sd.ProductId equals pd.Id
+				//          where pd.IsActive == true
+
+				//          orderby pd.Name
+				//          select new
+				//          {
+				//              id = pd.Id,
+				//              name = pd.Name,
+				//              price = pd.SalePrice,
+				//              //priceRTGS = pd.RtgsPrice,
+				//              image = pd.ProductImage,
+				//              tax = db.Taxs.FirstOrDefault(i => i.Id == pd.TaxId).TaxRate,
+				//              barcode = pd.BarCode,
+				//              quantity = sd.RemainingQuantity
+				//          };
+				// var res3 = from sd in stockdata.Where(k =>  k.Product_ProductId.ProductType == "SINGLE").ToList()
+				//           join pd in db.Products on sd.ProductId equals pd.Id
+				//           where pd.IsActive == true
+
+				//           orderby pd.Name
+				//           select new
+				//           {
+				//               id = pd.Id,
+				//               name = pd.Name,
+				//               price = pd.SalePrice,
+				//               //priceRTGS = pd.RtgsPrice,
+				//               image = pd.ProductImage,
+				//               tax = db.Taxs.FirstOrDefault(i => i.Id == pd.TaxId).TaxRate,
+				//               barcode = pd.BarCode,
+				//               quantity = sd.RemainingQuantity
+				//           };
+				//    res = res2.Concat(res3);
+				// }
+
+				System.Diagnostics.Debug.WriteLine("Test1 : " + userWarehouse);
+
+				//return Request.CreateResponse(HttpStatusCode.OK, res);
+
+				if (res.ToArray().Length != 0)
+				{
+					return Request.CreateResponse(
+					HttpStatusCode.OK,
+					res.ToList(),
+					JsonMediaTypeFormatter.DefaultMediaType);
+				}
+				else
+				{
+					return Request.CreateResponse(HttpStatusCode.NotFound, "Product not found , please try again");
+				}
+			}catch(Exception ex){
+				Helper.WriteError(ex, "Error in sell method: " + ex.Message);
+				Console.WriteLine(ex.InnerException.ToString());
+				return Request.CreateResponse(HttpStatusCode.InternalServerError,
+					new { error = "Transaction failed", message = ex.ToString() },
+					JsonMediaTypeFormatter.DefaultMediaType);
 			}
 
 			//return Request.CreateResponse<IEnumerable<string[]>>(HttpStatusCode.OK, res);
