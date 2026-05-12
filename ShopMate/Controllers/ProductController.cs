@@ -464,6 +464,8 @@ namespace ShopMate.Controllers
 							ObjProduct.MainParentId = (productParent.ProductCaseId == null || productParent.ProductCaseId.Value == 0) ? productParent.Id : productParent.MainParentId;
 						}
 
+						if (ObjProduct.Units == 0) ObjProduct.Units = 1;
+
 						if (productExist != null)
 						{
 							if (productWarehouse == 0)

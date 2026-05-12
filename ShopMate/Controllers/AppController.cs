@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
@@ -371,75 +372,46 @@ namespace ShopMate.Controllers
 			try
 			{
 				System.Diagnostics.Debug.WriteLine("Test1 : " + userWarehouse);
-				var query = from sd in db.WarehouseStocks
-							join pd in db.Products on sd.ProductId equals pd.Id
-							join sdP in db.WarehouseStocks on pd.MainParentId equals sdP.ProductId into parentStockGroup
-							from sdP in parentStockGroup.DefaultIfEmpty()   // 👈 This makes it a LEFT JOIN
-							join tax in db.Taxs on pd.TaxId equals tax.Id into taxGroup
-							from tax in taxGroup.DefaultIfEmpty()
-							where sd.WarehouseId == userWarehouse && pd.IsActive == true
-							orderby pd.Name
-							select new
-							{
-								id = pd.Id,
-								name = pd.Name,
-								price = pd.SalePrice,
-								//priceRTGS = pd.RtgsPrice,
-								image = pd.ProductImage,
-								tax = tax != null ? tax.TaxRate : 0,  // avoids NullReferenceException
-								barcode = pd.BarCode,
-								quantity = sd.RemainingQuantity == 0 ? (sdP != null) ? sdP.RemainingQuantity :  0 : sd.RemainingQuantity,
-								remainingSinglesQuantity = sd.RemainingSinglesQuantity,
-								remainingQuantity = sd.RemainingQuantity == 0 ? (sdP != null) ? sdP.RemainingQuantity : 0 : sd.RemainingQuantity,
-								unitSalePrice = pd.UnitSalePrice
+				var query = db.WarehouseStocks
+	.Where(sd => sd.WarehouseId == userWarehouse)
+	.Join(db.Products.Where(p => p.IsActive == true),
+		sd => sd.ProductId,
+		pd => pd.Id,
+		(sd, pd) => new { sd, pd })
+	.GroupJoin(db.WarehouseStocks,
+		temp => temp.pd.MainParentId,
+		sdP => sdP.ProductId,
+		(temp, parentStockGroup) => new { temp.sd, temp.pd, parentStockGroup })
+	.SelectMany(x => x.parentStockGroup.DefaultIfEmpty(),
+		(x, sdP) => new { x.sd, x.pd, sdP })
+	.GroupJoin(db.Taxs,
+		x => x.pd.TaxId,
+		tax => tax.Id,
+		(x, taxGroup) => new { x.sd, x.pd, x.sdP, taxGroup })
+	.SelectMany(x => x.taxGroup.DefaultIfEmpty(),
+		(x, tax) => new { x.sd, x.pd, x.sdP, tax })
+	.OrderBy(x => x.pd.Name)
+	.Select(x => new
+	{
+		id = x.pd.Id,
+		name = x.pd.Name,
+		price = x.pd.SalePrice,
+		image = x.pd.ProductImage,
+		tax = x.tax != null ? x.tax.TaxRate : 0,
+		barcode = x.pd.BarCode,
+		productType = x.pd.ProductType,
+		quantity = x.sd.RemainingQuantity == 0
+			? (x.sdP != null ? x.sdP.RemainingQuantity : 0)
+			: x.sd.RemainingQuantity,
+		remainingSinglesQuantity = x.pd.NumOfSinglesInCase,
+		remainingQuantity = x.sd.RemainingQuantity == 0
+			? (x.sdP != null ? x.sdP.RemainingQuantity : 0)
+			: x.sd.RemainingQuantity,
+		unitSalePrice = x.pd.UnitSalePrice,
+		numOfSinglesInCase = x.pd.NumOfSinglesInCase
+	});
 
-							};
-
-				var res = query.ToList();  // executes the query efficiently on the database side
-
-
-
-				//if (userWarehouse==8)
-				//{
-				//    //var roysen = db.WarehouseStocks.Where(m => m.Product_ProductId.ProductType == "case".ToLower() && m.RemainingQuantity > 0 && m.WarehouseId == userWarehouse);
-				//    //if (roysen != null)
-				//    //    if (stockdata = 2)
-				//    //    {
-				//    //    }
-				//  var  res2 = from sd in stockdata.Where(k=>k.RemainingQuantity > 0 && k.Product_ProductId.ProductType=="CASE").ToList()
-				//          join pd in db.Products on sd.ProductId equals pd.Id
-				//          where pd.IsActive == true
-
-				//          orderby pd.Name
-				//          select new
-				//          {
-				//              id = pd.Id,
-				//              name = pd.Name,
-				//              price = pd.SalePrice,
-				//              //priceRTGS = pd.RtgsPrice,
-				//              image = pd.ProductImage,
-				//              tax = db.Taxs.FirstOrDefault(i => i.Id == pd.TaxId).TaxRate,
-				//              barcode = pd.BarCode,
-				//              quantity = sd.RemainingQuantity
-				//          };
-				// var res3 = from sd in stockdata.Where(k =>  k.Product_ProductId.ProductType == "SINGLE").ToList()
-				//           join pd in db.Products on sd.ProductId equals pd.Id
-				//           where pd.IsActive == true
-
-				//           orderby pd.Name
-				//           select new
-				//           {
-				//               id = pd.Id,
-				//               name = pd.Name,
-				//               price = pd.SalePrice,
-				//               //priceRTGS = pd.RtgsPrice,
-				//               image = pd.ProductImage,
-				//               tax = db.Taxs.FirstOrDefault(i => i.Id == pd.TaxId).TaxRate,
-				//               barcode = pd.BarCode,
-				//               quantity = sd.RemainingQuantity
-				//           };
-				//    res = res2.Concat(res3);
-				// }
+				var res = query.ToList();
 
 				System.Diagnostics.Debug.WriteLine("Test1 : " + userWarehouse);
 
@@ -558,11 +530,63 @@ namespace ShopMate.Controllers
 									}
 								}
 								var ObjWarehouseStock = db.WarehouseStocks.Where(i => i.ProductId == item.prodId && i.WarehouseId == seller_user.WarehouseId).FirstOrDefault() ?? throw new Exception("Warehouse stock not found...Product Id:" + item.prodId + ", Warehouse Id:" + seller_user.WarehouseId);
-
 								// Check for sufficient stock before proceeding
 								if (ObjWarehouseStock.RemainingQuantity < quantity)
 								{
-									throw new Exception("Insufficient stock..." + item.prodId + "  Product Name...:" + selectedProduct.Name + ",  Remaining Quantity:" + ObjWarehouseStock.RemainingQuantity + ", Quantity:" + item.quantity);
+									if ("CASE".Equals(selectedProduct.ProductType))
+									{
+										// calculate units required
+										var unitsRequired = (selectedProduct.Units * quantity) + ((selectedProduct.Units/selectedProduct.NumOfSinglesInCase)*singlesQuantity);
+										Console.WriteLine("Required units..." + unitsRequired);
+										//process required units... by borrowing start with imme parent
+										var productStock = db.WarehouseStocks
+														 .Where(p => (p.Product_ProductId.Id == selectedProduct.MainParentId ||
+														 p.Product_ProductId.MainParentId == selectedProduct.MainParentId))
+														 .Distinct().OrderByDescending(p => p.Product_ProductId.Id)
+														 .ToList();
+										Console.WriteLine($"Products stock fetched. Count: {productStock.Count}");
+										WarehouseStock[] productsNavigated = new WarehouseStock[productStock.Count];
+										int count = 0;
+										//now get quantities...
+										foreach (var wh in productStock)
+										{
+
+											var warehouseProduct = wh.Product_ProductId;
+											var warehouseUnits = (warehouseProduct.Units * wh.RemainingQuantity) + ((warehouseProduct.Units/warehouseProduct.NumOfSinglesInCase)*wh.RemainingSinglesQuantity);
+
+											if (warehouseUnits < unitsRequired || warehouseProduct.Id > selectedProduct.Id)
+											{ // nothing to deduct from
+												productsNavigated[count] = wh;
+												count++;
+												continue;
+											}
+											//how many cases required from this product
+											var casesRequired = unitsRequired/warehouseProduct.Units;
+											Console.WriteLine($"Warehouse : {casesRequired}");
+											wh.RemainingQuantity -= Math.Ceiling(casesRequired);
+											db.Entry(wh).State = EntityState.Modified;
+
+											//deduct stock using order...
+										    foreach(var uwh in productsNavigated.Reverse()){
+												var uwhProduct = uwh.Product_ProductId;
+												if (uwhProduct.Id == selectedProduct.Id) continue;
+											}
+											// add quantity to a target warehouse
+											var providedUnits = (warehouseProduct.Units * Math.Ceiling(casesRequired));
+											var requiredTargetCases = providedUnits / selectedProduct.Units;
+											ObjWarehouseStock.RemainingQuantity += Math.Ceiling(requiredTargetCases);
+											db.Entry(ObjWarehouseStock).State = EntityState.Modified;
+											db.SaveChanges();
+											break;
+
+										}
+										Console.WriteLine($"Products stock fetched. Count: {productStock.Count}");
+									}
+									else
+									{
+										throw new Exception("Insufficient stock..." + item.prodId + "  Product Name...:" + selectedProduct.Name + ",  Remaining Quantity:" + ObjWarehouseStock.RemainingQuantity + ", Quantity:" + item.quantity);
+									}
+									
 								}
 								DateTime nowDate;
 								try

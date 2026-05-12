@@ -97,7 +97,7 @@ namespace ShopMate.Models
 
         public int NumOfSinglesInCase { get; set; } = 1;
 
-		[DisplayName("Units")]
+		[DisplayName("Units in case")]
 		public int Units { get; set; } = 0;
 		//  public string ProductCaseName { get; set; }
 
