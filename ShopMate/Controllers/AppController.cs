@@ -545,36 +545,74 @@ namespace ShopMate.Controllers
 														 .Distinct().OrderByDescending(p => p.Product_ProductId.Id)
 														 .ToList();
 										Console.WriteLine($"Products stock fetched. Count: {productStock.Count}");
-										WarehouseStock[] productsNavigated = new WarehouseStock[productStock.Count];
-										int count = 0;
+									    WarehouseStock firstToBeDeductedStock = null;
 										//now get quantities...
 										foreach (var wh in productStock)
 										{
-
+											//if (wh.RemainingQuantity == 0) continue;
 											var warehouseProduct = wh.Product_ProductId;
 											var warehouseUnits = (warehouseProduct.Units * wh.RemainingQuantity) + ((warehouseProduct.Units/warehouseProduct.NumOfSinglesInCase)*wh.RemainingSinglesQuantity);
 
 											if (warehouseUnits < unitsRequired || warehouseProduct.Id > selectedProduct.Id)
 											{ // nothing to deduct from
-												productsNavigated[count] = wh;
-												count++;
 												continue;
 											}
+											firstToBeDeductedStock = wh;
 											//how many cases required from this product
-											var casesRequired = unitsRequired/warehouseProduct.Units;
+											var casesRequired = Math.Ceiling(unitsRequired / warehouseProduct.Units);
 											Console.WriteLine($"Warehouse : {casesRequired}");
-											wh.RemainingQuantity -= Math.Ceiling(casesRequired);
+											wh.RemainingQuantity -= casesRequired;
+											
 											db.Entry(wh).State = EntityState.Modified;
 
-											//deduct stock using order...
-										    foreach(var uwh in productsNavigated.Reverse()){
-												var uwhProduct = uwh.Product_ProductId;
-												if (uwhProduct.Id == selectedProduct.Id) continue;
+											// Deduct stock using order...
+											WarehouseStock lastImmeProductStock = wh;
+											var productStockToDeduct = productStock
+											.Where(p=>p.ProductId > warehouseProduct.Id)
+												.OrderBy(p => p.Product_ProductId.Id).ToList();
+											Console.WriteLine($"..... {productStockToDeduct.Count}");
+											
+											foreach (var uwh in productStockToDeduct)
+											{
+												var immeChild = db.Products.FirstOrDefault(p => p.Id == uwh.ProductId);
+
+												if (immeChild == null) continue;
+												Console.WriteLine($"Trace Product...{immeChild.Name}");
+												var lastImmeProduct = lastImmeProductStock.Product_ProductId;
+												casesRequired = Math.Ceiling(unitsRequired / lastImmeProduct.Units);
+												Console.WriteLine($"Deduct... {immeChild.Name}");
+												//remove case from current
+												if (firstToBeDeductedStock != null && firstToBeDeductedStock.Id != uwh.Id)
+												{
+													if (wh.Id != lastImmeProductStock.Id)
+													{
+														lastImmeProductStock.RemainingQuantity -= casesRequired;
+														lastImmeProduct.RemainingQuantity = lastImmeProductStock.RemainingQuantity;
+													}
+												}
+												if (immeChild.Id == selectedProduct.Id)
+												{
+													break;
+												}
+												else if (immeChild.Id > warehouseProduct.Id)
+												{
+													//now add cases to the next product stock 
+													var _providedUnits = lastImmeProduct.Units * casesRequired;
+													var _requiredTargetCases = Math.Ceiling(_providedUnits / immeChild.Units);
+													uwh.RemainingQuantity += _requiredTargetCases;
+													db.Entry(uwh).State = EntityState.Modified;
+													immeChild.RemainingQuantity = uwh.RemainingQuantity;
+													db.Entry(immeChild).State = EntityState.Modified;
+													lastImmeProductStock = uwh;
+													db.SaveChanges();
+												}
 											}
+
 											// add quantity to a target warehouse
-											var providedUnits = (warehouseProduct.Units * Math.Ceiling(casesRequired));
-											var requiredTargetCases = providedUnits / selectedProduct.Units;
-											ObjWarehouseStock.RemainingQuantity += Math.Ceiling(requiredTargetCases);
+											var productToBeDeductedFrom = lastImmeProductStock.Product_ProductId;
+											var providedUnits = (productToBeDeductedFrom.Units * casesRequired);
+											var requiredTargetCases = Math.Ceiling(providedUnits / selectedProduct.Units);
+											ObjWarehouseStock.RemainingQuantity += requiredTargetCases;
 											db.Entry(ObjWarehouseStock).State = EntityState.Modified;
 											db.SaveChanges();
 											break;
@@ -822,7 +860,7 @@ namespace ShopMate.Controllers
 					// Rollback transaction on error
 					transaction.Rollback();
 					Helper.WriteError(ex, "Error in sell method: " + ex.Message);
-					Console.WriteLine(ex.InnerException.ToString());
+					//Console.WriteLine(ex.InnerException.ToString());
 					return Request.CreateResponse(HttpStatusCode.InternalServerError,
 						new { error = "Transaction failed", message = ex.ToString() },
 						JsonMediaTypeFormatter.DefaultMediaType);
