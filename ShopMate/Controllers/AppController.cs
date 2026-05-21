@@ -378,12 +378,18 @@ namespace ShopMate.Controllers
 		sd => sd.ProductId,
 		pd => pd.Id,
 		(sd, pd) => new { sd, pd })
-	.GroupJoin(db.WarehouseStocks,
+	.GroupJoin(db.WarehouseStocks.Where(p=>p.RemainingQuantity > 0),
 		temp => temp.pd.MainParentId,
 		sdP => sdP.ProductId,
 		(temp, parentStockGroup) => new { temp.sd, temp.pd, parentStockGroup })
 	.SelectMany(x => x.parentStockGroup.DefaultIfEmpty(),
 		(x, sdP) => new { x.sd, x.pd, sdP })
+	 .GroupJoin(db.WarehouseStocks.Where(p => p.RemainingQuantity > 0),
+		temp => temp.pd.ProductCaseId,
+		sdP => sdP.ProductId,
+		(temp, parentStockGroup2) => new { temp.sd, temp.pd, temp.sdP, parentStockGroup2 })
+	.SelectMany(x => x.parentStockGroup2.DefaultIfEmpty(),
+		(x, sdPc) => new { x.sd, x.pd, x.sdP, parentStockCase = sdPc })
 	.GroupJoin(db.Taxs,
 		x => x.pd.TaxId,
 		tax => tax.Id,
@@ -400,13 +406,9 @@ namespace ShopMate.Controllers
 		tax = x.tax != null ? x.tax.TaxRate : 0,
 		barcode = x.pd.BarCode,
 		productType = x.pd.ProductType,
-		quantity = x.sd.RemainingQuantity == 0
-			? (x.sdP != null ? x.sdP.RemainingQuantity : 0)
-			: x.sd.RemainingQuantity,
-		remainingSinglesQuantity = x.pd.NumOfSinglesInCase,
-		remainingQuantity = x.sd.RemainingQuantity == 0
-			? (x.sdP != null ? x.sdP.RemainingQuantity : 0)
-			: x.sd.RemainingQuantity,
+		quantity = x.sdP != null && x.sdP.RemainingQuantity > 0 && x.sdP.ProductId != x.pd.Id ? Math.Ceiling((x.sdP.RemainingQuantity * x.sdP.Product_ProductId.Units)/ x.pd.NumOfSinglesInCase) +x.pd.RemainingQuantity: "CASE".Equals(x.pd.ProductType) ? 10000000000000 :  x.sd.RemainingQuantity,
+		remainingSinglesQuantity = 0,
+		remainingQuantity = x.sdP != null && x.sdP.RemainingQuantity > 0 && x.sdP.ProductId != x.pd.Id ? Math.Ceiling((x.sdP.RemainingQuantity * x.sdP.Product_ProductId.Units)/ x.pd.NumOfSinglesInCase) + x.pd.RemainingQuantity : "CASE".Equals(x.pd.ProductType) ? 10000000000000 : x.sd.RemainingQuantity,
 		unitSalePrice = x.pd.UnitSalePrice,
 		numOfSinglesInCase = x.pd.NumOfSinglesInCase
 	});
@@ -520,7 +522,7 @@ namespace ShopMate.Controllers
 								{ // if case look for singles
 									var quntities = item.quantity.ToString().Split('.');
 									if (quntities.Length == 2)
-									{
+									{ 
 										singlesQuantity = int.Parse(quntities[1]);
 										if (singlesQuantity >= selectedProduct.NumOfSinglesInCase)
 										{
@@ -549,17 +551,20 @@ namespace ShopMate.Controllers
 										//now get quantities...
 										foreach (var wh in productStock)
 										{
-											//if (wh.RemainingQuantity == 0) continue;
 											var warehouseProduct = wh.Product_ProductId;
-											var warehouseUnits = (warehouseProduct.Units * wh.RemainingQuantity) + ((warehouseProduct.Units/warehouseProduct.NumOfSinglesInCase)*wh.RemainingSinglesQuantity);
+											var warehouseUnitsFromCases = (warehouseProduct.Units * wh.RemainingQuantity);
+											//var warehouseUnitsFromSingles = ((warehouseProduct.Units / warehouseProduct.NumOfSinglesInCase) * wh.RemainingSinglesQuantity);
+											//int warehouseUnits = (int)warehouseUnitsFromCases + warehouseUnitsFromSingles;
+											int warehouseUnits = (int)warehouseUnitsFromCases;
 
 											if (warehouseUnits < unitsRequired || warehouseProduct.Id > selectedProduct.Id)
 											{ // nothing to deduct from
 												continue;
 											}
 											firstToBeDeductedStock = wh;
-											//how many cases required from this product
+											//how many cases or units required from this product
 											var casesRequired = Math.Ceiling(unitsRequired / warehouseProduct.Units);
+											//var singlesRequired = Math.Ceiling((unitsRequired / warehouseProduct.Units)/warehouseProduct.NumOfSinglesInCase);
 											Console.WriteLine($"Warehouse : {casesRequired}");
 											wh.RemainingQuantity -= casesRequired;
 											
@@ -732,42 +737,60 @@ namespace ShopMate.Controllers
 									int currentSingles = ObjWarehouseStock.RemainingSinglesQuantity;
 									int remainingSinglesAfter = currentSingles - singlesQuantity;
 
+									WarehouseStock childStock = selectedProduct.Units > 0 ? db.WarehouseStocks.Where(p=>p.Product_ProductId.ProductCaseId == selectedProduct.Id).FirstOrDefault() : null;
+									Product childProduct = childStock != null && selectedProduct.Units > 0 ? childStock.Product_ProductId : null;
 									// Reduce full case count
 									ObjWarehouseStock.RemainingQuantity -= quantity;
 
 									// Update loose singles based on the computed remaining amount
 									if (currentSingles == 0 && remainingSinglesAfter == 0)
 									{
-										ObjWarehouseStock.RemainingSinglesQuantity = 0;
+									    if(childStock != null && singlesQuantity > 0){
+											childStock.RemainingQuantity = 0;
+										}
+										//ObjWarehouseStock.RemainingSinglesQuantity = 0;
 									}
 
 									else if (remainingSinglesAfter < 0)
 									{
 										// Borrow a full case to cover the shortage
-										ObjWarehouseStock.RemainingSinglesQuantity = (int)(selectedProduct.NumOfSinglesInCase + remainingSinglesAfter);
+										if(childStock != null && singlesQuantity > 0)
+											childStock.RemainingQuantity = (int)(selectedProduct.NumOfSinglesInCase + remainingSinglesAfter);
+										//ObjWarehouseStock.RemainingSinglesQuantity = (int)(selectedProduct.NumOfSinglesInCase + remainingSinglesAfter);
 										ObjWarehouseStock.RemainingQuantity--;   // one extra case broken open
 									}
 									else if (remainingSinglesAfter > 0)
 									{
 										// Only update if the remaining singles meet or exceed the singlesQuantity threshold
 										if (currentSingles == singlesQuantity)
-											ObjWarehouseStock.RemainingSinglesQuantity = 0;
-										else if (currentSingles > singlesQuantity)
-											ObjWarehouseStock.RemainingSinglesQuantity = remainingSinglesAfter;
+											//ObjWarehouseStock.RemainingSinglesQuantity = 0;
+											if (childStock != null)
+												childStock.RemainingQuantity = 0;
+										else if (currentSingles > singlesQuantity && singlesQuantity > 0)
+												childStock.RemainingQuantity = remainingSinglesAfter;
 										// If 0 < remainingSinglesAfter < singlesQuantity, leave the value unchanged (original behavior)
 
 									}
 									else if (remainingSinglesAfter == 0)
 									{
-										ObjWarehouseStock.RemainingSinglesQuantity = 0;
+									 	if (childStock != null && singlesQuantity > 0)
+											childStock.RemainingQuantity = 0;
 									}
 									// The original 'else if (singlesQuantity == 0)' branch was unreachable and has been removed
+									if (childStock != null)
+										db.Entry(childStock).State = EntityState.Modified;
+									if(childProduct != null){
+										childProduct.RemainingQuantity = childStock.RemainingQuantity;
+										db.Entry(childProduct).State = EntityState.Modified;
+									}
+									db.SaveChanges();
 								}
 								else
 								{
 									// Non‑case product: treat RemainingQuantity as the count of individual items
 									ObjWarehouseStock.RemainingQuantity -= quantity;
 									ObjWarehouseStock.RemainingSinglesQuantity = 0;
+									
 								}
 
 								if (ObjWarehouseStock.RemainingQuantity < 0) throw new Exception("Insufficient stock");
