@@ -215,9 +215,14 @@ namespace ShopMate.Controllers
 				DateAdded = DateTime.Now,
 				DateModied = DateTime.Now,
 				TaxId = 5,
-				ProductCaseId = caseId,
+				ProductCaseId = source.ProductCaseId,
 				UnitSalePrice = source.UnitSalePrice,
-				ProductType = source.ProductType
+				ProductType = source.ProductType,
+				Units = source.Units,
+				MainParentId = source.MainParentId,
+				RemainingQuantity = source.RemainingQuantity
+				
+
 			};
 			return newprod;
 		}
@@ -254,15 +259,19 @@ namespace ShopMate.Controllers
                                 Id = Convert.ToInt16(objDataRow["Id"].ToString()),
                                 Name = Convert.ToString(objDataRow["Name"].ToString()),
                                 BarCode = Convert.ToString(objDataRow["Bar Code"].ToString()),
-                                ProductType = Convert.ToString(objDataRow["Case Name"].ToString()),
+                                ProductType = Convert.ToString(objDataRow["ProductType"].ToString()),
                                 PurchasePrice = Convert.ToDecimal(objDataRow["Purchase Price"].ToString()),
                                 SalePrice = Convert.ToDecimal(objDataRow["Sale Price"].ToString()),
                                 ProductDescription = Convert.ToString(objDataRow["Product Description"].ToString()),
                                 WarehouseId = Convert.ToInt16(objDataRow["Warehouse Id"].ToString()),
                                 RemainingQuantity = Convert.ToDecimal(objDataRow["RemainingQuantity"].ToString()),
-                                NumOfSinglesInCase = Convert.ToInt32(objDataRow["No Of Singles"].ToString()),
+                                NumOfSinglesInCase = Convert.ToInt32(objDataRow["Number of singles in case"].ToString()),
 								UnitSalePrice = Convert.ToDecimal(objDataRow["UnitSalePrice"].ToString()),
-								//Ngoni to add spefic parameters for the product model
+
+								Units = Convert.ToInt32(objDataRow["Units in case"].ToString()),
+								MainParentId = Convert.ToInt32(objDataRow["MainParentId"].ToString()),
+								ProductCaseId = Convert.ToInt32(objDataRow["ProductCaseId"].ToString()),
+								// add spefic parameters for the product model
 							});
                             Ngoni = Ngoni + 1;
                         }

@@ -2,14 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
-using System.Data.Entity.Migrations;
 using System.Data.SqlClient;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using ShopMate.Migrations;
 using ShopMate.ModelDto;
 using ShopMate.Models;
 using WebErrorLogging.Utilities;
@@ -164,9 +161,13 @@ namespace ShopMate.Controllers
 			 Convert.ToString(c.WarehouseId),
            // Convert.ToString(c.StockAlert),
              Convert.ToString(pd.RemainingQuantity),
-			 Convert.ToString(pd.RemainingSinglesQuantity),
+			 //Convert.ToString(pd.RemainingSinglesQuantity),
 			 Convert.ToString(c.Units),
-			  Convert.ToString(c.NumOfSinglesInCase),
+			 Convert.ToString(c.NumOfSinglesInCase),
+			 Convert.ToString(c.MainParentId),
+			 Convert.ToString(c.ProductCaseId),
+			 Convert.ToString(c.ProductType),
+			 Convert.ToString(c.UnitSalePrice),
          //   Convert.ToString(tax.FirstOrDefault(i=>i.Id==c.TaxId).TaxRate+" %")
                 
                 

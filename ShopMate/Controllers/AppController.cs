@@ -793,7 +793,7 @@ namespace ShopMate.Controllers
 									
 								}
 
-								if (ObjWarehouseStock.RemainingQuantity < 0) throw new Exception("Insufficient stock");
+								//if (ObjWarehouseStock.RemainingQuantity < 0) throw new Exception("Insufficient stock");
 
 								db.Entry(ObjWarehouseStock).State = EntityState.Modified;
 
