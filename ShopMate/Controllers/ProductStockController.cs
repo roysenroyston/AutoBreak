@@ -2,120 +2,410 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using System.IO;
-using ShopMate.Models;
-using System.Data.SqlClient;
+using ShopMate.Migrations;
 using ShopMate.ModelDto;
+using ShopMate.Models;
 using WebErrorLogging.Utilities;
 
 namespace ShopMate.Controllers
 {
-    public class ProductStockController : BaseController
-    {
-        string userId = Env.GetUserInfo("name");
-        string warehouse = Env.GetUserInfo("WarehouseId");
-        int AddedBy = int.Parse(Env.GetUserInfo("userid"));
-        int warehouses = int.Parse(Env.GetUserInfo("WarehouseId"));
-        // GET: /ProductStock/
-        public ActionResult Index()
-        {
-            //ViewBag.ProductId = new SelectList(db.ProductStocks, "Id", "Name");
-            return View();
-        }
+	public class ProductStockController : BaseController
+	{
+		string userId = Env.GetUserInfo("name");
+		string warehouse = Env.GetUserInfo("WarehouseId");
+		int AddedBy = int.Parse(Env.GetUserInfo("userid"));
+		int warehouses = int.Parse(Env.GetUserInfo("WarehouseId"));
+		// GET: /ProductStock/
+		public ActionResult Index()
+		{
+			//ViewBag.ProductId = new SelectList(db.ProductStocks, "Id", "Name");
+			return View();
+		}
 
-        // GET ProductStock/GetGrid
-        public ActionResult GetGrid()
-        {
-            try
-            {
-            //  int wareid = Convert.ToInt16(warehouse);
-                var tak = db.ProductStocks.Where(k=> k.WarehouseId == warehouses).ToArray();
-                var user = db.Users.ToArray();
-                var tax = db.Taxs.ToArray();
-            
-                
-                    var result = from c in tak.Where(n =>  n.InventoryTypeId== 1012 || n.InventoryTypeId == 1011)
-                                 select new string[] {
-                            c.Id.ToString(),
-                            Convert.ToString(c.Id),
-            Convert.ToString(c.Product_ProductId.Name),
-            Convert.ToString(c.Quantity),
-            Convert.ToString(c.Description),
-            Convert.ToString(db.Users.FirstOrDefault(m=> m.Id==c.AddedBy).UserName),
-            Convert.ToString(c.DateAdded),
-            Convert.ToString((db.Users.FirstOrDefault(m=> m.Id==c.ModifiedBy).UserName)),
-            Convert.ToString(c.DateModied),
-            Convert.ToString(c.InventoryType_InventoryTypeId.Name),
-            Convert.ToString(db.Warehouses.FirstOrDefault( w => w.Id == c.WarehouseId).Name)
-            };
-                    return Json(new { aaData = result }, JsonRequestBehavior.AllowGet);
-                
-                
-
-            }
-            catch (Exception ex)
-            {
-                Helper.WriteError(ex, ex.Message);
-                return View(ex.Message);
-            }
-
-            //bool isAdmin = false;
-            ////TODO: Check the user if it is admin or normal user, (true-Admin, false- Normal user)
-            //string output = isAdmin ? "Welcome to the Admin User" : "Welcome to the User";
-
-            //return Json(output, JsonRequestBehavior.AllowGet);
-        }
+		// GET ProductStock/GetGrid
+		public ActionResult GetGrid()
+		{
+			try
+			{
+				//  int wareid = Convert.ToInt16(warehouse);
+				var tak = db.ProductStocks.Where(k => k.WarehouseId == warehouses).ToArray();
+				var user = db.Users.ToArray();
+				var tax = db.Taxs.ToArray();
 
 
-        public ActionResult ModelBindIndex()
-        {
-            return View();
-        }
-        // GET: /ProductStock/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            ProductStock ObjProductStock = db.ProductStocks.Find(id);
-            if (ObjProductStock == null)
-            {
-                return HttpNotFound();
-            }
-            return View(ObjProductStock);
-        }
-       
-        // GET: /ProductStock/Create
-        public ActionResult Create()
-        {
-            var userCustomers = db.Users.FirstOrDefault(n => n.UserName == userId).WarehouseId;
-            if (userId == "Zimhope")
-            {
-                ViewBag.WareHouse = new SelectList(db.Warehouses, "Id", "Name");
-                ViewBag.ProductId = new SelectList(db.Products.Where(m=> m.IsActive == true), "Id", "Name");
-                ViewBag.InventoryTypeId = new SelectList(db.InventoryTypes.Where(n => n.Id == 1011 || n.Id == 1012), "Id", "Name");
-                ViewBag.taxId = new SelectList(db.Taxs, "Id", "Name");
-                return View();
-            }
-            else
-            {
-                ViewBag.WareHouse = new SelectList(db.Warehouses.Where(n => n.Id == userCustomers), "Id", "Name");
-                ViewBag.ProductId = new SelectList(db.Products.Where(i=>i.WarehouseId== userCustomers), "Id", "Name");
-                ViewBag.InventoryTypeId = new SelectList(db.InventoryTypes.Where(n => n.Id == 1011 || n.Id == 1012), "Id", "Name");
-                ViewBag.taxId = new SelectList(db.Taxs, "Id", "Name");
-                return View();
-            }
-        }
+				var result = from c in tak.Where(n => n.InventoryTypeId == 1012 || n.InventoryTypeId == 1011)
+							 select new string[] {
+							c.Id.ToString(),
+							Convert.ToString(c.Id),
+			Convert.ToString(c.Product_ProductId.Name),
+			Convert.ToString(c.Quantity),
+			Convert.ToString(c.Description),
+			Convert.ToString(db.Users.FirstOrDefault(m=> m.Id==c.AddedBy).UserName),
+			Convert.ToString(c.DateAdded),
+			Convert.ToString((db.Users.FirstOrDefault(m=> m.Id==c.ModifiedBy).UserName)),
+			Convert.ToString(c.DateModied),
+			Convert.ToString(c.InventoryType_InventoryTypeId.Name),
+			Convert.ToString(db.Warehouses.FirstOrDefault( w => w.Id == c.WarehouseId).Name)
+			};
+				return Json(new { aaData = result }, JsonRequestBehavior.AllowGet);
 
-        // POST: /ProductStock/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+
+
+			}
+			catch (Exception ex)
+			{
+				Helper.WriteError(ex, ex.Message);
+				return View(ex.Message);
+			}
+
+			//bool isAdmin = false;
+			////TODO: Check the user if it is admin or normal user, (true-Admin, false- Normal user)
+			//string output = isAdmin ? "Welcome to the Admin User" : "Welcome to the User";
+
+			//return Json(output, JsonRequestBehavior.AllowGet);
+		}
+
+
+		public ActionResult ModelBindIndex()
+		{
+			return View();
+		}
+		// GET: /ProductStock/Details/5
+		public ActionResult Details(int? id)
+		{
+			if (id == null)
+			{
+				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+			}
+			ProductStock ObjProductStock = db.ProductStocks.Find(id);
+			if (ObjProductStock == null)
+			{
+				return HttpNotFound();
+			}
+			return View(ObjProductStock);
+		}
+
+		// GET: /ProductStock/Create
+		public ActionResult Create()
+		{
+			var userCustomers = db.Users.FirstOrDefault(n => n.UserName == userId).WarehouseId;
+			if (userId == "Zimhope")
+			{
+				ViewBag.WareHouse = new SelectList(db.Warehouses, "Id", "Name");
+				ViewBag.ProductId = new SelectList(db.Products.Where(m => m.IsActive == true), "Id", "Name");
+				ViewBag.InventoryTypeId = new SelectList(db.InventoryTypes.Where(n => n.Id == 1011 || n.Id == 1012), "Id", "Name");
+				ViewBag.taxId = new SelectList(db.Taxs, "Id", "Name");
+				return View();
+			}
+			else
+			{
+				ViewBag.WareHouse = new SelectList(db.Warehouses.Where(n => n.Id == userCustomers), "Id", "Name");
+				ViewBag.ProductId = new SelectList(db.Products.Where(i => i.WarehouseId == userCustomers), "Id", "Name");
+				ViewBag.InventoryTypeId = new SelectList(db.InventoryTypes.Where(n => n.Id == 1011 || n.Id == 1012), "Id", "Name");
+				ViewBag.taxId = new SelectList(db.Taxs, "Id", "Name");
+				return View();
+			}
+		}
+
+		// POST: /ProductStock/Create
+		// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+		// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+		//      [HttpPost]
+		////  [ValidateAntiForgeryToken]
+		////   [ValidateInput(false)]
+		////public ActionResult Create(ProductStock ObjProductStock)
+		//public ActionResult Create(/*ProductStock ObjProductStock,*/ int? InvenoryId, ProductStock[] productss, int? WarehouseId, string Description = "")
+		//{
+		//	System.Text.StringBuilder sb = new System.Text.StringBuilder();
+		//	string result = "Error! Adjustment Is Not Complete!";
+		//	Console.WriteLine("About to save product stock.....");
+		//	// Start a database transaction
+		//	using (var transaction = db.Database.BeginTransaction())
+		//	{
+		//		try
+		//		{
+		//			if (ModelState.IsValid)
+		//			{
+		//                      if (productss == null)
+		//                      {
+		//					transaction.Rollback();
+		//					result = "Pease add at least one product";
+		//					return Json(result, JsonRequestBehavior.AllowGet);
+		//				}
+
+		//				foreach (var item in productss)
+		//				{
+		//					ProductStock ObjProductStock = new ProductStock
+		//					{
+		//						ProductId = item.ProductId,
+		//						InventoryTypeId = InvenoryId,
+		//						WarehouseId = (int)WarehouseId,
+		//						Description = Description,
+		//						Quantity = item.Quantity,
+		//						AddedBy = AddedBy,
+		//						DateAdded = DateTime.Now,
+		//						DateModied = DateTime.Now,
+		//						ModifiedBy = AddedBy
+		//					};
+
+		//					var selectedProduct = db.Products.FirstOrDefault(i => i.Id == ObjProductStock.ProductId);
+		//					var ObjWarehouseStock = db.WarehouseStocks.FirstOrDefault(i => i.ProductId == ObjProductStock.ProductId && i.WarehouseId == ObjProductStock.WarehouseId);
+
+		//					// Check if warehouse stock exists
+		//					if (ObjWarehouseStock == null)
+		//					{
+		//						transaction.Rollback();
+		//						result = "Error! Warehouse stock not found for product: " + ObjProductStock.ProductId;
+		//						return Json(result, JsonRequestBehavior.AllowGet);
+		//					}
+
+		//					// Check if product exists
+		//					if (selectedProduct == null)
+		//					{
+		//						transaction.Rollback();
+		//						result = "Error! Product not found for ID: " + ObjProductStock.ProductId;
+		//						return Json(result, JsonRequestBehavior.AllowGet);
+		//					}
+
+		//					//if (ObjProductStock.InventoryTypeId == 1|| ObjProductStock.InventoryTypeId == 2)
+		//					if (ObjProductStock.InventoryTypeId == 1)
+		//					{
+		//						// Check for negative stock
+		//						if (ObjWarehouseStock.RemainingQuantity < ObjProductStock.Quantity)
+		//						{
+		//							transaction.Rollback();
+		//							result = "Error! Insufficient stock for product: " + selectedProduct.Name;
+		//							return Json(result, JsonRequestBehavior.AllowGet);
+		//						}
+		//						ObjWarehouseStock.RemainingQuantity = ObjWarehouseStock.RemainingQuantity - ObjProductStock.Quantity;
+		//						db.Entry(ObjWarehouseStock).State = EntityState.Modified;
+		//					}
+		//					else if (ObjProductStock.InventoryTypeId == 2)
+		//					{
+		//						// Check for negative stock
+		//						if (ObjWarehouseStock.RemainingQuantity < ObjProductStock.Quantity)
+		//						{
+		//							transaction.Rollback();
+		//							result = "Error! Insufficient stock for product: " + selectedProduct.Name;
+		//							return Json(result, JsonRequestBehavior.AllowGet);
+		//						}
+		//						ObjWarehouseStock.RemainingQuantity = ObjWarehouseStock.RemainingQuantity - ObjProductStock.Quantity;
+		//						db.Entry(ObjWarehouseStock).State = EntityState.Modified;
+		//					}
+		//					else if (ObjProductStock.InventoryTypeId == 5)
+		//					{
+		//						// Check for negative stock
+		//						if (selectedProduct.RemainingQuantity < ObjProductStock.Quantity)
+		//						{
+		//							transaction.Rollback();
+		//							result = "Error! Insufficient stock for product: " + selectedProduct.Name;
+		//							return Json(result, JsonRequestBehavior.AllowGet);
+		//						}
+		//						selectedProduct.RemainingQuantity = selectedProduct.RemainingQuantity - ObjProductStock.Quantity;
+		//						selectedProduct.RemainingAmount = selectedProduct.RemainingAmount - ObjProductStock.TotalSaleAmountWithTax;
+		//						db.Entry(selectedProduct).State = EntityState.Modified;
+		//					}
+		//					else if (ObjProductStock.InventoryTypeId == 6)
+		//					{
+		//						selectedProduct.RemainingQuantity = selectedProduct.RemainingQuantity + ObjProductStock.Quantity;
+		//						selectedProduct.RemainingAmount = selectedProduct.RemainingAmount + ObjProductStock.TotalSaleAmountWithTax;
+		//						db.Entry(selectedProduct).State = EntityState.Modified;
+		//					}
+		//					else if (ObjProductStock.InventoryTypeId == 7)
+		//					{
+		//						// Check for negative stock
+		//						if (selectedProduct.RemainingQuantity < ObjProductStock.Quantity)
+		//						{
+		//							transaction.Rollback();
+		//							result = "Error! Insufficient stock for product: " + selectedProduct.Name;
+		//							return Json(result, JsonRequestBehavior.AllowGet);
+		//						}
+		//						selectedProduct.RemainingQuantity = selectedProduct.RemainingQuantity - ObjProductStock.Quantity;
+		//						selectedProduct.RemainingAmount = selectedProduct.RemainingAmount - ObjProductStock.TotalSaleAmountWithTax;
+		//						db.Entry(selectedProduct).State = EntityState.Modified;
+		//					}
+		//					else if (ObjProductStock.InventoryTypeId == 3)
+		//					{
+		//						// Check for negative stock
+		//						if (selectedProduct.RemainingQuantity < ObjProductStock.Quantity)
+		//						{
+		//							transaction.Rollback();
+		//							result = "Error! Insufficient stock for product: " + selectedProduct.Name;
+		//							return Json(result, JsonRequestBehavior.AllowGet);
+		//						}
+		//						selectedProduct.RemainingQuantity = selectedProduct.RemainingQuantity - ObjProductStock.Quantity;
+		//						selectedProduct.RemainingAmount = selectedProduct.RemainingAmount - ObjProductStock.TotalSaleAmountWithTax;
+		//						db.Entry(selectedProduct).State = EntityState.Modified;
+		//					}
+		//					else if (ObjProductStock.InventoryTypeId == 4)
+		//					{
+		//						ObjWarehouseStock.RemainingQuantity = ObjWarehouseStock.RemainingQuantity + ObjProductStock.Quantity;
+		//						db.Entry(ObjWarehouseStock).State = EntityState.Modified;
+		//					}
+		//					else if (ObjProductStock.InventoryTypeId == 1011 || ObjProductStock.InventoryTypeId == 1013)
+		//					{
+		//						ObjWarehouseStock.RemainingQuantity = ObjWarehouseStock.RemainingQuantity + ObjProductStock.Quantity;
+		//						db.Entry(ObjWarehouseStock).State = EntityState.Modified;
+		//					}
+		//					else if (ObjProductStock.InventoryTypeId == 1012)
+		//					{
+		//						if (ObjWarehouseStock.RemainingQuantity >= ObjProductStock.Quantity)
+		//						{
+		//							ObjWarehouseStock.RemainingQuantity = ObjWarehouseStock.RemainingQuantity - ObjProductStock.Quantity;
+		//							db.Entry(ObjWarehouseStock).State = EntityState.Modified;
+		//						}
+		//						else
+		//						{
+		//							transaction.Rollback();
+		//							result = "Error! Insufficient stock for product: " + selectedProduct.Name;
+		//							return Json(result, JsonRequestBehavior.AllowGet);
+		//						}
+		//					}
+
+
+		//                          if(ObjProductStock.RemainingSinglesQuantity > 0 && ObjWarehouseStock.RemainingQuantity == 0)
+		//					{ // If there is a loose one, you cannot return all the boxes.
+		//						transaction.Rollback();
+		//						result = "If there is a loose one, you cannot return all the boxes. " + selectedProduct.Name;
+		//						return Json(result, JsonRequestBehavior.AllowGet);
+		//					}
+
+		//					ObjProductStock.PurchasePrice = selectedProduct.PurchasePrice;
+		//					ObjProductStock.SalePrice = selectedProduct.SalePrice;
+		//					ObjProductStock.RemainingQuantity = ObjWarehouseStock.RemainingQuantity;
+		//					db.ProductStocks.Add(ObjProductStock);
+		//				}
+
+		//				// Save all changes once at the end
+		//				db.SaveChanges(userId);
+		//                      Console.WriteLine("Product stock saved.....");
+		//				// Commit the transaction
+		//				transaction.Commit();
+
+		//				result = "Success! Adjustment Completed";
+		//				return Json(result, JsonRequestBehavior.AllowGet);
+		//			}
+		//			else
+		//			{
+		//				foreach (var key in this.ViewData.ModelState.Keys)
+		//				{
+		//					foreach (var err in this.ViewData.ModelState[key].Errors)
+		//					{
+		//						sb.Append(err.ErrorMessage + "<br/>");
+		//					}
+		//				}
+		//				result = "Error! Validation failed: " + sb.ToString();
+		//				return Json(result, JsonRequestBehavior.AllowGet);
+		//			}
+		//		}
+		//		catch (Exception ex)
+		//		{
+		//			// Rollback the transaction on error
+		//			transaction.Rollback();
+		//			Helper.WriteError(ex, ex.Message);
+		//			sb.Append("Error :" + ex.Message);
+		//			result = "Error! " + ex.Message;
+		//			return Json(result, JsonRequestBehavior.AllowGet);
+		//		}
+		//	}
+		//}
+
+
+		private void UpdateStockForChild(Product selectedProduct, WarehouseStock ObjWarehouseStock, decimal quantity, List<WarehouseStock> productStock,
+		 List<WarehouseStock> productStockToAddStock)
+		{
+			// calculate units required
+			var unitsRequired = (selectedProduct.Units * quantity);
+			Console.WriteLine("Required units..." + unitsRequired);
+			//process required units... by borrowing start with imme parent
+			
+			Console.WriteLine($"Products stock fetched. Count: {productStock.Count}");
+			WarehouseStock firstToBeDeductedStock = null;
+			//now get quantities...
+			foreach (var wh in productStock)
+			{
+				var warehouseProduct = wh.Product_ProductId;
+				var warehouseUnitsFromCases = (warehouseProduct.Units * wh.RemainingQuantity);
+				//var warehouseUnitsFromSingles = ((warehouseProduct.Units / warehouseProduct.NumOfSinglesInCase) * wh.RemainingSinglesQuantity);
+				//int warehouseUnits = (int)warehouseUnitsFromCases + warehouseUnitsFromSingles;
+				int warehouseUnits = (int)warehouseUnitsFromCases;
+
+				if (warehouseUnits < unitsRequired || warehouseProduct.Id > selectedProduct.Id)
+				{ // nothing to deduct from
+					continue;
+				}
+				firstToBeDeductedStock = wh;
+				//how many cases or units required from this product
+				var casesRequired = Math.Ceiling(unitsRequired / warehouseProduct.Units);
+				//var singlesRequired = Math.Ceiling((unitsRequired / warehouseProduct.Units)/warehouseProduct.NumOfSinglesInCase);
+				Console.WriteLine($"Warehouse : {casesRequired}");
+				wh.RemainingQuantity -= casesRequired;
+
+				db.Entry(wh).State = EntityState.Modified;
+
+				// Deduct stock using order...
+				WarehouseStock lastImmeProductStock = wh;
+				var productStockToDeduct = productStock
+				.Where(p => p.ProductId > warehouseProduct.Id)
+					.OrderBy(p => p.Product_ProductId.Id).ToList();
+				Console.WriteLine($"..... {productStockToDeduct.Count}");
+
+				foreach (var uwh in productStockToDeduct)
+				{
+					var immeChild = db.Products.FirstOrDefault(p => p.Id == uwh.ProductId);
+
+					if (immeChild == null) continue;
+					Console.WriteLine($"Trace Product...{immeChild.Name}");
+					var lastImmeProduct = lastImmeProductStock.Product_ProductId;
+					casesRequired = Math.Ceiling(unitsRequired / lastImmeProduct.Units);
+					Console.WriteLine($"Deduct... {immeChild.Name}");
+					//remove case from current
+					if (firstToBeDeductedStock != null && firstToBeDeductedStock.Id != uwh.Id)
+					{
+						if (wh.Id != lastImmeProductStock.Id)
+						{
+							lastImmeProductStock.RemainingQuantity -= casesRequired;
+							lastImmeProduct.RemainingQuantity = lastImmeProductStock.RemainingQuantity;
+						}
+					}
+					if (immeChild.Id == selectedProduct.Id)
+					{
+						break;
+					}
+					else if (immeChild.Id > warehouseProduct.Id)
+					{
+						//now add cases to the next product stock 
+						var _providedUnits = lastImmeProduct.Units * casesRequired;
+						var _requiredTargetCases = Math.Ceiling(_providedUnits / immeChild.Units);
+						uwh.RemainingQuantity += _requiredTargetCases;
+						db.Entry(uwh).State = EntityState.Modified;
+						immeChild.RemainingQuantity = uwh.RemainingQuantity;
+						db.Entry(immeChild).State = EntityState.Modified;
+						lastImmeProductStock = uwh;
+						db.SaveChanges();
+					}
+				}
+
+				// add quantity to a target warehouse
+				var productToBeDeductedFrom = lastImmeProductStock.Product_ProductId;
+				var providedUnits = (productToBeDeductedFrom.Units * casesRequired);
+				var requiredTargetCases = Math.Ceiling(providedUnits / selectedProduct.Units);
+				ObjWarehouseStock.RemainingQuantity += requiredTargetCases;
+				db.Entry(ObjWarehouseStock).State = EntityState.Modified;
+				db.SaveChanges();
+				break;
+
+			}
+		}
+
+
+		[HttpPost]
 		//  [ValidateAntiForgeryToken]
 		//   [ValidateInput(false)]
 		//public ActionResult Create(ProductStock ObjProductStock)
@@ -131,8 +421,8 @@ namespace ShopMate.Controllers
 				{
 					if (ModelState.IsValid)
 					{
-                        if (productss == null)
-                        {
+						if (productss == null)
+						{
 							transaction.Rollback();
 							result = "Pease add at least one product";
 							return Json(result, JsonRequestBehavior.AllowGet);
@@ -171,119 +461,52 @@ namespace ShopMate.Controllers
 								result = "Error! Product not found for ID: " + ObjProductStock.ProductId;
 								return Json(result, JsonRequestBehavior.AllowGet);
 							}
-
+							if(ObjProductStock.InventoryTypeId == 1011){
+								ObjWarehouseStock.RemainingQuantity += item.Quantity;
+							}else{
+								ObjWarehouseStock.RemainingQuantity -= item.Quantity;
+							}
+							
+							selectedProduct.RemainingQuantity = ObjWarehouseStock.RemainingQuantity;
+							db.Entry(ObjWarehouseStock).State = EntityState.Modified;
+							db.Entry(selectedProduct).State = EntityState.Modified;
+							db.SaveChanges(userId);
 							//if (ObjProductStock.InventoryTypeId == 1|| ObjProductStock.InventoryTypeId == 2)
-							if (ObjProductStock.InventoryTypeId == 1)
-							{
-								// Check for negative stock
-								if (ObjWarehouseStock.RemainingQuantity < ObjProductStock.Quantity)
+							if ("CASE".Equals(selectedProduct.ProductType))
+							{ //if product is case
+							  //fill up negative stock
+								if (ObjWarehouseStock.RemainingQuantity < 0)
 								{
-									transaction.Rollback();
-									result = "Error! Insufficient stock for product: " + selectedProduct.Name;
-									return Json(result, JsonRequestBehavior.AllowGet);
+									continue;
 								}
-								ObjWarehouseStock.RemainingQuantity = ObjWarehouseStock.RemainingQuantity - ObjProductStock.Quantity;
-								db.Entry(ObjWarehouseStock).State = EntityState.Modified;
-							}
-							else if (ObjProductStock.InventoryTypeId == 2)
-							{
-								// Check for negative stock
-								if (ObjWarehouseStock.RemainingQuantity < ObjProductStock.Quantity)
+								else // break to fill the gap
 								{
-									transaction.Rollback();
-									result = "Error! Insufficient stock for product: " + selectedProduct.Name;
-									return Json(result, JsonRequestBehavior.AllowGet);
-								}
-								ObjWarehouseStock.RemainingQuantity = ObjWarehouseStock.RemainingQuantity - ObjProductStock.Quantity;
-								db.Entry(ObjWarehouseStock).State = EntityState.Modified;
-							}
-							else if (ObjProductStock.InventoryTypeId == 5)
-							{
-								// Check for negative stock
-								if (selectedProduct.RemainingQuantity < ObjProductStock.Quantity)
-								{
-									transaction.Rollback();
-									result = "Error! Insufficient stock for product: " + selectedProduct.Name;
-									return Json(result, JsonRequestBehavior.AllowGet);
-								}
-								selectedProduct.RemainingQuantity = selectedProduct.RemainingQuantity - ObjProductStock.Quantity;
-								selectedProduct.RemainingAmount = selectedProduct.RemainingAmount - ObjProductStock.TotalSaleAmountWithTax;
-								db.Entry(selectedProduct).State = EntityState.Modified;
-							}
-							else if (ObjProductStock.InventoryTypeId == 6)
-							{
-								selectedProduct.RemainingQuantity = selectedProduct.RemainingQuantity + ObjProductStock.Quantity;
-								selectedProduct.RemainingAmount = selectedProduct.RemainingAmount + ObjProductStock.TotalSaleAmountWithTax;
-								db.Entry(selectedProduct).State = EntityState.Modified;
-							}
-							else if (ObjProductStock.InventoryTypeId == 7)
-							{
-								// Check for negative stock
-								if (selectedProduct.RemainingQuantity < ObjProductStock.Quantity)
-								{
-									transaction.Rollback();
-									result = "Error! Insufficient stock for product: " + selectedProduct.Name;
-									return Json(result, JsonRequestBehavior.AllowGet);
-								}
-								selectedProduct.RemainingQuantity = selectedProduct.RemainingQuantity - ObjProductStock.Quantity;
-								selectedProduct.RemainingAmount = selectedProduct.RemainingAmount - ObjProductStock.TotalSaleAmountWithTax;
-								db.Entry(selectedProduct).State = EntityState.Modified;
-							}
-							else if (ObjProductStock.InventoryTypeId == 3)
-							{
-								// Check for negative stock
-								if (selectedProduct.RemainingQuantity < ObjProductStock.Quantity)
-								{
-									transaction.Rollback();
-									result = "Error! Insufficient stock for product: " + selectedProduct.Name;
-									return Json(result, JsonRequestBehavior.AllowGet);
-								}
-								selectedProduct.RemainingQuantity = selectedProduct.RemainingQuantity - ObjProductStock.Quantity;
-								selectedProduct.RemainingAmount = selectedProduct.RemainingAmount - ObjProductStock.TotalSaleAmountWithTax;
-								db.Entry(selectedProduct).State = EntityState.Modified;
-							}
-							else if (ObjProductStock.InventoryTypeId == 4)
-							{
-								ObjWarehouseStock.RemainingQuantity = ObjWarehouseStock.RemainingQuantity + ObjProductStock.Quantity;
-								db.Entry(ObjWarehouseStock).State = EntityState.Modified;
-							}
-							else if (ObjProductStock.InventoryTypeId == 1011 || ObjProductStock.InventoryTypeId == 1013)
-							{
-								ObjWarehouseStock.RemainingQuantity = ObjWarehouseStock.RemainingQuantity + ObjProductStock.Quantity;
-								db.Entry(ObjWarehouseStock).State = EntityState.Modified;
-							}
-							else if (ObjProductStock.InventoryTypeId == 1012)
-							{
-								if (ObjWarehouseStock.RemainingQuantity >= ObjProductStock.Quantity)
-								{
-									ObjWarehouseStock.RemainingQuantity = ObjWarehouseStock.RemainingQuantity - ObjProductStock.Quantity;
-									db.Entry(ObjWarehouseStock).State = EntityState.Modified;
-								}
-								else
-								{
-									transaction.Rollback();
-									result = "Error! Insufficient stock for product: " + selectedProduct.Name;
-									return Json(result, JsonRequestBehavior.AllowGet);
-								}
-							}
- 
+									//update child quantity
+									Console.WriteLine("Update stock of child");
+									var productStock = db.WarehouseStocks
+														 .Where(p => (p.Product_ProductId.MainParentId == (selectedProduct.MainParentId == 0 ? selectedProduct.Id : selectedProduct.MainParentId))
+														 || p.Product_ProductId.Id == (selectedProduct.MainParentId == 0 ? selectedProduct.Id : selectedProduct.MainParentId))
+														 .Distinct().OrderByDescending(p => p.Product_ProductId.Id)
+														 .ToList();
 
-                            if(ObjProductStock.RemainingSinglesQuantity > 0 && ObjWarehouseStock.RemainingQuantity == 0)
-							{ // If there is a loose one, you cannot return all the boxes.
-								transaction.Rollback();
-								result = "If there is a loose one, you cannot return all the boxes. " + selectedProduct.Name;
-								return Json(result, JsonRequestBehavior.AllowGet);
+									var productStockToAddStock = productStock
+											 .Where(p => p.RemainingQuantity < 0)
+												 .OrderBy(p => p.Product_ProductId.Id).ToList();
+
+                                    foreach(var wh in productStockToAddStock){
+										var _selectedProduct = wh.Product_ProductId;
+										var quantity = -wh.RemainingQuantity;
+										UpdateStockForChild(_selectedProduct,wh,quantity, productStock, productStockToAddStock);
+									}
+								}
+
 							}
 
-							ObjProductStock.PurchasePrice = selectedProduct.PurchasePrice;
-							ObjProductStock.SalePrice = selectedProduct.SalePrice;
-							ObjProductStock.RemainingQuantity = ObjWarehouseStock.RemainingQuantity;
-							db.ProductStocks.Add(ObjProductStock);
 						}
 
 						// Save all changes once at the end
 						db.SaveChanges(userId);
-                        Console.WriteLine("Product stock saved.....");
+						Console.WriteLine("Product stock saved.....");
 						// Commit the transaction
 						transaction.Commit();
 
@@ -315,177 +538,177 @@ namespace ShopMate.Controllers
 			}
 		}
 		public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            ProductStock ObjProductStock = db.ProductStocks.Find(id);
-            if (ObjProductStock == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.ProductId = new SelectList(db.Products, "Id", "Name", ObjProductStock.ProductId);
-            ViewBag.InventoryTypeId = new SelectList(db.InventoryTypes, "Id", "Name", ObjProductStock.InventoryTypeId);
+		{
+			if (id == null)
+			{
+				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+			}
+			ProductStock ObjProductStock = db.ProductStocks.Find(id);
+			if (ObjProductStock == null)
+			{
+				return HttpNotFound();
+			}
+			ViewBag.ProductId = new SelectList(db.Products, "Id", "Name", ObjProductStock.ProductId);
+			ViewBag.InventoryTypeId = new SelectList(db.InventoryTypes, "Id", "Name", ObjProductStock.InventoryTypeId);
 
-            return View(ObjProductStock);
-        }
+			return View(ObjProductStock);
+		}
 
-        // POST: /ProductStock/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [ValidateInput(false)]
-        public ActionResult Edit(ProductStock ObjProductStock)
-        {
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            try
-            {
-                if (ModelState.IsValid)
-                {
-
-
-                    db.Entry(ObjProductStock).State = EntityState.Modified;
-                    db.SaveChanges(userId);
-
-                    sb.Append("Sumitted");
-                    return Content(sb.ToString());
-                }
-                else
-                {
-                    foreach (var key in this.ViewData.ModelState.Keys)
-                    {
-                        foreach (var err in this.ViewData.ModelState[key].Errors)
-                        {
-                            sb.Append(err.ErrorMessage + "<br/>");
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Helper.WriteError(ex, ex.Message);
-                sb.Append("Error :" + ex.Message);
-            }
+		// POST: /ProductStock/Edit/5
+		// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+		// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[ValidateInput(false)]
+		public ActionResult Edit(ProductStock ObjProductStock)
+		{
+			System.Text.StringBuilder sb = new System.Text.StringBuilder();
+			try
+			{
+				if (ModelState.IsValid)
+				{
 
 
-            return Content(sb.ToString());
+					db.Entry(ObjProductStock).State = EntityState.Modified;
+					db.SaveChanges(userId);
 
-        }
-        // GET: /ProductStock/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            ProductStock ObjProductStock = db.ProductStocks.Find(id);
-            if (ObjProductStock == null)
-            {
-                return HttpNotFound();
-            }
-            return View(ObjProductStock);
-        }
-
-        // POST: /ProductStock/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            try
-            {
-
-                ProductStock ObjProductStock = db.ProductStocks.Find(id);
-                db.ProductStocks.Remove(ObjProductStock);
-                db.SaveChanges(userId);
-
-                sb.Append("Sumitted");
-                return Content(sb.ToString());
-
-            }
-            catch (Exception ex)
-            {
-                Helper.WriteError(ex, ex.Message);
-                sb.Append("Error :" + ex.Message);
-            }
-
-            return Content(sb.ToString());
-
-        }
-        // GET: /ProductStock/MultiViewIndex/5
-        public ActionResult MultiViewIndex(int? id)
-        {
-            ProductStock ObjProductStock = db.ProductStocks.Find(id);
-            ViewBag.IsWorking = 0;
-            if (id > 0)
-            {
-                ViewBag.IsWorking = id;
-                ViewBag.ProductId = new SelectList(db.Products, "Id", "Name", ObjProductStock.ProductId);
-                ViewBag.InventoryTypeId = new SelectList(db.InventoryTypes, "Id", "Name", ObjProductStock.InventoryTypeId);
-
-            }
-
-            return View(ObjProductStock);
-        }
-
-        // POST: /ProductStock/MultiViewIndex/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [ValidateInput(false)]
-        public ActionResult MultiViewIndex(ProductStock ObjProductStock)
-        {
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            try
-            {
-                if (ModelState.IsValid)
-                {
+					sb.Append("Sumitted");
+					return Content(sb.ToString());
+				}
+				else
+				{
+					foreach (var key in this.ViewData.ModelState.Keys)
+					{
+						foreach (var err in this.ViewData.ModelState[key].Errors)
+						{
+							sb.Append(err.ErrorMessage + "<br/>");
+						}
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Helper.WriteError(ex, ex.Message);
+				sb.Append("Error :" + ex.Message);
+			}
 
 
-                    db.Entry(ObjProductStock).State = EntityState.Modified;
-                    db.SaveChanges(userId);
+			return Content(sb.ToString());
 
-                    sb.Append("Sumitted");
-                    return Content(sb.ToString());
-                }
-                else
-                {
-                    foreach (var key in this.ViewData.ModelState.Keys)
-                    {
-                        foreach (var err in this.ViewData.ModelState[key].Errors)
-                        {
-                            sb.Append(err.ErrorMessage + "<br/>");
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Helper.WriteError(ex, ex.Message);
-                sb.Append("Error :" + ex.Message);
-            }
+		}
+		// GET: /ProductStock/Delete/5
+		public ActionResult Delete(int? id)
+		{
+			if (id == null)
+			{
+				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+			}
+			ProductStock ObjProductStock = db.ProductStocks.Find(id);
+			if (ObjProductStock == null)
+			{
+				return HttpNotFound();
+			}
+			return View(ObjProductStock);
+		}
 
-            return Content(sb.ToString());
+		// POST: /ProductStock/Delete/5
+		[HttpPost, ActionName("Delete")]
+		[ValidateAntiForgeryToken]
+		public ActionResult DeleteConfirmed(int id)
+		{
+			System.Text.StringBuilder sb = new System.Text.StringBuilder();
+			try
+			{
 
-        }
+				ProductStock ObjProductStock = db.ProductStocks.Find(id);
+				db.ProductStocks.Remove(ObjProductStock);
+				db.SaveChanges(userId);
 
-        private SIContext db = new SIContext();
+				sb.Append("Sumitted");
+				return Content(sb.ToString());
+
+			}
+			catch (Exception ex)
+			{
+				Helper.WriteError(ex, ex.Message);
+				sb.Append("Error :" + ex.Message);
+			}
+
+			return Content(sb.ToString());
+
+		}
+		// GET: /ProductStock/MultiViewIndex/5
+		public ActionResult MultiViewIndex(int? id)
+		{
+			ProductStock ObjProductStock = db.ProductStocks.Find(id);
+			ViewBag.IsWorking = 0;
+			if (id > 0)
+			{
+				ViewBag.IsWorking = id;
+				ViewBag.ProductId = new SelectList(db.Products, "Id", "Name", ObjProductStock.ProductId);
+				ViewBag.InventoryTypeId = new SelectList(db.InventoryTypes, "Id", "Name", ObjProductStock.InventoryTypeId);
+
+			}
+
+			return View(ObjProductStock);
+		}
+
+		// POST: /ProductStock/MultiViewIndex/5
+		// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+		// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[ValidateInput(false)]
+		public ActionResult MultiViewIndex(ProductStock ObjProductStock)
+		{
+			System.Text.StringBuilder sb = new System.Text.StringBuilder();
+			try
+			{
+				if (ModelState.IsValid)
+				{
 
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+					db.Entry(ObjProductStock).State = EntityState.Modified;
+					db.SaveChanges(userId);
+
+					sb.Append("Sumitted");
+					return Content(sb.ToString());
+				}
+				else
+				{
+					foreach (var key in this.ViewData.ModelState.Keys)
+					{
+						foreach (var err in this.ViewData.ModelState[key].Errors)
+						{
+							sb.Append(err.ErrorMessage + "<br/>");
+						}
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Helper.WriteError(ex, ex.Message);
+				sb.Append("Error :" + ex.Message);
+			}
+
+			return Content(sb.ToString());
+
+		}
+
+		private SIContext db = new SIContext();
+
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				db.Dispose();
+			}
+			base.Dispose(disposing);
+		}
 
 
 
-    }
+	}
 }
 

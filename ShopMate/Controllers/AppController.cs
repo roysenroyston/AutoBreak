@@ -542,8 +542,8 @@ namespace ShopMate.Controllers
 										Console.WriteLine("Required units..." + unitsRequired);
 										//process required units... by borrowing start with imme parent
 										var productStock = db.WarehouseStocks
-														 .Where(p => (p.Product_ProductId.Id == selectedProduct.MainParentId ||
-														 p.Product_ProductId.MainParentId == selectedProduct.MainParentId))
+														 .Where(p => (p.Product_ProductId.Id == (selectedProduct.MainParentId == 0 ? selectedProduct.Id : selectedProduct.MainParentId) ||
+														 p.Product_ProductId.MainParentId == (selectedProduct.MainParentId == 0 ? selectedProduct.Id : selectedProduct.MainParentId)))
 														 .Distinct().OrderByDescending(p => p.Product_ProductId.Id)
 														 .ToList();
 										Console.WriteLine($"Products stock fetched. Count: {productStock.Count}");
