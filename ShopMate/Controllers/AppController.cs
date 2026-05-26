@@ -406,6 +406,7 @@ namespace ShopMate.Controllers
 		tax = x.tax != null ? x.tax.TaxRate : 0,
 		barcode = x.pd.BarCode,
 		productType = x.pd.ProductType,
+		units = "CASE".Equals(x.pd.ProductType) ? x.pd.Units : 1,
 		quantity = x.sdP != null && x.sdP.RemainingQuantity > 0 && x.sdP.ProductId != x.pd.Id ? Math.Ceiling((x.sdP.RemainingQuantity * x.sdP.Product_ProductId.Units)/ x.pd.NumOfSinglesInCase) +x.pd.RemainingQuantity: "CASE".Equals(x.pd.ProductType) ? 10000000000000 :  x.sd.RemainingQuantity,
 		remainingSinglesQuantity = 0,
 		remainingQuantity = x.sdP != null && x.sdP.RemainingQuantity > 0 && x.sdP.ProductId != x.pd.Id ? Math.Ceiling((x.sdP.RemainingQuantity * x.sdP.Product_ProductId.Units)/ x.pd.NumOfSinglesInCase) + x.pd.RemainingQuantity : "CASE".Equals(x.pd.ProductType) ? 10000000000000 : x.sd.RemainingQuantity,
@@ -508,7 +509,7 @@ namespace ShopMate.Controllers
 							User seller_user = db.Users.FirstOrDefault(i => i.Id == mySell.userId) ?? throw new Exception("User not found..." + mySell.userId);
 							Sale ObjSale = new Sale();
 
-							foreach (var item in mySell.products)
+							foreach (var item in mySell.products.OrderByDescending(p=>p.units))
 							{
 								sellCount.Add(item.prodId);
 								var selectedProduct = db.Products.Where(i => i.Id == item.prodId).FirstOrDefault() ?? throw new Exception("Product not found..." + item.prodId);

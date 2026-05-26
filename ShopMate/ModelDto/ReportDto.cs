@@ -13,7 +13,8 @@ namespace ShopMate.ModelDto
         public string Currency { get; set; }
 		public string PaymentType { get; set; }
         public long Singles { get; set; }
-        public decimal UnitSalePrice { get; set; }
+		public long Units { get; set; }
+		public decimal UnitSalePrice { get; set; }
 		public decimal SalePrice { get; set; }
         public decimal Amount { get; set; }
         public decimal? WithTaxAmount { get; set; }

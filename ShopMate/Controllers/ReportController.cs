@@ -181,12 +181,12 @@ namespace ShopMate.Controllers
             if ((db.Warehouses.FirstOrDefault(i => i.Id == warehouse).Name) == "Dispatch")
             {
                 sale = db.Sales.Where(i => (i.DateAdded >= Datefrom && i.DateAdded <= Dateto) && i.InventoryTypeId == 2 && i.WarehouseId == warehouse)
-                   .Select(i => new SaleDto { ProductType = i.Product_ProductId.ProductType, Singles = i.Singles, UnitSalePrice = i.UnitSalePrice, PaymentType = i.PaymentMode_PaymentModeId.Name, Currency = i.Currency, ProductName = i.Product_ProductId.Name, CustomerName = i.customerName, Quantity = i.Quantity, SalePrice = i.SalePrice, Amount = i.TotalAmount, WithTaxAmount = i.TotalAmountWithTax, InvoiceId = i.InvoiceId, Dated = i.DateAdded.Value , RecieptNo = i.recieptNumber }).ToList();
+                   .Select(i => new SaleDto {Units = i.Product_ProductId.Units, ProductType = i.Product_ProductId.ProductType, Singles = i.Singles, UnitSalePrice = i.UnitSalePrice, PaymentType = i.PaymentMode_PaymentModeId.Name, Currency = i.Currency, ProductName = i.Product_ProductId.Name, CustomerName = i.customerName, Quantity = i.Quantity, SalePrice = i.SalePrice, Amount = i.TotalAmount, WithTaxAmount = i.TotalAmountWithTax, InvoiceId = i.InvoiceId, Dated = i.DateAdded.Value , RecieptNo = i.recieptNumber }).ToList();
             }
             else
             {
                 sale = db.Sales.Where(i => (i.DateAdded >= Datefrom && i.DateAdded <= Dateto) && i.InventoryTypeId == 2 && i.WarehouseId == warehouse)
-                  .Select(i => new SaleDto { ProductType = i.Product_ProductId.ProductType, Singles = i.Singles, UnitSalePrice = i.UnitSalePrice, PaymentType = i.PaymentMode_PaymentModeId.Name, Currency = i.Currency, ProductName = i.Product_ProductId.Name, Quantity = i.Quantity, CustomerName = i.customerName, SalePrice = i.SalePrice, Amount = i.TotalAmount, WithTaxAmount = i.TotalAmountWithTax, InvoiceId = i.InvoiceId, Dated = i.DateAdded.Value, RecieptNo = i.recieptNumber }).ToList();
+                  .Select(i => new SaleDto { Units = i.Product_ProductId.Units, ProductType = i.Product_ProductId.ProductType, Singles = i.Singles, UnitSalePrice = i.UnitSalePrice, PaymentType = i.PaymentMode_PaymentModeId.Name, Currency = i.Currency, ProductName = i.Product_ProductId.Name, Quantity = i.Quantity, CustomerName = i.customerName, SalePrice = i.SalePrice, Amount = i.TotalAmount, WithTaxAmount = i.TotalAmountWithTax, InvoiceId = i.InvoiceId, Dated = i.DateAdded.Value, RecieptNo = i.recieptNumber }).ToList();
             }
             ViewBag.company = invoiceFormat.CompanyName;
             return View(sale);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using ShopMate.Migrations;
 
 namespace ShopMate.Models
 {
@@ -17,6 +18,7 @@ namespace ShopMate.Models
         public string subtotal { get; set; }
         public double tax { get; set; }
         public string time { get; set; }
+        public int units { get; set; }
         public int userId { get; set; }
         public string paymentMethod { get; set; }
         public string customer { get; set; }
@@ -28,6 +30,8 @@ namespace ShopMate.Models
         public string image { get; set; }
         public string name { get; set; }
         public decimal price { get; set; }
+
+        public int units { get; set; }
 
         public decimal priceRtgs { get; set; }
         public int prodId { get; set; }

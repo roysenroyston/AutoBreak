@@ -227,8 +227,14 @@
 												{
 													if ("CASE".Equals(item.ProductType))
 													{
-														<td> @((long)item.Quantity) (C) </td>
-
+														if (item.Units > 1)
+														{
+															<td> @((long)item.Quantity) (C) </td>
+														}
+														else
+														{
+															<td> @((long)item.Quantity) </td>
+														}
 													}
 													else
 													{
@@ -263,7 +269,7 @@
 												<th></th>
 												<th></th>
 											</tr>
-											
+
 											<tr>
 												<th></th>
 												@*<th></th>*@
@@ -276,7 +282,33 @@
 												<th></th>
 												<th></th>
 											</tr>
-											
+
+											<tr>
+												<th></th>
+												@*<th></th>*@
+												<th colspan="3" style="text-align:right">Cases:</th>
+												@*<th>@Model.Where(q => q.Currency == "USD").Sum(i => i.Quantity)</th>*@
+												<th></th>
+												<th></th>
+												<th>@Model.Where(q => "CASE".Equals(q.ProductType) && q.Units > 1).Sum(i => i.Quantity)</th>
+												@*<th>@Model.Where(q => q.Currency == "USD").Sum(i => i.WithTaxAmount)</th>*@
+												<th></th>
+												<th></th>
+											</tr>
+
+											<tr>
+												<th></th>
+												@*<th></th>*@
+												<th colspan="3" style="text-align:right">Units:</th>
+												@*<th>@Model.Where(q => q.Currency != "USD").Sum(i => i.Quantity)</th>*@
+												<th></th>
+												<th></th>
+												<th>@Model.Where(q => ("CASE".Equals(q.ProductType) && q.Units == 1) || !"CASE".Equals(q.ProductType) ).Sum(i => i.Quantity)</th>
+												@*<th>@Model.Where(q => q.Currency != "USD").Sum(i => i.WithTaxAmount)</th>*@
+												<th></th>
+												<th></th>
+											</tr>
+
 										</tfoot>
                                     </table>
 
