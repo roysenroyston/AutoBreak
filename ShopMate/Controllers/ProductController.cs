@@ -151,7 +151,7 @@ namespace ShopMate.Controllers
 								 select new string[] { c.Id.ToString(), Convert.ToString(c.Id),
 			 Convert.ToString(c.Name),
 		     Convert.ToString( c.ProductCaseId == null || c.ProductCaseId.Value == 0 ? "CASE".Equals(c.ProductType) ?  "Parent" : "Single": db.Products.FirstOrDefault(m=> m.Id ==c.ProductCaseId).Name),
-			 //Convert.ToString(c.NumOfSinglesInCase),
+			 Convert.ToString(c.NumOfSinglesInCase),
 			 Convert.ToString(c.BarCode),
 			 Convert.ToString(c.PurchasePrice),
 			 Convert.ToString(c.SalePrice),

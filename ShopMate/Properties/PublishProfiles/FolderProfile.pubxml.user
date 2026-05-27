@@ -6,54 +6,54 @@ by editing this MSBuild file. In order to learn more about this please visit htt
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <_PublishTargetUrl>D:\Roysen\published\Autobreak</_PublishTargetUrl>
-    <History>True|2024-06-17T12:15:31.2467884Z;True|2024-06-10T09:20:59.6350583+02:00;True|2024-06-04T14:31:52.5002686+02:00;True|2024-01-16T14:23:43.5867716+02:00;True|2024-01-02T12:46:18.1530458+02:00;True|2023-10-11T09:59:54.9248404+02:00;True|2023-09-11T10:58:15.7295825+02:00;True|2023-09-11T10:25:16.7122808+02:00;True|2023-09-04T11:16:06.3513288+02:00;True|2023-08-30T14:45:55.3413057+02:00;True|2023-08-29T08:32:06.4331536+02:00;True|2023-07-25T10:37:21.8030784+02:00;True|2023-03-21T16:14:18.6976105+02:00;True|2023-01-16T15:50:00.7773628+02:00;True|2022-11-16T10:32:10.8213858+02:00;True|2022-11-16T09:22:06.1065388+02:00;True|2022-11-16T09:17:14.1869556+02:00;True|2022-11-15T16:04:31.7897809+02:00;True|2022-09-08T15:54:30.7459181+02:00;True|2022-09-07T10:05:28.9010628+02:00;True|2022-09-01T13:08:47.6641458+02:00;False|2022-08-24T13:59:27.5843130+02:00;False|2022-08-24T13:56:43.0043409+02:00;True|2022-08-23T13:50:26.4881822+02:00;True|2022-08-23T12:32:46.4429504+02:00;True|2022-04-06T14:32:12.8061106+02:00;</History>
+    <_PublishTargetUrl>C:\Users\vsiga\Desktop\ZiPOS</_PublishTargetUrl>
+    <History>True|2026-05-26T07:16:23.8498570Z||;True|2024-06-17T14:15:31.2467884+02:00||;True|2024-06-10T09:20:59.6350583+02:00||;True|2024-06-04T14:31:52.5002686+02:00||;True|2024-01-16T14:23:43.5867716+02:00||;True|2024-01-02T12:46:18.1530458+02:00||;True|2023-10-11T09:59:54.9248404+02:00||;True|2023-09-11T10:58:15.7295825+02:00||;True|2023-09-11T10:25:16.7122808+02:00||;True|2023-09-04T11:16:06.3513288+02:00||;True|2023-08-30T14:45:55.3413057+02:00||;True|2023-08-29T08:32:06.4331536+02:00||;True|2023-07-25T10:37:21.8030784+02:00||;True|2023-03-21T16:14:18.6976105+02:00||;True|2023-01-16T15:50:00.7773628+02:00||;True|2022-11-16T10:32:10.8213858+02:00||;True|2022-11-16T09:22:06.1065388+02:00||;True|2022-11-16T09:17:14.1869556+02:00||;True|2022-11-15T16:04:31.7897809+02:00||;True|2022-09-08T15:54:30.7459181+02:00||;True|2022-09-07T10:05:28.9010628+02:00||;True|2022-09-01T13:08:47.6641458+02:00||;False|2022-08-24T13:59:27.5843130+02:00||;False|2022-08-24T13:56:43.0043409+02:00||;True|2022-08-23T13:50:26.4881822+02:00||;True|2022-08-23T12:32:46.4429504+02:00||;True|2022-04-06T14:32:12.8061106+02:00||;</History>
   </PropertyGroup>
   <ItemGroup>
     <File Include="App.config">
-      <publishTime>04/04/2023 11:43:07</publishTime>
+      <publishTime>04/24/2026 11:34:32</publishTime>
     </File>
     <File Include="AuditTrail.aspx">
-      <publishTime>04/04/2023 11:43:07</publishTime>
+      <publishTime>04/24/2026 11:34:32</publishTime>
     </File>
     <File Include="bin/Antlr3.Runtime.dll">
-      <publishTime>04/04/2023 11:43:21</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="bin/BCrypt.Net-Next.dll">
-      <publishTime>04/04/2023 11:43:21</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="bin/de/Microsoft.SqlServer.Types.resources.dll">
       <publishTime>02/21/2014 05:26:06</publishTime>
     </File>
     <File Include="bin/EntityFramework.dll">
-      <publishTime>04/04/2023 11:43:23</publishTime>
+      <publishTime>06/16/2024 22:46:24</publishTime>
     </File>
     <File Include="bin/EntityFramework.SqlServer.dll">
-      <publishTime>04/04/2023 11:43:22</publishTime>
+      <publishTime>06/16/2024 22:47:02</publishTime>
     </File>
     <File Include="bin/es/Microsoft.SqlServer.Types.resources.dll">
       <publishTime>02/21/2014 05:25:54</publishTime>
     </File>
     <File Include="bin/ExcelDataReader.DataSet.dll">
-      <publishTime>04/04/2023 11:43:23</publishTime>
+      <publishTime>04/24/2026 11:34:36</publishTime>
     </File>
     <File Include="bin/ExcelDataReader.DataSet.pdb">
-      <publishTime>04/04/2023 11:43:23</publishTime>
+      <publishTime>04/24/2026 11:34:36</publishTime>
     </File>
     <File Include="bin/ExcelDataReader.dll">
-      <publishTime>04/04/2023 11:43:23</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="bin/ExcelDataReader.pdb">
-      <publishTime>04/04/2023 11:43:23</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="bin/fr/Microsoft.SqlServer.Types.resources.dll">
       <publishTime>02/21/2014 05:27:18</publishTime>
     </File>
     <File Include="bin/IronPdf.Assets.Rendering.Windows.dll">
-      <publishTime>04/04/2023 11:43:27</publishTime>
+      <publishTime>04/24/2026 11:34:36</publishTime>
     </File>
     <File Include="bin/IronPdf.dll">
-      <publishTime>04/04/2023 11:43:29</publishTime>
+      <publishTime>04/24/2026 11:34:36</publishTime>
     </File>
     <File Include="bin/it/Microsoft.SqlServer.Types.resources.dll">
       <publishTime>02/21/2014 05:26:02</publishTime>
@@ -65,91 +65,91 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/21/2014 05:27:16</publishTime>
     </File>
     <File Include="bin/Microsoft.AspNet.Identity.Core.dll">
-      <publishTime>04/04/2023 11:43:29</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/Microsoft.AspNet.Identity.EntityFramework.dll">
-      <publishTime>04/04/2023 11:43:29</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/Microsoft.AspNet.Identity.Owin.dll">
-      <publishTime>04/04/2023 11:43:30</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/Microsoft.Extensions.Configuration.Abstractions.dll">
-      <publishTime>04/04/2023 11:43:32</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/Microsoft.Extensions.Configuration.Binder.dll">
-      <publishTime>04/04/2023 11:43:32</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/Microsoft.Extensions.Configuration.dll">
-      <publishTime>04/04/2023 11:43:32</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/Microsoft.Extensions.DependencyInjection.Abstractions.dll">
-      <publishTime>04/04/2023 11:43:33</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/Microsoft.Extensions.Options.ConfigurationExtensions.dll">
-      <publishTime>04/04/2023 11:43:33</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/Microsoft.Extensions.Options.dll">
-      <publishTime>04/04/2023 11:43:33</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/Microsoft.Extensions.Primitives.dll">
-      <publishTime>04/04/2023 11:43:33</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/Microsoft.Owin.dll">
-      <publishTime>04/04/2023 11:43:33</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/Microsoft.Owin.Host.SystemWeb.dll">
-      <publishTime>04/04/2023 11:43:33</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/Microsoft.Owin.Security.Cookies.dll">
-      <publishTime>04/04/2023 11:43:33</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/Microsoft.Owin.Security.dll">
-      <publishTime>04/04/2023 11:43:33</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/Microsoft.Owin.Security.Facebook.dll">
-      <publishTime>04/04/2023 11:43:33</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/Microsoft.Owin.Security.Google.dll">
-      <publishTime>04/04/2023 11:43:33</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/Microsoft.Owin.Security.MicrosoftAccount.dll">
-      <publishTime>04/04/2023 11:43:33</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/Microsoft.Owin.Security.OAuth.dll">
-      <publishTime>04/04/2023 11:43:33</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/Microsoft.Owin.Security.Twitter.dll">
-      <publishTime>04/04/2023 11:43:33</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/Microsoft.ReportViewer.Common.dll">
-      <publishTime>04/04/2023 11:43:33</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/Microsoft.ReportViewer.WebForms.dll">
-      <publishTime>04/04/2023 11:43:33</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/Microsoft.SqlServer.Types.dll">
       <publishTime>02/21/2014 05:28:46</publishTime>
     </File>
     <File Include="bin/Microsoft.Web.Infrastructure.dll">
-      <publishTime>04/04/2023 11:43:33</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/Microsoft.Win32.Primitives.dll">
       <publishTime>08/16/2023 15:23:46</publishTime>
     </File>
     <File Include="bin/MicrosoftHelper.dll">
-      <publishTime>04/04/2023 11:43:33</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/netstandard.dll">
       <publishTime>08/16/2023 15:23:46</publishTime>
     </File>
     <File Include="bin/Newtonsoft.Json.dll">
-      <publishTime>01/28/2016 14:22:24</publishTime>
+      <publishTime>03/08/2023 07:09:56</publishTime>
     </File>
     <File Include="bin/OnBarcode.Barcode.BarcodeScanner.dll">
-      <publishTime>04/04/2023 11:43:10</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="bin/Owin.dll">
-      <publishTime>04/04/2023 11:43:33</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/pt/Microsoft.SqlServer.Types.resources.dll">
       <publishTime>02/21/2014 05:25:24</publishTime>
@@ -158,37 +158,37 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/21/2014 05:25:46</publishTime>
     </File>
     <File Include="bin/Serilog.dll">
-      <publishTime>04/04/2023 11:43:34</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/Serilog.Sinks.File.dll">
-      <publishTime>04/04/2023 11:43:34</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/Serilog.Sinks.File.pdb">
-      <publishTime>04/04/2023 11:43:34</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/Serilog.Sinks.MSSqlServer.dll">
-      <publishTime>04/04/2023 11:43:34</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/Serilog.Sinks.PeriodicBatching.dll">
-      <publishTime>04/04/2023 11:43:34</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/ShopMate.dll">
-      <publishTime>01/15/2025 12:54:29</publishTime>
+      <publishTime>05/26/2026 09:16:10</publishTime>
     </File>
     <File Include="bin/ShopMate.pdb">
-      <publishTime>01/15/2025 12:54:29</publishTime>
+      <publishTime>05/26/2026 09:16:10</publishTime>
     </File>
     <File Include="bin/Spire.Barcode.dll">
-      <publishTime>04/04/2023 11:43:23</publishTime>
+      <publishTime>04/24/2026 11:34:36</publishTime>
     </File>
     <File Include="bin/Spire.License.dll">
-      <publishTime>04/04/2023 11:43:34</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/System.AppContext.dll">
       <publishTime>08/16/2023 15:23:46</publishTime>
     </File>
     <File Include="bin/System.Buffers.dll">
-      <publishTime>04/04/2023 11:43:34</publishTime>
+      <publishTime>04/24/2026 11:34:38</publishTime>
     </File>
     <File Include="bin/System.Collections.Concurrent.dll">
       <publishTime>08/16/2023 15:23:46</publishTime>
@@ -215,7 +215,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/16/2023 15:23:46</publishTime>
     </File>
     <File Include="bin/System.Configuration.ConfigurationManager.dll">
-      <publishTime>04/04/2023 11:43:34</publishTime>
+      <publishTime>04/24/2026 11:34:38</publishTime>
     </File>
     <File Include="bin/System.Console.dll">
       <publishTime>08/16/2023 15:23:46</publishTime>
@@ -224,7 +224,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/16/2023 15:23:46</publishTime>
     </File>
     <File Include="bin/System.Data.SqlClient.dll">
-      <publishTime>04/04/2023 11:43:34</publishTime>
+      <publishTime>04/24/2026 11:34:38</publishTime>
     </File>
     <File Include="bin/System.Diagnostics.Contracts.dll">
       <publishTime>08/16/2023 15:23:46</publishTime>
@@ -314,13 +314,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/16/2023 15:23:46</publishTime>
     </File>
     <File Include="bin/System.Memory.dll">
-      <publishTime>04/04/2023 11:43:34</publishTime>
+      <publishTime>04/24/2026 11:34:38</publishTime>
     </File>
     <File Include="bin/System.Net.Http.dll">
       <publishTime>08/16/2023 15:23:46</publishTime>
     </File>
     <File Include="bin/System.Net.Http.Formatting.dll">
-      <publishTime>04/04/2023 11:43:30</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/System.Net.NameResolution.dll">
       <publishTime>08/16/2023 15:23:46</publishTime>
@@ -353,7 +353,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/16/2023 15:23:46</publishTime>
     </File>
     <File Include="bin/System.Numerics.Vectors.dll">
-      <publishTime>04/04/2023 11:43:34</publishTime>
+      <publishTime>04/24/2026 11:34:38</publishTime>
     </File>
     <File Include="bin/System.ObjectModel.dll">
       <publishTime>08/16/2023 15:23:46</publishTime>
@@ -377,7 +377,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/16/2023 15:23:46</publishTime>
     </File>
     <File Include="bin/System.Runtime.CompilerServices.Unsafe.dll">
-      <publishTime>04/04/2023 11:43:34</publishTime>
+      <publishTime>04/24/2026 11:34:38</publishTime>
     </File>
     <File Include="bin/System.Runtime.CompilerServices.VisualC.dll">
       <publishTime>08/16/2023 15:23:46</publishTime>
@@ -413,7 +413,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/16/2023 15:23:46</publishTime>
     </File>
     <File Include="bin/System.Security.AccessControl.dll">
-      <publishTime>04/04/2023 11:43:34</publishTime>
+      <publishTime>04/24/2026 11:34:38</publishTime>
     </File>
     <File Include="bin/System.Security.Claims.dll">
       <publishTime>08/16/2023 15:23:46</publishTime>
@@ -434,13 +434,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/16/2023 15:23:46</publishTime>
     </File>
     <File Include="bin/System.Security.Permissions.dll">
-      <publishTime>04/04/2023 11:43:34</publishTime>
+      <publishTime>04/24/2026 11:34:38</publishTime>
     </File>
     <File Include="bin/System.Security.Principal.dll">
       <publishTime>08/16/2023 15:23:46</publishTime>
     </File>
     <File Include="bin/System.Security.Principal.Windows.dll">
-      <publishTime>04/04/2023 11:43:34</publishTime>
+      <publishTime>04/24/2026 11:34:38</publishTime>
     </File>
     <File Include="bin/System.Security.SecureString.dll">
       <publishTime>08/16/2023 15:23:46</publishTime>
@@ -479,31 +479,31 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/16/2023 15:23:46</publishTime>
     </File>
     <File Include="bin/System.Web.Helpers.dll">
-      <publishTime>04/04/2023 11:43:31</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/System.Web.Http.dll">
-      <publishTime>04/04/2023 11:43:31</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/System.Web.Http.WebHost.dll">
-      <publishTime>04/04/2023 11:43:31</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/System.Web.Mvc.dll">
-      <publishTime>04/04/2023 11:43:30</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/System.Web.Optimization.dll">
-      <publishTime>04/04/2023 11:43:30</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/System.Web.Razor.dll">
-      <publishTime>04/04/2023 11:43:30</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/System.Web.WebPages.Deployment.dll">
-      <publishTime>04/04/2023 11:43:31</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/System.Web.WebPages.dll">
-      <publishTime>04/04/2023 11:43:32</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/System.Web.WebPages.Razor.dll">
-      <publishTime>04/04/2023 11:43:31</publishTime>
+      <publishTime>04/24/2026 11:34:37</publishTime>
     </File>
     <File Include="bin/System.Xml.ReaderWriter.dll">
       <publishTime>08/16/2023 15:23:46</publishTime>
@@ -524,13 +524,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/16/2023 15:23:46</publishTime>
     </File>
     <File Include="bin/TrackerEnabledDbContext.Common.dll">
-      <publishTime>04/04/2023 11:43:34</publishTime>
+      <publishTime>04/24/2026 11:34:38</publishTime>
     </File>
     <File Include="bin/TrackerEnabledDbContext.dll">
-      <publishTime>04/04/2023 11:43:34</publishTime>
+      <publishTime>04/24/2026 11:34:38</publishTime>
     </File>
     <File Include="bin/WebGrease.dll">
-      <publishTime>04/04/2023 11:43:34</publishTime>
+      <publishTime>04/24/2026 11:34:38</publishTime>
     </File>
     <File Include="bin/zh-Hans/Microsoft.SqlServer.Types.resources.dll">
       <publishTime>02/21/2014 05:27:58</publishTime>
@@ -6221,619 +6221,619 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/28/2019 08:32:28</publishTime>
     </File>
     <File Include="favicon.ico">
-      <publishTime>04/04/2023 11:43:13</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="fonts/glyphicons-halflings-regular.eot">
-      <publishTime>04/04/2023 11:43:13</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="fonts/glyphicons-halflings-regular.svg">
-      <publishTime>04/04/2023 11:43:13</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="fonts/glyphicons-halflings-regular.ttf">
-      <publishTime>04/04/2023 11:43:13</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="fonts/glyphicons-halflings-regular.woff">
-      <publishTime>04/04/2023 11:43:13</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Global.asax">
-      <publishTime>04/04/2023 11:43:10</publishTime>
+      <publishTime>04/24/2026 11:34:34</publishTime>
     </File>
     <File Include="Models/logoss.png">
-      <publishTime>04/04/2023 11:43:10</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="packages.config">
-      <publishTime>04/04/2023 11:43:21</publishTime>
+      <publishTime>04/29/2026 10:47:08</publishTime>
     </File>
     <File Include="Scripts/bootstrap.js">
-      <publishTime>04/04/2023 11:43:10</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Scripts/bootstrap.min.js">
-      <publishTime>04/04/2023 11:43:10</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Scripts/JavaScript-barcodereader.js">
-      <publishTime>04/04/2023 11:43:10</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Scripts/jquery-1.10.2.js">
-      <publishTime>04/04/2023 11:43:10</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Scripts/jquery-1.10.2.min.js">
-      <publishTime>04/04/2023 11:43:10</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Scripts/jquery-1.10.2.min.map">
-      <publishTime>04/04/2023 11:43:10</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Scripts/jquery.validate.js">
-      <publishTime>04/04/2023 11:43:10</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Scripts/jquery.validate.min.js">
-      <publishTime>04/04/2023 11:43:10</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Scripts/jquery.validate.unobtrusive.js">
-      <publishTime>04/04/2023 11:43:10</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Scripts/jquery.validate.unobtrusive.min.js">
-      <publishTime>04/04/2023 11:43:10</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Scripts/jquery1.8.3.print.js">
-      <publishTime>04/04/2023 11:43:10</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Scripts/modernizr-2.6.2.js">
-      <publishTime>04/04/2023 11:43:10</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Scripts/quagga.js">
-      <publishTime>04/04/2023 11:43:10</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Scripts/React/app.js">
-      <publishTime>04/04/2023 11:43:10</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Scripts/React/package.json">
-      <publishTime>04/04/2023 11:43:10</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Scripts/React/webpack.config.js">
-      <publishTime>04/04/2023 11:43:10</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Scripts/respond.js">
-      <publishTime>04/04/2023 11:43:10</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Scripts/respond.min.js">
-      <publishTime>04/04/2023 11:43:10</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Scripts/_references.js">
-      <publishTime>04/04/2023 11:43:10</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Uploads/logoss.png">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Account/login.cshtml">
-      <publishTime>04/13/2023 10:49:55</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Account/register.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Account/unauthorized.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Accounting/ProfitnLoss.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Accounting/trialBalance.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Bank/Create.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Bank/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Bank/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Bank/Edit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Bank/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/BarCodeGenerator/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Currencies/Create.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Currencies/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Currencies/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Currencies/Edit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Currencies/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/DeclaredayEnd/Create.cshtml">
-      <publishTime>07/21/2023 16:41:19</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/DeclaredayEnd/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/DeclaredayEnd/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/DeliveryNote/Create.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/DeliveryNote/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/DeliveryNote/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/DeliveryNote/Edit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/DeliveryNote/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/DeliveryNote/print.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Dispatch/Create.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Dispatch/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Dispatch/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Dispatch/print.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/DuePayment/Create.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/DuePayment/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/DuePayment/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/DuePayment/Edit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/DuePayment/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/DuePayment/MultiViewIndex.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/DuePayment/Returned.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Expense/Create.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Expense/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Expense/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Expense/Edit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Expense/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Expense/MultiViewIndex.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/GRV/Create.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/GRV/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/GRV/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/GRV/Edit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/GRV/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/GRV/MultiViewIndex.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/GRV/print.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Home/About.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Home/Contact.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Home/Index.cshtml">
-      <publishTime>06/04/2024 14:06:33</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/InventoryType/Create.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/InventoryType/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/InventoryType/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/InventoryType/Edit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/InventoryType/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/InventoryType/MultiViewIndex.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Invoice/Create.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Invoice/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Invoice/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Invoice/DuePayments.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Invoice/Edit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Invoice/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Invoice/MultiViewIndex.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Invoice/NewInvoice.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Invoice/Print.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Invoice/Printformal.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Invoice/PrintInformal.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Invoice/Sale.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/InvoiceFormat/Create.cshtml">
-      <publishTime>01/15/2025 12:50:50</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/InvoiceFormat/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/InvoiceFormat/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/InvoiceFormat/Edit.cshtml">
-      <publishTime>01/15/2025 12:51:21</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/InvoiceFormat/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/InvoiceFormat/MultiViewIndex.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/InvoiceItems/Create.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/InvoiceItems/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/InvoiceItems/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/InvoiceItems/Edit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/InvoiceItems/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/InvoiceItems/MultiViewIndex.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/InvoicePaymentMethod/Create.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/InvoicePaymentMethod/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/InvoicePaymentMethod/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/InvoicePaymentMethod/Edit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/InvoicePaymentMethod/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/JobCard/Create.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/JobCard/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/JobCard/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/JobCard/Display.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/JobCard/Edit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/JobCard/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/JobCard/MultiViewIndex.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/JobCard/Print.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/LedgerAccount/Create.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/LedgerAccount/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/LedgerAccount/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/LedgerAccount/Edit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/LedgerAccount/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/LedgerAccount/MultiViewIndex.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Machine/Create.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Machine/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Menu/Create.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Menu/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Menu/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Menu/Edit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Menu/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Menu/MultiViewIndex.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/MenuPermission/Create.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/MenuPermission/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/MenuPermission/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/MenuPermission/Edit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/MenuPermission/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/MenuPermission/MultiViewIndex.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Order/Cancel.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Order/Create.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Order/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Order/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Order/Edit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Order/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Order/MultiViewIndex.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Order/print.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Order/ShippingOrderDetails.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Order/StockShippingOrder.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Order/StockShippingOrderCreate.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Order/StockShippingOrderEdit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Payment/Create.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Payment/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Payment/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Payment/Edit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Payment/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/PaymentMode/Create.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/PaymentMode/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/PaymentMode/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/PaymentMode/Edit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/PaymentMode/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/PaymentMode/MultiViewIndex.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/PaymentType/Create.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/PaymentType/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/PaymentType/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/PaymentType/Edit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/PaymentType/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/pos/accountpurchase.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/pos/Index.cshtml">
-      <publishTime>06/24/2024 08:27:44</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/pos/InvoicePrint.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/pos/print.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/pos/PrintInvoice.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/pos/purchase.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Product/BarcodeScaner.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Product/Create.cshtml">
-      <publishTime>09/06/2024 11:30:32</publishTime>
+      <publishTime>05/09/2026 02:34:30</publishTime>
     </File>
     <File Include="Views/Product/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Product/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Product/Edit.cshtml">
-      <publishTime>06/14/2024 10:48:30</publishTime>
+      <publishTime>05/09/2026 02:34:16</publishTime>
     </File>
     <File Include="Views/Product/Index.cshtml">
-      <publishTime>10/05/2023 15:23:22</publishTime>
+      <publishTime>05/26/2026 08:46:06</publishTime>
     </File>
     <File Include="Views/Product/MultiViewIndex.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Product/ProductHistory.cshtml">
-      <publishTime>10/05/2023 15:15:39</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Product/UpDatePrice.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/ProductCategory/Create.cshtml">
-      <publishTime>04/05/2023 16:12:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/ProductCategory/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/ProductCategory/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/ProductCategory/Edit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/ProductCategory/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/ProductCategory/MultiViewIndex.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/ProductStock/Create.cshtml">
-      <publishTime>06/10/2024 09:41:09</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/ProductStock/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/ProductStock/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/ProductStock/Edit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/ProductStock/Index.cshtml">
-      <publishTime>07/06/2023 10:59:07</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/ProductStock/MultiViewIndex.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/ProductUpdate/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Purchase/Create.cshtml">
-      <publishTime>01/16/2024 13:50:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Purchase/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Purchase/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Purchase/Edit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Purchase/Index.cshtml">
-      <publishTime>09/11/2023 10:00:07</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Purchase/MultiViewIndex.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Purchase/ProductCategory/Create.cshtml">
       <publishTime>03/09/2020 19:19:06</publishTime>
@@ -6854,406 +6854,406 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/09/2020 19:19:06</publishTime>
     </File>
     <File Include="Views/Purchase/PurchaseReturn.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Quotation/Create.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Quotation/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Quotation/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Quotation/Edit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Quotation/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Quotation/Print.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Rates/Create.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Rates/Edit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Rates/Index.cshtml">
-      <publishTime>04/04/2023 12:03:04</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/RawMaterials/Create.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/RawMaterials/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/RawMaterials/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/RawMaterials/Edit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/RawMaterials/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/RawMaterials/RawMaterialsUpdate.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Report/Accounts.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Report/cashierreport.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Report/DayEnd.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Report/DayEnd1.cshtml">
-      <publishTime>07/25/2023 10:34:14</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Report/DeclareDayEnd.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Report/Due.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Report/EndDay.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Report/Expense.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Report/FastSale.cshtml">
-      <publishTime>05/15/2024 13:51:49</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Report/formalreport.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Report/Grv.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Report/Ladger.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Report/manufacturing.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Report/Payment.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Report/PendingOrdersSummery.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Report/ProductHistory.cshtml">
-      <publishTime>10/06/2023 14:05:41</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Report/Profit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Report/Purchase.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Report/PurchaseReturn.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Report/SaleReturn.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Report/Shrinkage.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Report/StockAlert.cshtml">
-      <publishTime>04/13/2023 10:48:06</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Report/StockAmount.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Report/TodayInvoiceSale.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Report/TodayPurchase.cshtml">
-      <publishTime>04/13/2023 10:24:58</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Report/TodayRawMaterialPurchase.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Report/TodayRawMaterialUse.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Report/TodaySale.cshtml">
-      <publishTime>06/10/2024 12:44:57</publishTime>
+      <publishTime>05/26/2026 09:02:21</publishTime>
     </File>
     <File Include="Views/Report/VAT.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Report/WareHouseStock.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>05/06/2026 23:34:04</publishTime>
     </File>
     <File Include="Views/Report/WarehouseStockAmount.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Report/zzzBaseOfReport.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Role/Create.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Role/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Role/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Role/Edit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Role/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Role/MultiViewIndex.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Sale/Create.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Sale/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Sale/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Sale/Edit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Sale/Index.cshtml">
-      <publishTime>10/06/2023 12:55:18</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Sale/MultiViewIndex.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Sale/SaleReturn.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/SaleOrder/Create.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/SaleOrder/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/SaleOrder/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/SaleOrder/Edit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/SaleOrder/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/SaleOrder/MultiViewIndex.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/SaleOrder/Print.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Setting/Create.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Setting/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Setting/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Setting/Edit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Setting/GetAuditGrid.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Setting/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Setting/MultiViewIndex.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Shared/Error.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Shared/_Layout.cshtml">
-      <publishTime>06/17/2024 14:46:56</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Shared/_LoginPartial.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Statements/CustomerStatement.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Statements/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Statements/Supplier.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/StockTake/Create.cshtml">
-      <publishTime>07/07/2023 11:53:59</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/StockTake/Details.cshtml">
-      <publishTime>07/07/2023 11:47:30</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/StockTake/Index.cshtml">
-      <publishTime>07/07/2023 10:13:24</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/StockTake/stockupdate.cshtml">
-      <publishTime>07/07/2023 11:51:37</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Stores/Create.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Stores/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Stores/Edit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Stores/EditManufactured.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Stores/Finished.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Stores/FinishedGoods.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Stores/FinishedgoodsApproval.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Stores/FinishedGoodsold - Copy.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Stores/GetManufacturedGrid.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Stores/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Stores/Manufacture.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Stores/Print.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Stores/Print1.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Tax/Create.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Tax/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Tax/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Tax/Edit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Tax/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Tax/MultiViewIndex.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Transaction/Create.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Transaction/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Transaction/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Transaction/Edit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Transaction/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Transaction/MultiViewIndex.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/User/Artisan.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/User/Create.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/User/CreateArtisan.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/User/CreateCustomer.cshtml">
-      <publishTime>04/05/2023 16:12:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/User/CreateVendor.cshtml">
-      <publishTime>04/05/2023 16:12:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/User/Customer.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/User/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/User/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/User/Edit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/User/EditCustomer.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/User/EditSupplier.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/User/Index.cshtml">
-      <publishTime>07/05/2023 08:56:41</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/User/UserProfile.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/User/Vendor.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Warehouse/Create.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Warehouse/Delete.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Warehouse/Details.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Warehouse/Edit.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Warehouse/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Warehouse/MultiViewIndex.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/WarehouseStock/Index.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/Web.config">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Views/_ViewStart.cshtml">
-      <publishTime>04/04/2023 11:43:11</publishTime>
+      <publishTime>04/24/2026 11:34:35</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>11/11/2024 11:25:37</publishTime>
+      <publishTime>05/26/2026 09:16:12</publishTime>
     </File>
   </ItemGroup>
 </Project>

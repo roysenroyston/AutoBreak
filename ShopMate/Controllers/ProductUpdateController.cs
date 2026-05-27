@@ -55,19 +55,7 @@ namespace ShopMate.Controllers
 					User currentUser = db.Users.FirstOrDefault(n => n.UserName == userId) ?? throw new Exception("User not found");
 					int UserId = currentUser.Id;
 
-					// Preload existing products that match any Id in the CSV
-					var existingProductIds = fileData.Select(p => p.Id).Distinct().ToList();
-					var existingProducts = db.Products
-						.Where(p => existingProductIds.Contains(p.Id))
-						.ToDictionary(p => p.Id);
-
-					// Preload all possible 'case' products (Name + WarehouseId) for mapping
-					var caseProducts = db.Products
-						.Select(p => new { p.Name, p.WarehouseId, p.Id })
-						.ToList();
-					var caseIdLookup = caseProducts
-						.GroupBy(p => new { p.Name, p.WarehouseId })
-						.ToDictionary(g => g.Key, g => g.First().Id);
+					
 
 					// Collections for batched operations
 					var productsToUpdate = new List<Product>();
@@ -81,47 +69,37 @@ namespace ShopMate.Controllers
 					foreach (Product product in fileData)
 					{
 						// Get caseId (original logic: assumes it always exists, throws if null)
-						var caseKey = new { Name = product.ProductType, WarehouseId = product.WarehouseId };
-						if (!caseIdLookup.TryGetValue(caseKey, out int caseId))
-							continue;
-
-						if (existingProducts.TryGetValue(product.Id, out Product updateProduct))
+						//var caseKey = new { Name = product.ProductType, WarehouseId = product.WarehouseId };
+						//if (!caseIdLookup.TryGetValue(caseKey, out int caseId))
+						//	continue;
+						var existingProducts = db.Products.Where(p => p.Id == product.Id).FirstOrDefault();
+						if (existingProducts != null)
 						{
-							// Product exists in DB
-							if (updateProduct.Id == product.Id && updateProduct.WarehouseId == product.WarehouseId)
-							{
-								// Update existing product (no stock changes)
-								updateProduct.Name = product.Name;
-								updateProduct.BarCode = product.BarCode;
-								updateProduct.SalePrice = product.SalePrice;
-								updateProduct.ProductDescription = product.ProductDescription;
-								updateProduct.PurchasePrice = product.PurchasePrice;
-								updateProduct.WarehouseId = product.WarehouseId;
-								updateProduct.ProductCaseId = caseId;
-								updateProduct.NumOfSinglesInCase = product.NumOfSinglesInCase;
-								updateProduct.UnitSalePrice = product.UnitSalePrice;
-								updateProduct.ProductType = product.ProductType;
-								db.Entry(updateProduct).State = EntityState.Modified;
-								productsToUpdate.Add(updateProduct);
+
+							// Update existing product (no stock changes)
+							existingProducts.Name = product.Name;
+							existingProducts.BarCode = product.BarCode;
+							existingProducts.SalePrice = product.SalePrice;
+							existingProducts.ProductDescription = product.ProductDescription;
+							existingProducts.PurchasePrice = product.PurchasePrice;
+							existingProducts.WarehouseId = product.WarehouseId;
+							existingProducts.ProductCaseId = product.ProductCaseId;
+							existingProducts.NumOfSinglesInCase = product.NumOfSinglesInCase;
+							existingProducts.UnitSalePrice = product.UnitSalePrice;
+							existingProducts.ProductType = product.ProductType;
+								db.Entry(existingProducts).State = EntityState.Modified;
+								productsToUpdate.Add(existingProducts);
 							    db.SaveChanges();
 							}
 							else
 							{
 								// Warehouse mismatch – treat as new product (original logic)
-								var newprod = CreateNewProductEntity(product, UserId, caseId);
+								var newprod = CreateNewProductEntity(product, UserId, product.ProductCaseId ?? 0);
 								newProducts.Add(newprod);
 								tempNewProductData.Add((newprod, product));
 								db.SaveChanges();
 							}
-						}
-						else
-						{
-							// Product does not exist – create new
-							var newprod = CreateNewProductEntity(product, UserId, caseId);
-							newProducts.Add(newprod);
-							tempNewProductData.Add((newprod, product));
-							db.SaveChanges();
-						}
+						
 					}
 
 					// 1. Save all new products to generate their Ids
@@ -201,6 +179,7 @@ namespace ShopMate.Controllers
 			Product newprod = new Product
 			{
 				// newprod.Id = product.Id;  (commented in original, so omitted)
+				Id = source.Id,
 				Name = source.Name,
 				BarCode = source.BarCode,
 				SalePrice = source.SalePrice,
@@ -252,28 +231,32 @@ namespace ShopMate.Controllers
                         var dataTable = dataSet.Tables[0];
                         foreach (DataRow objDataRow in dataTable.Rows)
                         {
-              
-                            if (objDataRow.ItemArray.All(x => string.IsNullOrEmpty(x?.ToString()))) continue;
-                            empList.Add(new Product()
-                            {
-                                Id = Convert.ToInt16(objDataRow["Id"].ToString()),
-                                Name = Convert.ToString(objDataRow["Name"].ToString()),
-                                BarCode = Convert.ToString(objDataRow["Bar Code"].ToString()),
-                                ProductType = Convert.ToString(objDataRow["ProductType"].ToString()),
-                                PurchasePrice = Convert.ToDecimal(objDataRow["Purchase Price"].ToString()),
-                                SalePrice = Convert.ToDecimal(objDataRow["Sale Price"].ToString()),
-                                ProductDescription = Convert.ToString(objDataRow["Product Description"].ToString()),
-                                WarehouseId = Convert.ToInt16(objDataRow["Warehouse Id"].ToString()),
-                                RemainingQuantity = Convert.ToDecimal(objDataRow["RemainingQuantity"].ToString()),
-                                NumOfSinglesInCase = Convert.ToInt32(objDataRow["Number of singles in case"].ToString()),
-								UnitSalePrice = Convert.ToDecimal(objDataRow["UnitSalePrice"].ToString()),
-
-								Units = Convert.ToInt32(objDataRow["Units in case"].ToString()),
-								MainParentId = Convert.ToInt32(objDataRow["MainParentId"].ToString()),
-								ProductCaseId = Convert.ToInt32(objDataRow["ProductCaseId"].ToString()),
-								// add spefic parameters for the product model
-							});
-                            Ngoni = Ngoni + 1;
+							try
+							{
+								//if (objDataRow.ItemArray.All(x => string.IsNullOrEmpty(x?.ToString()))) continue;
+								empList.Add(new Product()
+								{
+									Id = GetValue<short>(objDataRow, "Id"),                          // default 0
+									Name = GetValue<string>(objDataRow, "Name", string.Empty),
+									BarCode = GetValue<string>(objDataRow, "Bar Code", string.Empty),
+									ProductType = GetValue<string>(objDataRow, "ProductType", string.Empty),
+									PurchasePrice = GetValue<decimal>(objDataRow, "Purchase Price"), // default 0.0m
+									SalePrice = GetValue<decimal>(objDataRow, "Sale Price"),
+									ProductDescription = GetValue<string>(objDataRow, "Product Description", string.Empty),
+									WarehouseId = GetValue<short>(objDataRow, "Warehouse Id"),
+									RemainingQuantity = GetValue<decimal>(objDataRow, "RemainingQuantity"),
+									NumOfSinglesInCase = GetValue<int>(objDataRow, "Number of singles in case"),
+									UnitSalePrice = GetValue<decimal>(objDataRow, "UnitSalePrice"),
+									Units = GetValue<int>(objDataRow, "Units in case"),
+									MainParentId = GetValue<int>(objDataRow, "MainParentId"),
+									ProductCaseId = GetValue<int>(objDataRow, "ProductCaseId")
+									// add spefic parameters for the product model
+								});
+								Ngoni = Ngoni + 1;
+							}catch(Exception ec){
+								Console.WriteLine("Exception...");
+								Console.WriteLine("Exception...,");
+							}
                         }
                     }
                 }
@@ -288,5 +271,21 @@ namespace ShopMate.Controllers
         }
 
 
-    }
+		T GetValue<T>(DataRow objDataRow,string columnName, T defaultValue = default)
+		{
+			var value = objDataRow[columnName];
+			if (value == DBNull.Value || value == null)
+				return defaultValue;
+			try
+			{
+				return (T)Convert.ChangeType(value, typeof(T));
+			}
+			catch
+			{
+				return defaultValue;
+			}
+		}
+
+
+	}
 }
