@@ -72,6 +72,9 @@ namespace ShopMate.Controllers
 						//var caseKey = new { Name = product.ProductType, WarehouseId = product.WarehouseId };
 						//if (!caseIdLookup.TryGetValue(caseKey, out int caseId))
 						//	continue;
+						if("CASE".Equals(product.ProductType) && !"Parent".Equals(product.SingleOf) && product.MainParentId <= 0){
+							throw new Exception("MainParent Id is Required... if product is case");
+						}
 						var existingProducts = db.Products.Where(p => p.Id == product.Id).FirstOrDefault();
 						if (existingProducts != null)
 						{
@@ -84,6 +87,7 @@ namespace ShopMate.Controllers
 							existingProducts.PurchasePrice = product.PurchasePrice;
 							existingProducts.WarehouseId = product.WarehouseId;
 							existingProducts.ProductCaseId = product.ProductCaseId;
+							existingProducts.MainParentId = product.MainParentId;
 							existingProducts.NumOfSinglesInCase = product.NumOfSinglesInCase;
 							existingProducts.UnitSalePrice = product.UnitSalePrice;
 							existingProducts.ProductType = product.ProductType;
@@ -233,6 +237,9 @@ namespace ShopMate.Controllers
                         {
 							try
 							{
+								string productName = GetValue<string>(objDataRow, "Single of?", string.Empty);
+								var id =db.Products.Where(p => p.Name.Equals(productName)).FirstOrDefault();
+								var mainParentId = GetValue<int>(objDataRow, "MainParentId");
 								//if (objDataRow.ItemArray.All(x => string.IsNullOrEmpty(x?.ToString()))) continue;
 								empList.Add(new Product()
 								{
@@ -246,10 +253,12 @@ namespace ShopMate.Controllers
 									WarehouseId = GetValue<short>(objDataRow, "Warehouse Id"),
 									RemainingQuantity = GetValue<decimal>(objDataRow, "RemainingQuantity"),
 									NumOfSinglesInCase = GetValue<int>(objDataRow, "Number of singles in case"),
-									UnitSalePrice = GetValue<decimal>(objDataRow, "UnitSalePrice"),
+									UnitSalePrice = 0 /*GetValue<decimal>(objDataRow, "UnitSalePrice")*/,
 									Units = GetValue<int>(objDataRow, "Units in case"),
 									MainParentId = GetValue<int>(objDataRow, "MainParentId"),
-									ProductCaseId = GetValue<int>(objDataRow, "ProductCaseId")
+									SingleOf = productName,
+									//ProductCaseId = GetValue<int>(objDataRow, "ProductCaseId")
+									ProductCaseId = mainParentId == 0 ? 0 : id == null ? 0 : id.Id
 									// add spefic parameters for the product model
 								});
 								Ngoni = Ngoni + 1;

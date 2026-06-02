@@ -25,8 +25,25 @@ namespace ShopMate
 			AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.Name;
 			GlobalTrackingConfig.DisconnectedContext = true;
 			//EnsureIndexes();
+			IfProductNumOfSinglesIsNull();
 
 		}
+
+
+		private void IfProductNumOfSinglesIsNull(){
+			using (var ctx = new SIContext())
+			{
+				using (var transaction = ctx.Database.BeginTransaction())
+				{
+					// Index 1
+					ctx.Database.ExecuteSqlCommand(@"
+            UPDATE Product SET NumOfSinglesInCase = 1 WHERE NumOfSinglesInCase = null;
+        ");
+					transaction.Commit();
+				}
+			}
+
+				}
 
 
 		private void EnsureIndexes()

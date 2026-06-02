@@ -102,7 +102,7 @@ namespace ShopMate.Controllers
 			}
 
 			//return Json(new { price = ObjProduct.SalePrice, description = ObjProduct.ProductDescription, Name = ObjProduct.Name, taxId = ObjProduct.TaxId, remainingquantity = ObjProduct.RemainingQuantity }, JsonRequestBehavior.AllowGet);
-			return Json(new { price = ObjProduct.PurchasePrice, description = ObjProduct.ProductDescription, Name = ObjProduct.Name, taxId = ObjProduct.TaxId, remainingquantity = stock.RemainingQuantity }, JsonRequestBehavior.AllowGet);
+			return Json(new { price = ObjProduct.PurchasePrice, description = ObjProduct.ProductDescription, Name = ObjProduct.Name, taxId = ObjProduct.TaxId, remainingquantity = ObjProduct.RemainingQuantity }, JsonRequestBehavior.AllowGet);
 		}
 
 
@@ -150,7 +150,7 @@ namespace ShopMate.Controllers
 								 join pd in db.WarehouseStocks on c.Id equals pd.ProductId
 								 select new string[] { c.Id.ToString(), Convert.ToString(c.Id),
 			 Convert.ToString(c.Name),
-		     Convert.ToString( c.ProductCaseId == null || c.ProductCaseId.Value == 0 ? "CASE".Equals(c.ProductType) ?  "Parent" : "Single": db.Products.FirstOrDefault(m=> m.Id ==c.ProductCaseId).Name),
+		     Convert.ToString(c.ProductCaseId == null || c.ProductCaseId.Value == 0 ? "CASE".Equals(c.ProductType) ?  "Parent" : "Single": db.Products.FirstOrDefault(m=> m.Id ==c.ProductCaseId).Name),
 			 Convert.ToString(c.NumOfSinglesInCase),
 			 Convert.ToString(c.BarCode),
 			 Convert.ToString(c.PurchasePrice),
@@ -163,11 +163,11 @@ namespace ShopMate.Controllers
              Convert.ToString(pd.RemainingQuantity),
 			 //Convert.ToString(pd.RemainingSinglesQuantity),
 			 Convert.ToString(c.Units),
-			 Convert.ToString(c.NumOfSinglesInCase),
+			 //Convert.ToString(c.NumOfSinglesInCase),
 			 Convert.ToString(c.MainParentId),
-			 Convert.ToString(c.ProductCaseId),
+			 //Convert.ToString(c.ProductCaseId),
 			 Convert.ToString(c.ProductType),
-			 Convert.ToString(c.UnitSalePrice),
+			 //Convert.ToString(c.UnitSalePrice),
          //   Convert.ToString(tax.FirstOrDefault(i=>i.Id==c.TaxId).TaxRate+" %")
                 
                 

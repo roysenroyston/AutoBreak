@@ -7,7 +7,7 @@
     {
         public override void Up()
         {
-            AlterColumn("dbo.Product", "NumOfSinglesInCase", c => c.Int(nullable: false));
+            //AlterColumn("dbo.Product", "NumOfSinglesInCase", c => c.Int(nullable: false));
         }
         
         public override void Down()

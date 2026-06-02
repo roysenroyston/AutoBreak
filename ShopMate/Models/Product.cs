@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using System.Data;
 using System.Reflection;
+using System.ComponentModel.DataAnnotations.Schema;
 
 
 namespace ShopMate.Models
@@ -96,6 +97,9 @@ namespace ShopMate.Models
         public int? MainParentId { get; set; } = 0;
 
         public int NumOfSinglesInCase { get; set; } = 1;
+
+        [NotMapped]
+		public string SingleOf { get; set; }
 
 		[DisplayName("Units in case")]
 		public int Units { get; set; } = 0;

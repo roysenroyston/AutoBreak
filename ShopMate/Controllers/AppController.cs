@@ -407,9 +407,11 @@ namespace ShopMate.Controllers
 		barcode = x.pd.BarCode,
 		productType = x.pd.ProductType,
 		units = "CASE".Equals(x.pd.ProductType) ? x.pd.Units : 1,
-		quantity = x.sdP != null && x.sdP.RemainingQuantity > 0 && x.sdP.ProductId != x.pd.Id ? Math.Ceiling((x.sdP.RemainingQuantity * x.sdP.Product_ProductId.Units)/ x.pd.NumOfSinglesInCase) +x.pd.RemainingQuantity: "CASE".Equals(x.pd.ProductType) ? 10000000000000 :  x.sd.RemainingQuantity,
+		quantity = x.sd.RemainingQuantity,
+		//quantity = x.sdP != null && x.sdP.RemainingQuantity > 0 && x.sdP.ProductId != x.pd.Id ? Math.Ceiling((x.sdP.RemainingQuantity * x.sdP.Product_ProductId.Units)/ x.pd.NumOfSinglesInCase) +x.pd.RemainingQuantity: "CASE".Equals(x.pd.ProductType) ? x.sd.RemainingQuantity :  x.sd.RemainingQuantity,
 		remainingSinglesQuantity = 0,
-		remainingQuantity = x.sdP != null && x.sdP.RemainingQuantity > 0 && x.sdP.ProductId != x.pd.Id ? Math.Ceiling((x.sdP.RemainingQuantity * x.sdP.Product_ProductId.Units)/ x.pd.NumOfSinglesInCase) + x.pd.RemainingQuantity : "CASE".Equals(x.pd.ProductType) ? 10000000000000 : x.sd.RemainingQuantity,
+		//remainingQuantity = x.sdP != null && x.sdP.RemainingQuantity > 0 && x.sdP.ProductId != x.pd.Id ? Math.Ceiling((x.sdP.RemainingQuantity * x.sdP.Product_ProductId.Units)/ x.pd.NumOfSinglesInCase) + x.pd.RemainingQuantity : "CASE".Equals(x.pd.ProductType) ? x.sd.RemainingQuantity : x.sd.RemainingQuantity,
+		remainingQuantity = x.sd.RemainingQuantity,
 		unitSalePrice = x.pd.UnitSalePrice,
 		numOfSinglesInCase = x.pd.NumOfSinglesInCase
 	});
@@ -628,7 +630,7 @@ namespace ShopMate.Controllers
 									}
 									else
 									{
-										throw new Exception("Insufficient stock..." + item.prodId + "  Product Name...:" + selectedProduct.Name + ",  Remaining Quantity:" + ObjWarehouseStock.RemainingQuantity + ", Quantity:" + item.quantity);
+										//throw new Exception("Insufficient stock..." + item.prodId + "  Product Name...:" + selectedProduct.Name + ",  Remaining Quantity:" + ObjWarehouseStock.RemainingQuantity + ", Quantity:" + item.quantity);
 									}
 									
 								}
@@ -844,6 +846,7 @@ namespace ShopMate.Controllers
 						// EF-specific exception with detailed inner SQL errors
 						var inner = dbEx.InnerException?.InnerException?.Message ?? dbEx.InnerException?.Message ?? dbEx.Message;
 						throw new Exception($"SaveChanges failed: {inner}", dbEx);
+					
 					}
 
 					// Update OtherTaxValue with Sale Id for ProductStock records
@@ -885,9 +888,13 @@ namespace ShopMate.Controllers
 					transaction.Rollback();
 					Helper.WriteError(ex, "Error in sell method: " + ex.Message);
 					//Console.WriteLine(ex.InnerException.ToString());
-					return Request.CreateResponse(HttpStatusCode.InternalServerError,
-						new { error = "Transaction failed", message = ex.ToString() },
-						JsonMediaTypeFormatter.DefaultMediaType);
+					return Request.CreateResponse(
+		   HttpStatusCode.OK,
+		   new { trynos = csello.ToString(), sellsCount = sellCount.Count(), duplicatesCount = duplicates.Count(), duplicatesList = duplicates.ToString() },
+		   JsonMediaTypeFormatter.DefaultMediaType);
+					//return Request.CreateResponse(HttpStatusCode.InternalServerError,
+					//	new { error = "Transaction failed", message = ex.ToString() },
+					//	JsonMediaTypeFormatter.DefaultMediaType);
 				}
 			}
 		}
